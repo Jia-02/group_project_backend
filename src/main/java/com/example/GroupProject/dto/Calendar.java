@@ -17,4 +17,46 @@ public class Calendar {
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime calendar_end_date;
+
+	public int getCalendar_id() {
+		return calendar_id;
+	}
+
+	public void setCalendar_id(int calendar_id) {
+		this.calendar_id = calendar_id;
+	}
+
+	public String getCalendar_title() {
+		return calendar_title;
+	}
+
+	public void setCalendar_title(String calendar_title) {
+		this.calendar_title = calendar_title;
+	}
+
+	public String getCalendar_description() {
+		return calendar_description;
+	}
+
+	public void setCalendar_description(String calendar_description) {
+		this.calendar_description = calendar_description;
+	}
+
+	public LocalDateTime getCalendar_start_date() {
+		return calendar_start_date;
+	}
+
+	public void setCalendar_start_date(LocalDateTime calendar_start_date) {
+		this.calendar_start_date = calendar_start_date;
+	}
+
+	public LocalDateTime getCalendar_end_date() {
+		return calendar_end_date;
+	}
+
+	public void setCalendar_end_date(LocalDateTime calendar_end_date) {
+		this.calendar_end_date = calendar_end_date;
+	}
+	
+	
 }
