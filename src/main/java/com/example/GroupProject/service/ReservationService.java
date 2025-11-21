@@ -2,6 +2,7 @@ package com.example.GroupProject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.ReservationDao;
@@ -17,7 +18,8 @@ public class ReservationService {
 	/**
 	 * 新增訂位
 	 */
-	public BasicRes createReservation(ReservationDto reservationDto) {
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes createReservation(ReservationDto reservationDto){
 		// 檢查總人數、大人至少1個，大人+小孩=總人數
 		if (reservationDto.getReservationCount() <= 0 //
 				|| reservationDto.getReservationAdultCount() <= 0 //

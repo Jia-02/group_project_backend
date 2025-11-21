@@ -16,29 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `calender`
+-- Table structure for table `calendar`
 --
 
-DROP TABLE IF EXISTS `calender`;
+DROP TABLE IF EXISTS `calendar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `calender` (
-  `calender_id` int NOT NULL AUTO_INCREMENT,
-  `calender_title` varchar(60) DEFAULT NULL,
-  `calender_description` varchar(500) DEFAULT NULL,
+CREATE TABLE `calendar` (
+  `calendar_id` int NOT NULL AUTO_INCREMENT,
+  `calendar_title` varchar(60) DEFAULT NULL,
+  `calendar_description` varchar(500) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  PRIMARY KEY (`calender_id`)
+  PRIMARY KEY (`calendar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `calender`
+-- Dumping data for table `calendar`
 --
 
-LOCK TABLES `calender` WRITE;
-/*!40000 ALTER TABLE `calender` DISABLE KEYS */;
-/*!40000 ALTER TABLE `calender` ENABLE KEYS */;
+LOCK TABLES `calendar` WRITE;
+/*!40000 ALTER TABLE `calendar` DISABLE KEYS */;
+/*!40000 ALTER TABLE `calendar` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -393,4 +393,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-21 16:33:12
+-- Dump completed on 2025-11-21 16:53:58

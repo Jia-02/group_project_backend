@@ -11,14 +11,23 @@
 	<resultMap id="ReservationMap"
 		type="com.example.GroupProject.dto.ReservationDto">
 
-		<result property="reservationDate" column="reservation_date" />      <!-- DATE 預約日期 -->
-		<result property="reservationPhone" column="reservation_phone" />    <!-- VAR(45) 預約電話 -->
+		<!-- 複合主鍵 -->
+		<id property="reservationDate" column="reservation_date" />      <!-- DATE 預約日期 -->
+		<id property="reservationPhone" column="reservation_phone" />    <!-- VAR(45) 預約電話 -->
+		
+		<!-- 一般欄位 -->
 		<result property="reservationTime" column="reservation_time" />      <!-- TIME 預約時間 -->
 		<result property="reservationName" column="reservation_name" />      <!-- VAR(100) 預約人姓名 -->
 		<result property="reservationCount" column="reservation_count" />    <!-- INT 用餐人數 -->
+		<result property="reservationAdultCount"
+			column="reservation_adult_count" />    <!-- INT 用餐大人人數 -->
+		<result property="reservationChildCount"
+			column="reservation_child_count" />    <!-- INT 用餐小孩人數 -->
 		<result property="reservationStatus"
 			column="reservation_status" />  <!-- TINYINT 預約狀態 -->
 		<result property="reservationNote" column="reservation_note" />      <!-- VAR(200) 備註 -->
+		
+		<!-- 外鍵（FK） -->
 		<result property="tableId" column="table_id" />                        <!-- VAR(20) 桌位編號 -->
 
 	</resultMap>
@@ -28,11 +37,14 @@
 	<insert id="createReservation"
 		parameterType="com.example.GroupProject.dto.ReservationDto">
 		INSERT INTO reservation
-		(reservation_date, reservation_phone, reservation_time, reservation_name,
+		(reservation_date,
+		reservation_phone, reservation_time, reservation_name,
 		reservation_count, reservation_status, reservation_note, table_id)
 		VALUES
-		(#{reservationDate}, #{reservationPhone}, #{reservationTime}, #{reservationName},
-		#{reservationCount}, #{reservationStatus}, #{reservationNote},
+		(#{reservationDate}, #{reservationPhone}, #{reservationTime},
+		#{reservationName},
+		#{reservationCount}, #{reservationStatus},
+		#{reservationNote},
 		#{tableId})
 	</insert>
 
