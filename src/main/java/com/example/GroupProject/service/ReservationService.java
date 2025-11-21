@@ -8,7 +8,6 @@ import com.example.GroupProject.dao.ReservationDao;
 import com.example.GroupProject.dto.ReservationDto;
 import com.example.GroupProject.response.BasicRes;
 
-
 @Service
 public class ReservationService {
 
@@ -19,11 +18,13 @@ public class ReservationService {
 	 * 新增訂位
 	 */
 	public BasicRes createReservation(ReservationDto reservationDto) {
-		// 檢查人數
-		if (reservationDto.getReservationCount() == null || reservationDto.getReservationCount() <= 0) {
-			return new BasicRes(//人數輸入錯誤
-					ResCodeMessage.PEOPLE_COUNT_FAILED.getCode(), 
-					ResCodeMessage.PEOPLE_COUNT_FAILED.getMessage());
+		// 檢查總人數、大人至少1個，大人+小孩=總人數
+		if (reservationDto.getReservationCount() <= 0 //
+				|| reservationDto.getReservationAdultCount() <= 0 //
+				|| reservationDto.getReservationAdultCount()
+						+ reservationDto.getReservationChildCount() != reservationDto.getReservationCount()) {
+			return new BasicRes(// 人數輸入錯誤
+					ResCodeMessage.PEOPLE_COUNT_FAILED.getCode(), ResCodeMessage.PEOPLE_COUNT_FAILED.getMessage());
 		}
 
 //        // 檢查桌位是否已被預約

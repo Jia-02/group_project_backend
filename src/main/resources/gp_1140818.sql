@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gp_1140818
 -- ------------------------------------------------------
--- Server version	8.0.42
+-- Server version	8.0.43
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,12 +23,12 @@ DROP TABLE IF EXISTS `calender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `calender` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(60) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
+  `calender_id` int NOT NULL AUTO_INCREMENT,
+  `calender_title` varchar(60) DEFAULT NULL,
+  `calender_description` varchar(500) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`calender_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -260,7 +260,9 @@ CREATE TABLE `reservation` (
   `reservation_phone` varchar(45) NOT NULL,
   `reservation_time` time NOT NULL,
   `reservation_name` varchar(100) NOT NULL,
-  `reservation_count` int DEFAULT '1',
+  `reservation_adult_count` int NOT NULL DEFAULT '1',
+  `reservation_child_count` int DEFAULT '0',
+  `reservation_count` int NOT NULL DEFAULT '1',
   `reservation_status` tinyint DEFAULT '0',
   `reservation_note` varchar(200) DEFAULT NULL,
   `table_id` varchar(20) NOT NULL,
@@ -274,6 +276,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
+INSERT INTO `reservation` VALUES ('2025-11-21','0912345678','18:30:00','廖珈誼',1,0,4,0,'靠窗座位','T01');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,4 +393,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-20 17:38:39
+-- Dump completed on 2025-11-21 16:33:12

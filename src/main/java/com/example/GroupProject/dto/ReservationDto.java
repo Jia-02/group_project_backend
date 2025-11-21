@@ -13,9 +13,13 @@ public class ReservationDto {
     
     private String reservationName;      // VAR(100) 預約人姓名
     
-    private Integer reservationCount;    // INT 用餐人數
+    private int reservationCount;    // INT 用餐人數
     
-    private Byte reservationStatus;      // TINYINT 預約狀態
+    private int reservationAdultCount;    // INT 用餐大人人數
+    
+    private int reservationChildCount;    // INT 用餐小孩人數
+    
+    private boolean reservationStatus;      // TINYINT 預約狀態
     
     private String reservationNote;      // VAR(200) 備註
     
@@ -53,19 +57,35 @@ public class ReservationDto {
 		this.reservationName = reservationName;
 	}
 
-	public Integer getReservationCount() {
+	public int getReservationCount() {
 		return reservationCount;
 	}
 
-	public void setReservationCount(Integer reservationCount) {
+	public void setReservationCount(int reservationCount) {
 		this.reservationCount = reservationCount;
 	}
 
-	public Byte getReservationStatus() {
+	public int getReservationAdultCount() {
+		return reservationAdultCount;
+	}
+
+	public void setReservationAdultCount(int reservationAdultCount) {
+		this.reservationAdultCount = reservationAdultCount;
+	}
+
+	public int getReservationChildCount() {
+		return reservationChildCount;
+	}
+
+	public void setReservationChildCount(int reservationChildCount) {
+		this.reservationChildCount = reservationChildCount;
+	}
+
+	public boolean isReservationStatus() {
 		return reservationStatus;
 	}
 
-	public void setReservationStatus(Byte reservationStatus) {
+	public void setReservationStatus(boolean reservationStatus) {
 		this.reservationStatus = reservationStatus;
 	}
 
@@ -85,4 +105,5 @@ public class ReservationDto {
 		this.tableId = tableId;
 	}
     
+
 }
