@@ -3,6 +3,11 @@ package com.example.GroupProject.constants;
 public enum ResCodeMessage {
 
 	SUCCESS(200, "Success!!"), //
+	
+	//訂位錯誤相關
+	CREATE_RESERVATION_FAILED(400, "訂位失敗操你媽。"), //
+	PEOPLE_COUNT_FAILED(400, "人數輸入錯誤。"), //
+	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
 	NOT_FOUND(404, "Not found!!"), //
