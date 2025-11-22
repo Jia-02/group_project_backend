@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.TablesDao">
+
+
+	<!-- 對應 DTO 欄位的 resultMap -->
+	<resultMap id="TableMap"
+		type="com.example.GroupProject.dto.TablesDto">
+
+		<result property="tableId" column="tableId" />    
+		<result property="tableStatus" column="tableStatus" />   
+		<result property="tableCapacity" column="capacity" />      
+		<result property="tablePositionX" column="position_x" />      
+		<result property="tablePositionY" column="position_y" />    
+
+	</resultMap>
+	
+	<insert id="addTable"
+			parameterType="com.example.GroupProject.dto.TablesDto">
+			INSERT INTO tables (tableId,tableStatus,capacity,position_x,position_y)
+			VALUES (#{tableId} , #{tableStatus}, #{tableCapacity}, #{tablePositionX}, #{tablePositionY})
+	</insert>
+	
+	<select id="getTableList" resultMap = "TableMap">
+		select * from tables
+	</select>
+	
+</mapper>
