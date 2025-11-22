@@ -29,7 +29,8 @@ public class ReservationService {
 					ResCodeMessage.PEOPLE_COUNT_FAILED.getCode(), ResCodeMessage.PEOPLE_COUNT_FAILED.getMessage());
 		}
 
-        // 檢查桌位是否已被預約
+        // 檢查桌位是否已被預約、使用中?
+	
 
 		// 新增訂位
 		int result = reservationDao.createReservation(reservationDto);
