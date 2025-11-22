@@ -15,6 +15,7 @@ public class TablesService {
 	@Autowired
 	private TablesDao tableDao;
 	
+	//新增桌位
 	public BasicRes addTable(TablesDto table) {
 		
 		tableDao.addTable(table);
@@ -22,6 +23,8 @@ public class TablesService {
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(),ResCodeMessage.SUCCESS.getMessage());
 	}
 	
+	
+	//list查詢
 	public TableListRes getTableList() {
 		return new TableListRes(ResCodeMessage.SUCCESS.getCode(),ResCodeMessage.SUCCESS.getMessage(),tableDao.getTableList());
 	}

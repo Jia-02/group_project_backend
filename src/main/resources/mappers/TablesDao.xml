@@ -9,22 +9,42 @@
 	<resultMap id="TableMap"
 		type="com.example.GroupProject.dto.TablesDto">
 
-		<result property="tableId" column="tableId" />    
-		<result property="tableStatus" column="tableStatus" />   
-		<result property="tableCapacity" column="capacity" />      
-		<result property="tablePositionX" column="position_x" />      
-		<result property="tablePositionY" column="position_y" />    
+		<result property="tableId" column="tableId" />
+		<result property="tableStatus" column="tableStatus" />
+		<result property="tableCapacity" column="capacity" />
+		<result property="tablePositionX" column="position_x" />
+		<result property="tablePositionY" column="position_y" />
 
 	</resultMap>
-	
+
+	<!-- 新增桌位 -->
 	<insert id="addTable"
-			parameterType="com.example.GroupProject.dto.TablesDto">
-			INSERT INTO tables (tableId,tableStatus,capacity,position_x,position_y)
-			VALUES (#{tableId} , #{tableStatus}, #{tableCapacity}, #{tablePositionX}, #{tablePositionY})
+		parameterType="com.example.GroupProject.dto.TablesDto">
+		INSERT INTO tables
+		(tableId,tableStatus,capacity,position_x,position_y)
+		VALUES (#{tableId}
+		, #{tableStatus}, #{tableCapacity},
+		#{tablePositionX},
+		#{tablePositionY})
 	</insert>
-	
-	<select id="getTableList" resultMap = "TableMap">
+
+	<!-- 取得桌位列表 -->
+	<select id="getTableList" resultMap="TableMap">
 		select * from tables
 	</select>
-	
+
+	<!-- 透過id查詢桌位是否仍存在 -->
+	<select id="existsById" resultType="boolean">
+		SELECT COUNT(1) > 0 from
+		tables
+		WHERE table_id = #{tableId}
+	</select>
+
+	<!-- 更新桌位狀態 -->
+	<update id="updateTableStatus">
+		UPDATE tables
+		SET table_status = #{tableStatus}
+		WHERE table_id = #{tableId}
+	</update>
+
 </mapper>

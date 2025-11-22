@@ -14,7 +14,7 @@
 		<!-- 複合主鍵 -->
 		<id property="reservationDate" column="reservation_date" />      <!-- DATE 預約日期 -->
 		<id property="reservationPhone" column="reservation_phone" />    <!-- VAR(45) 預約電話 -->
-		
+
 		<!-- 一般欄位 -->
 		<result property="reservationTime" column="reservation_time" />      <!-- TIME 預約時間 -->
 		<result property="reservationName" column="reservation_name" />      <!-- VAR(100) 預約人姓名 -->
@@ -26,7 +26,7 @@
 		<result property="reservationStatus"
 			column="reservation_status" />  <!-- TINYINT 預約狀態 -->
 		<result property="reservationNote" column="reservation_note" />      <!-- VAR(200) 備註 -->
-		
+
 		<!-- 外鍵（FK） -->
 		<result property="tableId" column="table_id" />                        <!-- VAR(20) 桌位編號 -->
 
@@ -47,5 +47,41 @@
 		#{reservationNote},
 		#{tableId})
 	</insert>
+
+	<!-- 查詢所有訂位列表 -->
+	<select id="getReservationList"
+		resultType="com.example.GroupProject.dto.ReservationDto">
+		SELECT * FROM reservation
+	</select>
+
+	<!-- 查詢同一天、同電話的預約數量 -->
+	<select id="countByDateAndPhone" resultType="int">
+		SELECT COUNT(1)
+		FROM reservation
+		WHERE reservation_date = #{reservationDate}
+		AND reservation_phone = #{reservationPhone}
+		AND reservation_status = 0
+	</select>
+
+
+	<!-- 查詢該時段之該桌號是否已預定 -->
+	<select id="isTableReservedAtSameTime" resultType="boolean">
+    <![CDATA[
+    SELECT COUNT(1) > 0
+    FROM reservation
+    WHERE table_id = #{tableId}
+      AND reservation_date = #{reservationDate}
+      AND reservation_time = #{reservationTime}
+      AND reservation_status = 0  -- 未報到或有效預約
+    ]]>
+	</select>
+
+	<!-- 刪除訂位 -->
+	<delete id="deleteReservation">
+		DELETE FROM reservation
+		WHERE reservation_date = #{reservationDate} 
+		AND reservation_phone = #{reservationPhone}
+	</delete>
+
 
 </mapper>
