@@ -99,10 +99,10 @@ DROP TABLE IF EXISTS `inner_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inner_order` (
-  `id` varchar(60) NOT NULL,
+  `inner_id` varchar(60) NOT NULL,
   `date` date NOT NULL,
   `table_id` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`inner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -316,12 +316,12 @@ DROP TABLE IF EXISTS `tables`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tables` (
-  `id` varchar(20) NOT NULL,
-  `status` varchar(100) NOT NULL,
+  `table_id` varchar(20) NOT NULL,
+  `table_status` varchar(100) NOT NULL,
   `capacity` int NOT NULL DEFAULT '2',
   `position_x` int NOT NULL DEFAULT '0',
   `position_y` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`table_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -393,4 +393,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-21 16:53:58
+-- Dump completed on 2025-11-22 11:52:38

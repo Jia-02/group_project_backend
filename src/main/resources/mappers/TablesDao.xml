@@ -9,8 +9,8 @@
 	<resultMap id="TableMap"
 		type="com.example.GroupProject.dto.TablesDto">
 
-		<result property="tableId" column="id" />    
-		<result property="tableStatus" column="status" />   
+		<result property="tableId" column="tableId" />    
+		<result property="tableStatus" column="tableStatus" />   
 		<result property="tableCapacity" column="capacity" />      
 		<result property="tablePositionX" column="position_x" />      
 		<result property="tablePositionY" column="position_y" />    
@@ -19,7 +19,7 @@
 	
 	<insert id="addTable"
 			parameterType="com.example.GroupProject.dto.TablesDto">
-			INSERT INTO tables (id,status,capacity,position_x,position_y)
+			INSERT INTO tables (tableId,tableStatus,capacity,position_x,position_y)
 			VALUES (#{tableId} , #{tableStatus}, #{tableCapacity}, #{tablePositionX}, #{tablePositionY})
 	</insert>
 	
