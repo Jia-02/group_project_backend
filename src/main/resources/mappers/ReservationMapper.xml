@@ -26,7 +26,8 @@
 		<result property="reservationStatus"
 			column="reservation_status" />  <!-- TINYINT 預約狀態 -->
 		<result property="reservationNote" column="reservation_note" />      <!-- VAR(200) 備註 -->
-
+		<result property="childSeat"
+			column="child_seat" />    <!-- INT 安全座椅數量 -->
 		<!-- 外鍵（FK） -->
 		<result property="tableId" column="table_id" />                        <!-- VAR(20) 桌位編號 -->
 
@@ -39,13 +40,15 @@
 		INSERT INTO reservation
 		(reservation_date,
 		reservation_phone, reservation_time, reservation_name,
-		reservation_count, reservation_status, reservation_note, table_id)
+		reservation_adult_count, reservation_child_count, reservation_count, 
+		reservation_status, child_seat, reservation_note,
+		table_id)
 		VALUES
 		(#{reservationDate}, #{reservationPhone}, #{reservationTime},
-		#{reservationName},
-		#{reservationCount}, #{reservationStatus},
-		#{reservationNote},
-		#{tableId})
+		#{reservationName}, #{reservationAdultCount},
+		#{reservationChildCount}, #{reservationCount},
+		#{reservationStatus}, #{childSeat},
+		#{reservationNote}, #{tableId})
 	</insert>
 
 	<!-- 查詢所有訂位列表 -->
@@ -54,15 +57,36 @@
 		SELECT * FROM reservation
 	</select>
 
-	<!-- 查詢同一天、同電話的預約數量 -->
-	<select id="countByDateAndPhone" resultType="int">
-		SELECT COUNT(1)
-		FROM reservation
+	<!-- 查詢一筆訂位資料 -->
+	<select id="findByDateAndPhone"
+		resultType="com.example.GroupProject.dto.ReservationDto">
+		SELECT * FROM reservation
 		WHERE reservation_date = #{reservationDate}
 		AND reservation_phone = #{reservationPhone}
 		AND reservation_status = 0
 	</select>
 
+	<!-- 查詢同一天、同電話的預約數量 -->
+	<select id="countByDateAndPhone" resultType="int">
+		SELECT COUNT(1)
+		FROM
+		reservation
+		WHERE reservation_date = #{reservationDate}
+		AND
+		reservation_phone = #{reservationPhone}
+		AND reservation_status = 0
+	</select>
+	
+	<!-- 查詢同一天、同時段兒童座椅的使用數量 -->
+    <select id="sumChildSeatsByDateAndTime" resultType="int">
+    SELECT 
+        COALESCE(SUM(child_seat), 0)
+    FROM 
+        reservation
+    WHERE 
+        reservation_date = #{reservationDate} 
+        AND reservation_time = #{reservationTime}
+    </select>
 
 	<!-- 查詢該時段之該桌號是否已預定 -->
 	<select id="isTableReservedAtSameTime" resultType="boolean">
@@ -79,9 +103,37 @@
 	<!-- 刪除訂位 -->
 	<delete id="deleteReservation">
 		DELETE FROM reservation
-		WHERE reservation_date = #{reservationDate} 
+		WHERE reservation_date =
+		#{reservationDate}
 		AND reservation_phone = #{reservationPhone}
 	</delete>
 
+	<!-- 查詢一天的訂位資訊(含桌位) -->
+	<select id="findReservationsByDate"
+		resultType="com.example.GroupProject.dto.ReservationAndTableByDate">
+		SELECT
+		r.reservation_date,
+		r.reservation_time,
+		r.reservation_phone,
+		r.reservation_name,
+		r.reservation_count,
+		r.reservation_adult_count,
+		r.reservation_child_count,
+		r.reservation_status,
+		r.child_seat,
+		r.reservation_note,
+		r.table_id, -- 從 Reservation 表取得桌號
+
+		t.table_status, -- 從 Table 表取得狀態
+		t.table_capacity -- 從 Table 表取得容量
+		FROM
+		reservation r
+		JOIN
+		tables t ON r.table_id = t.table_id
+		WHERE
+		r.reservation_date = #{reservationDate}
+		ORDER BY
+		r.reservation_time ASC
+	</select>
 
 </mapper>

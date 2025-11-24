@@ -2,17 +2,21 @@ package com.example.GroupProject.constants;
 
 public enum ResCodeMessage {
 
-	SUCCESS(200, "Success!!"), //
+	SUCCESS(200, "成功!!!"), //
 	
 	//訂位錯誤相關
+	RESERVATION_NOT_FOUND(400, "找不到訂位。"), //
 	CREATE_RESERVATION_FAILED(400, "訂位失敗。"), //
 	PEOPLE_COUNT_FAILED(400, "人數輸入錯誤。"), //
 	PHONE_IS_RESERVATION_IN_DATE(400, "已於今日預約過。"), //
 	DELETE_RESERVATION_FAILED(400, "預約刪除失敗。"), //
+	UPDATE_RESERVATION_FAILED(400, "預約更新失敗。"), //
+	CHILD_SEAT_INSUFFICIENT(400, "兒童座椅數量不足。"), //
 	
 	//桌位錯誤
-	TABLE_NOT_FOUND(400, "無法找到桌位。"), 
-	TABLE_IS_RESERVATION(400, "桌位已被訂位"), 
+	TABLE_NOT_FOUND(400, "無法找到桌位。"), //
+	TABLE_IS_RESERVATION(400, "桌位已被訂位"), //
+	TABLE_CAPACITY_INSUFFICIENT(400, "桌位容納不下這個人數"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

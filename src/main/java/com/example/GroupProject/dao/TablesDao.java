@@ -18,6 +18,9 @@ public interface TablesDao {
 	
     /** 桌位是否存在 */
 	public boolean existsById(@Param("tableId") String tableId);
+	
+	/** 取得桌位容量人數大小 */
+	public int getTableCapacityById(@Param("tableId") String tableId);
     
 
 	public void delTableByTableId(TablesDto table);

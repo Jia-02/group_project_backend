@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class ReservationDeleteReq {
 	
     private LocalDate reservationDate;
+    
     private String reservationPhone;
     
 	public LocalDate getReservationDate() {

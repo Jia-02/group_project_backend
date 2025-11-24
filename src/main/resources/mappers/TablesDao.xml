@@ -34,16 +34,24 @@
 	
 	<!-- 透過id查詢桌位是否仍存在 -->
 	<select id="existsById" resultType="boolean">
-		SELECT COUNT(1) > 0 from
-		tables
+		SELECT COUNT(1) > 0 from tables
 		WHERE table_id = #{tableId}
 	</select>
 	
+	<!-- 透過id查詢桌位人數容量 -->
+	<select id="getTableCapacityById" resultType="int">
+		SELECT capacity From tables
+		WHERE table_id = #{tableId}
+	</select>
+	
+	
+	<!-- 刪除桌位 -->
 	<delete id="delTableByTableId"
 			parameterType="com.example.GroupProject.dto.TablesDto">
 		delete from tables where table_id = #{tableId}
 	</delete>
 	
+	<!-- 更新桌位 -->
 	<update id="updateByTableId"
 			parameterType="com.example.GroupProject.dto.TablesDto">
 		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,

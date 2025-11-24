@@ -3,8 +3,9 @@ package com.example.GroupProject.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDto {
-	
+public class ReservationAndTableByDate {
+
+	//訂位資訊
     private LocalDate reservationDate;   // DATE 預約日期
     
     private String reservationPhone;     // VAR(45) 預約電話
@@ -23,9 +24,35 @@ public class ReservationDto {
     
     private String reservationNote;      // VAR(200) 備註
     
-    private int childSeat;    // INT 安全座椅數量
+    //桌位資訊
     
-    private String tableId;              // VAR(20) 桌位編號
+	private String tableId;
+
+	private String tableStatus;
+
+	private int tableCapacity;
+
+	public ReservationAndTableByDate() {
+		super();
+	}
+
+	public ReservationAndTableByDate(LocalDate reservationDate, String reservationPhone, LocalTime reservationTime,
+			String reservationName, int reservationCount, int reservationAdultCount, int reservationChildCount,
+			boolean reservationStatus, String reservationNote, String tableId, String tableStatus, int tableCapacity) {
+		super();
+		this.reservationDate = reservationDate;
+		this.reservationPhone = reservationPhone;
+		this.reservationTime = reservationTime;
+		this.reservationName = reservationName;
+		this.reservationCount = reservationCount;
+		this.reservationAdultCount = reservationAdultCount;
+		this.reservationChildCount = reservationChildCount;
+		this.reservationStatus = reservationStatus;
+		this.reservationNote = reservationNote;
+		this.tableId = tableId;
+		this.tableStatus = tableStatus;
+		this.tableCapacity = tableCapacity;
+	}
 
 	public LocalDate getReservationDate() {
 		return reservationDate;
@@ -107,11 +134,19 @@ public class ReservationDto {
 		this.tableId = tableId;
 	}
 
-	public int getChildSeat() {
-		return childSeat;
+	public String getTableStatus() {
+		return tableStatus;
 	}
 
-	public void setChildSeat(int childSeat) {
-		this.childSeat = childSeat;
+	public void setTableStatus(String tableStatus) {
+		this.tableStatus = tableStatus;
+	}
+
+	public int getTableCapacity() {
+		return tableCapacity;
+	}
+
+	public void setTableCapacity(int tableCapacity) {
+		this.tableCapacity = tableCapacity;
 	}
 }

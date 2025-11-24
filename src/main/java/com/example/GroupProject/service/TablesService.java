@@ -30,6 +30,7 @@ public class TablesService {
 				tableDao.getTableList());
 	}
 
+	//刪除桌位
 	public BasicRes delTable(TablesDto table) {
 
 		tableDao.delTableByTableId(table);
@@ -37,6 +38,7 @@ public class TablesService {
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
+	//更新桌位
 	public BasicRes updateTable(TablesDto table) {
 
 		tableDao.updateByTableId(table);
