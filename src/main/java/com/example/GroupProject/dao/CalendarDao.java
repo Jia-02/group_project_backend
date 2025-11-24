@@ -16,5 +16,5 @@ public interface CalendarDao {
 	/* update */
 	public int updateDataById(Calendar calendar);
 	/* delete */
-	public void deleteById(@Param("inputId") int calendar_id);
+	public void deleteById(@Param("calendar_id") int calendar_id);
 }
