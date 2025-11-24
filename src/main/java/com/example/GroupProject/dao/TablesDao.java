@@ -17,7 +17,12 @@ public interface TablesDao {
 	public List<TablesDto> getTableList();
 	
     /** 桌位是否存在 */
-    boolean existsById(@Param("tableId") String tableId);
+	public boolean existsById(@Param("tableId") String tableId);
     
+
+	public void delTableByTableId(TablesDto table);
+	
+	public void updateByTableId(TablesDto table);
+
 }
 	

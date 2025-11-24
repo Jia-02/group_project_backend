@@ -9,30 +9,29 @@
 	<resultMap id="TableMap"
 		type="com.example.GroupProject.dto.TablesDto">
 
-		<result property="tableId" column="tableId" />
-		<result property="tableStatus" column="tableStatus" />
-		<result property="tableCapacity" column="capacity" />
-		<result property="tablePositionX" column="position_x" />
-		<result property="tablePositionY" column="position_y" />
+
+		<result property="tableId" column="table_id" />    
+		<result property="tableStatus" column="table_status" />   
+		<result property="tableCapacity" column="capacity" />      
+		<result property="tablePositionX" column="position_x" />      
+		<result property="tablePositionY" column="position_y" />    
+
 
 	</resultMap>
 
 	<!-- 新增桌位 -->
 	<insert id="addTable"
-		parameterType="com.example.GroupProject.dto.TablesDto">
-		INSERT INTO tables
-		(tableId,tableStatus,capacity,position_x,position_y)
-		VALUES (#{tableId}
-		, #{tableStatus}, #{tableCapacity},
-		#{tablePositionX},
-		#{tablePositionY})
+			parameterType="com.example.GroupProject.dto.TablesDto">
+			INSERT INTO tables (table_id,table_status,capacity,position_x,position_y)
+			VALUES (#{tableId} , #{tableStatus}, #{tableCapacity}, #{tablePositionX}, #{tablePositionY})
+
 	</insert>
 
 	<!-- 取得桌位列表 -->
 	<select id="getTableList" resultMap="TableMap">
 		select * from tables
 	</select>
-
+	
 	<!-- 透過id查詢桌位是否仍存在 -->
 	<select id="existsById" resultType="boolean">
 		SELECT COUNT(1) > 0 from
@@ -45,6 +44,19 @@
 		UPDATE tables
 		SET table_status = #{tableStatus}
 		WHERE table_id = #{tableId}
+	</update>
+
+	
+	<delete id="delTableByTableId"
+			parameterType="com.example.GroupProject.dto.TablesDto">
+		delete from tables where table_id = #{tableId}
+	</delete>
+	
+	<update id="updateByTableId"
+			parameterType="com.example.GroupProject.dto.TablesDto">
+		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,
+			position_x = #{tablePositionX}, position_y = #{tablePositionY} where table_id = #{tableId}
+			
 	</update>
 
 </mapper>
