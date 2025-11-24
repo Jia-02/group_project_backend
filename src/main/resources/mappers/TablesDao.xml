@@ -38,14 +38,6 @@
 		tables
 		WHERE table_id = #{tableId}
 	</select>
-
-	<!-- 更新桌位狀態 -->
-	<update id="updateTableStatus">
-		UPDATE tables
-		SET table_status = #{tableStatus}
-		WHERE table_id = #{tableId}
-	</update>
-
 	
 	<delete id="delTableByTableId"
 			parameterType="com.example.GroupProject.dto.TablesDto">
