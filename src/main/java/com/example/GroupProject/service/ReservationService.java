@@ -69,6 +69,9 @@ public class ReservationService {
 		if (!tableDao.existsById(reservationDto.getTableId())) {
 			return new BasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(), ResCodeMessage.TABLE_NOT_FOUND.getMessage());
 		}
+		
+		//檢查桌位容納數量<用餐人數
+		
 
 		// 檢查同個時間，同個桌位無法被重複選擇
 		if (reservationDao.isTableReservedAtSameTime(tableId, date, time)) {
