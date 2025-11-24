@@ -265,6 +265,7 @@ CREATE TABLE `reservation` (
   `reservation_count` int NOT NULL DEFAULT '1',
   `reservation_status` tinyint DEFAULT '0',
   `reservation_note` varchar(200) DEFAULT NULL,
+  `child_seat` int DEFAULT '0',
   `table_id` varchar(20) NOT NULL,
   PRIMARY KEY (`reservation_date`,`reservation_phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -276,7 +277,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-11-21','0912345678','18:30:00','廖珈誼',1,0,4,0,'靠窗座位','T01');
+INSERT INTO `reservation` VALUES ('2025-12-15','0912345677','20:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-12-15','0912345678','20:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -331,6 +332,7 @@ CREATE TABLE `tables` (
 
 LOCK TABLES `tables` WRITE;
 /*!40000 ALTER TABLE `tables` DISABLE KEYS */;
+INSERT INTO `tables` VALUES ('A01','已預約',8,10,50),('A02','可預約',5,10,30),('A03','已預約',4,10,80),('A04','已預約',2,10,100);
 /*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,4 +395,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-22 11:52:38
+-- Dump completed on 2025-11-24 16:29:59
