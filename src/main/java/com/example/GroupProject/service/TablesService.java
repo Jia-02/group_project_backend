@@ -11,19 +11,34 @@ import com.example.GroupProject.response.TableListRes;
 
 @Service
 public class TablesService {
-	
+
 	@Autowired
 	private TablesDao tableDao;
-	
+
 	public BasicRes addTable(TablesDto table) {
-		
+
 		tableDao.addTable(table);
-		
-		return new BasicRes(ResCodeMessage.SUCCESS.getCode(),ResCodeMessage.SUCCESS.getMessage());
+
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
-	
+
 	public TableListRes getTableList() {
-		return new TableListRes(ResCodeMessage.SUCCESS.getCode(),ResCodeMessage.SUCCESS.getMessage(),tableDao.getTableList());
+		return new TableListRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				tableDao.getTableList());
 	}
-	
+
+	public BasicRes delTable(TablesDto table) {
+
+		tableDao.delTableByTableId(table);
+
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
+	}
+
+	public BasicRes updateTable(TablesDto table) {
+
+		tableDao.updateByTableId(table);
+		
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
+	}
+
 }

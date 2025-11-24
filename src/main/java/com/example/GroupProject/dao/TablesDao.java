@@ -12,6 +12,10 @@ public interface TablesDao {
 	public void addTable(TablesDto table);
 	
 	public List<TablesDto> getTableList();
+	
+	public void delTableByTableId(TablesDto table);
+	
+	public void updateByTableId(TablesDto table);
 
 }
 	

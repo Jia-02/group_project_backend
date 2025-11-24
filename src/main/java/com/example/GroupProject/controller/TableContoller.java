@@ -29,4 +29,16 @@ public class TableContoller {
 		return tableService.getTableList();
 	}
 	
+	@PostMapping(value = "table/del")
+	public BasicRes delTable(@RequestBody TablesDto table) {
+		return tableService.delTable(table);
+	}
+	
+	@PostMapping(value = "table/update")
+	public BasicRes updateTable(@RequestBody TablesDto table) {
+		return tableService.updateTable(table);
+	}
+	
+	
+	
 }
