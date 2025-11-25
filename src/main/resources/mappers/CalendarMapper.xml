@@ -3,39 +3,52 @@
 <!DOCTYPE mapper
        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.Git.dao.CalendarDao">
 
+<mapper namespace="com.example.GroupProject.dao.CalendarDao">
 	<insert id="create">
 		<!-- 原生 SQL 語句 -->
 		<!-- #{變數名稱}: 對應到 Dao 的方法參數中 @Param("變數名稱") -->
 		insert into calendar (calendar_id, calendar_title,
-		calendar_description, calendar_start_date, calendar_end_date)
+		calendar_description, calendar_start_date, calendar_end_date,calendar_status,calendar_photo)
 		values
-		(#{calendar_id}, #{calendar_title}, #{calendar_description}, #{calendar_start_date},
-		#{calendar_end_date})
+		(#{calendar_id}, #{calendar_title}, #{calendar_description},
+		#{calendar_start_date},
+		#{calendar_end_date},#{calendar_status},#{calendar_photo}
+		)
 	</insert>
 
 	<!-- 更新語法 -->
 	<update id="updateDataById">
-		update calendar set 
-        calendar_title = #{calendar_title},             
-        calendar_description = #{calendar_description},   
-        calendar_start_date = #{calendar_start_date},     
-        calendar_end_date = #{calendar_end_date}     
-        where calendar_id = #{calendar_id}
+		update calendar set
+		calendar_title = #{calendar_title},
+		calendar_description = #{calendar_description},
+		calendar_start_date = #{calendar_start_date},
+		calendar_end_date = #{calendar_end_date},
+		calendar_status = #{calendar_status},
+		calendar_photo = #{calendar_photo}		
+		where calendar_id = #{calendar_id}
 	</update>
 
 	<select id="selectByIdList">
-		select * from calendarv where start_date &gt;= #{calendar_start_date} and
-		end_date &lt;= #{calendar_end_date}
-		<foreach item="idItem" collection="idList" open="and id in ("	separator="," close=")">
+		select * from calendarv where calendar_id = #{calendar_id}
+		<foreach item="idItem" collection="idList" open="and id in ("
+			separator="," close=")">
 			#{idItem}
 		</foreach>
 	</select>
-
+	<select id="findActivitiesByDate"
+		resultType="com.example.GroupProject.dto.Calendar">
+		SELECT * 	FROM calendar
+		WHERE
+		calendar_start_date <![CDATA[ <= ]]>
+		#{checkDate}
+		AND calendar_end_date <![CDATA[ >= ]]>
+		#{checkDate}
+	</select>
 	<!-- 刪除語法 -->
 	<delete id="deleteById">
-		delete from calendar where calendar_id = #{calendar_id}
+		delete from calendar where calendar_id =
+		#{calendar_id}
 	</delete>
 
 

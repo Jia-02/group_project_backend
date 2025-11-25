@@ -26,7 +26,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	
+	// 尋找 MyBatis Spring Boot Starter 依賴
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
+    
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
