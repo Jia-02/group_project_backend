@@ -1,9 +1,13 @@
 package com.example.GroupProject.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,8 @@ import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
 import com.example.GroupProject.response.ReservationListRes;
 
+//使用排序
+@EnableScheduling
 @Service
 public class ReservationService {
 
@@ -162,6 +168,73 @@ public class ReservationService {
 				ResCodeMessage.SUCCESS.getMessage(), //
 				reservationDao.findReservationsByDate(reservationDate));
 	}
+	
+	private static final List<LocalTime> SchedulTime = Arrays.asList(
+	        LocalTime.of(10, 0, 0), 
+	        LocalTime.of(11, 30, 0), 
+	        LocalTime.of(13, 0, 0), 
+	        LocalTime.of(14, 30, 0), 
+	        LocalTime.of(16, 0, 0),
+	        LocalTime.of(17, 30, 0)
+	    );
+	
+	/** 查詢當下最接近的預約資訊 */
+	@Transactional(rollbackFor = Exception.class)
+	public ReservationAndTableByDateRes findTableStatusByNow() {
+	    
+		//現在時間
+	    LocalDateTime now = LocalDateTime.now();
+	    //取日期
+	    LocalDate reservationDate = now.toLocalDate();
+
+	    // 呼叫方法判斷當前時段
+	    LocalTime queryTime = findCurrentOrPastSlot(now.toLocalTime(), SchedulTime); 
+        System.out.println(queryTime);
+	    if (queryTime == null) {
+	         return new ReservationAndTableByDateRes(//
+	 	            ResCodeMessage.NOT_FOUND.getCode(), 
+		            ResCodeMessage.NOT_FOUND.getMessage());
+	    }
+	    
+	    // 執行資料庫查詢
+	    return new ReservationAndTableByDateRes(
+	            ResCodeMessage.SUCCESS.getCode(), 
+	            ResCodeMessage.SUCCESS.getMessage(), 
+	            reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime));
+	}
+
+	
+	//私有方法查詢與現在時間最接近的時段
+	//假設10.00 11.30兩個時段，如果現在是10.30會顯示10點)
+	private LocalTime findCurrentOrPastSlot(LocalTime currentTime, List<LocalTime> fixedSlots) {
+	    
+		//設一個值存放最接近的時段
+	    LocalTime queryTime = null;
+
+	    for (LocalTime slot : fixedSlots) {
+	        // 當前(current) >= 時段起始 (slot)
+	        if (currentTime.isAfter(slot) || currentTime.equals(slot)) {
+	            queryTime = slot; // 暫存這個時段
+	        } else {
+	            break; 
+	        }
+	    }
+	    
+	    // 所有時段都已過或尚未開始
+	    if (queryTime == null) {
+	        return null;
+	    }
+	    
+	    // currentTime > lastSlot關店時間 (19:00)，queryTime 是 19:00
+	    LocalTime lastSlot = LocalTime.of(19, 0, 0);
+	    if (currentTime.isAfter(lastSlot) && queryTime.equals(lastSlot)) {
+	         return null;
+	    }
+	    return queryTime;
+	}
+
+	
+	
 	
 	/** 查詢同一天某時段之資訊桌位、預約資訊 */
 	@Transactional(rollbackFor = Exception.class)

@@ -56,6 +56,12 @@ public class ReservationController {
 		return reservationService.findTableStatusByTimeSlot(reservationDate, reservationTime);
 	}
 	
+    //查詢當下資訊桌位、預約資訊 
+	@GetMapping(value = "reservation/now_time_list")
+	public ReservationAndTableByDateRes findTableStatusByNow() {
+		return reservationService.findTableStatusByNow();
+	}
+	
 	//刪除訂位
     @PostMapping("reservation/delete")
     public BasicRes deleteReservation(@Valid @RequestBody ReservationDeleteReq req) {
