@@ -19,8 +19,6 @@ import com.example.GroupProject.response.ReservationAndTableByDateRes;
 import com.example.GroupProject.response.ReservationListRes;
 import com.example.GroupProject.service.ReservationService;
 
-import jakarta.validation.Valid;
-
 @CrossOrigin // 允許前端來源
 @RestController
 public class ReservationController {
@@ -64,7 +62,7 @@ public class ReservationController {
 	
 	//刪除訂位
     @PostMapping("reservation/delete")
-    public BasicRes deleteReservation(@Valid @RequestBody ReservationDeleteReq req) {
+    public BasicRes deleteReservation(@RequestBody ReservationDeleteReq req) {
         return reservationService.deleteReservation(req.getReservationDate(),req.getReservationPhone());
     }
     

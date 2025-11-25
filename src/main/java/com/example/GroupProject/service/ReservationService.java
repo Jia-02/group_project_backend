@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.ReservationDao;
+import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.ReservationDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
@@ -30,6 +31,9 @@ public class ReservationService {
 
 	@Autowired
 	private TablesDao tableDao;
+	
+	@Autowired
+	private TableDailyDao tableDailyDao;
 
 	/** 新增訂位 */
 	@Transactional(rollbackFor = Exception.class)
@@ -54,7 +58,6 @@ public class ReservationService {
 		final int maxChildSeat = 5; // 店家總庫存數
 		if(childSeat > 0) {
 			int reservedSeats = reservationDao.sumChildSeatsByDateAndTime(date, time);
-			System.out.println(reservedSeats);
 			if (childSeat + reservedSeats > maxChildSeat) {
                 return new BasicRes(
     					ResCodeMessage.CHILD_SEAT_INSUFFICIENT.getCode(), //
@@ -75,6 +78,13 @@ public class ReservationService {
 		if (!tableDao.existsById(reservationDto.getTableId())) { //
 			return new BasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(), //
 					ResCodeMessage.TABLE_NOT_FOUND.getMessage());
+		}
+		
+		//檢查桌位狀態如果是未開放無法訂位
+		Integer tableStatus = tableDailyDao.getTableStatus(date, tableId);
+		if(tableStatus != null && tableStatus == 0) {
+			return new BasicRes(ResCodeMessage.TABLE_IS_NOT_OPEN.getCode(), //
+					ResCodeMessage.TABLE_IS_NOT_OPEN.getMessage());
 		}
 
 		// 檢查桌位容納數量 > 用餐人數
@@ -160,7 +170,7 @@ public class ReservationService {
 				reservationDao.getReservationList());
 	}
 	
-	/** 查詢一天的訂位資料(含桌位) */
+	/** 查詢一天的訂位資料(含桌位、桌位狀態) */
 	@Transactional(rollbackFor = Exception.class)
 	public ReservationAndTableByDateRes findReservationsByDate(LocalDate reservationDate) {
 		return new ReservationAndTableByDateRes(//
@@ -171,11 +181,11 @@ public class ReservationService {
 	
 	private static final List<LocalTime> SchedulTime = Arrays.asList(
 	        LocalTime.of(10, 0, 0), 
-	        LocalTime.of(11, 30, 0), 
-	        LocalTime.of(13, 0, 0), 
-	        LocalTime.of(14, 30, 0), 
-	        LocalTime.of(16, 0, 0),
-	        LocalTime.of(17, 30, 0)
+	        LocalTime.of(12, 0, 0), 
+	        LocalTime.of(14, 0, 0), 
+	        LocalTime.of(16, 0, 0), 
+	        LocalTime.of(18, 0, 0),
+	        LocalTime.of(20, 0, 0)
 	    );
 	
 	/** 查詢當下最接近的預約資訊 */
@@ -225,8 +235,8 @@ public class ReservationService {
 	        return null;
 	    }
 	    
-	    // currentTime > lastSlot關店時間 (19:00)，queryTime 是 19:00
-	    LocalTime lastSlot = LocalTime.of(19, 0, 0);
+	    // currentTime > lastSlot關店時間 (22:00)，queryTime 是 22:00
+	    LocalTime lastSlot = LocalTime.of(22, 0, 0);
 	    if (currentTime.isAfter(lastSlot) && queryTime.equals(lastSlot)) {
 	         return null;
 	    }

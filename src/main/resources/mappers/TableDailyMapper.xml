@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.TableDailyDao">
+
+	<!-- 查某一天所有桌位 -->
+	<select id="getDailyStatus"
+		resultType="com.example.GroupProject.dto.TableDailyDto">
+		SELECT
+		table_daily_date,
+		table_id,
+		table_daily_status
+		FROM
+		table_daily
+		WHERE table_daily_date = #{tableDailyDate}
+		ORDER BY table_id
+	</select>
+
+    <!-- 查某一天某一桌狀態 -->
+	<select id="getTableStatus" resultType="Integer">
+		SELECT table_daily_status
+		FROM table_daily
+		WHERE table_daily_date = #{tableDailyDate}
+		AND table_id = #{tableId}
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="insertStatus"
+		parameterType="com.example.GroupProject.dto.TableDailyDto">
+		INSERT INTO table_daily (
+		table_daily_date, table_id,
+		table_daily_status
+		) VALUES (
+		#{tableDailyDate},
+		#{tableId},
+		#{tableDailyStatus}
+		)
+	</insert>
+
+	<!-- 更新狀態 -->
+	<update id="updateStatus"
+		parameterType="com.example.GroupProject.dto.TableDailyDto">
+		UPDATE table_daily
+		SET table_daily_status =
+		#{tableDailyStatus}
+		WHERE table_daily_date = #{tableDailyDate}
+		AND
+		table_id = #{tableId}
+	</update>
+
+
+</mapper>

@@ -12,7 +12,7 @@
 
 		<result property="tableId" column="table_id" />    
 		<result property="tableStatus" column="table_status" />   
-		<result property="tableCapacity" column="capacity" />      
+		<result property="capacity" column="capacity" />      
 		<result property="tablePositionX" column="position_x" />      
 		<result property="tablePositionY" column="position_y" />    
 
@@ -43,7 +43,6 @@
 		SELECT capacity From tables
 		WHERE table_id = #{tableId}
 	</select>
-	
 	
 	<!-- 刪除桌位 -->
 	<delete id="delTableByTableId"
