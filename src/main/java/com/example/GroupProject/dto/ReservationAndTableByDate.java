@@ -24,21 +24,25 @@ public class ReservationAndTableByDate {
     
     private String reservationNote;      // VAR(200) 備註
     
+    private int childSeat;    // INT 兒童座椅數量
+    
     //桌位資訊
     
 	private String tableId;
 
 	private String tableStatus;
 
-	private int tableCapacity;
+	private int capacity;
 
 	public ReservationAndTableByDate() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public ReservationAndTableByDate(LocalDate reservationDate, String reservationPhone, LocalTime reservationTime,
 			String reservationName, int reservationCount, int reservationAdultCount, int reservationChildCount,
-			boolean reservationStatus, String reservationNote, String tableId, String tableStatus, int tableCapacity) {
+			boolean reservationStatus, String reservationNote, int childSeat, String tableId, String tableStatus,
+			int capacity) {
 		super();
 		this.reservationDate = reservationDate;
 		this.reservationPhone = reservationPhone;
@@ -49,9 +53,10 @@ public class ReservationAndTableByDate {
 		this.reservationChildCount = reservationChildCount;
 		this.reservationStatus = reservationStatus;
 		this.reservationNote = reservationNote;
+		this.childSeat = childSeat;
 		this.tableId = tableId;
 		this.tableStatus = tableStatus;
-		this.tableCapacity = tableCapacity;
+		this.capacity = capacity;
 	}
 
 	public LocalDate getReservationDate() {
@@ -126,6 +131,14 @@ public class ReservationAndTableByDate {
 		this.reservationNote = reservationNote;
 	}
 
+	public int getChildSeat() {
+		return childSeat;
+	}
+
+	public void setChildSeat(int childSeat) {
+		this.childSeat = childSeat;
+	}
+
 	public String getTableId() {
 		return tableId;
 	}
@@ -142,11 +155,12 @@ public class ReservationAndTableByDate {
 		this.tableStatus = tableStatus;
 	}
 
-	public int getTableCapacity() {
-		return tableCapacity;
+	public int getCapacity() {
+		return capacity;
 	}
 
-	public void setTableCapacity(int tableCapacity) {
-		this.tableCapacity = tableCapacity;
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
+
 }

@@ -13,6 +13,7 @@ import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.ReservationDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.ReservationAndTableByDateRes;
 import com.example.GroupProject.response.ReservationListRes;
 
 @Service
@@ -23,15 +24,6 @@ public class ReservationService {
 
 	@Autowired
 	private TablesDao tableDao;
-
-	/** 查詢全部訂位列表 */
-	@Transactional(readOnly = true)
-	public ReservationListRes getReservationList() {
-		return new ReservationListRes(//
-				ResCodeMessage.SUCCESS.getCode(), //
-				ResCodeMessage.SUCCESS.getMessage(), //
-				reservationDao.getReservationList());
-	}
 
 	/** 新增訂位 */
 	@Transactional(rollbackFor = Exception.class)
@@ -152,5 +144,32 @@ public class ReservationService {
 	        throw new RuntimeException(createRes.getCode() + createRes.getMessage());
 		}
 		return createRes;
+	}
+	/** 查詢全部訂位列表 */
+	@Transactional(readOnly = true)
+	public ReservationListRes getReservationList() {
+		return new ReservationListRes(//
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				reservationDao.getReservationList());
+	}
+	
+	/** 查詢一天的訂位資料(含桌位) */
+	@Transactional(rollbackFor = Exception.class)
+	public ReservationAndTableByDateRes findReservationsByDate(LocalDate reservationDate) {
+		return new ReservationAndTableByDateRes(//
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				reservationDao.findReservationsByDate(reservationDate));
+	}
+	
+	/** 查詢同一天某時段之資訊桌位、預約資訊 */
+	@Transactional(rollbackFor = Exception.class)
+	public ReservationAndTableByDateRes findTableStatusByTimeSlot(LocalDate reservationDate, //
+			LocalTime reservationTime) {
+		return new ReservationAndTableByDateRes(//
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				reservationDao.findTableStatusByTimeSlot(reservationDate,reservationTime));
 	}
 }

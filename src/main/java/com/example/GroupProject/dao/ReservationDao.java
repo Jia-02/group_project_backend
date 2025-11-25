@@ -46,5 +46,10 @@ public interface ReservationDao {
 			@Param("reservationTime") LocalTime reservationTime);
 	
 	//查詢一天的訂位資料(含桌位)
-	public List<ReservationAndTableByDate> findReservationsByDate(LocalDate date);
+	public List<ReservationAndTableByDate> findReservationsByDate(LocalDate reservationDate);
+	
+	//查詢同一天某時段之資訊桌位、預約資訊
+	public List<ReservationAndTableByDate> findTableStatusByTimeSlot(
+		    @Param("reservationDate") LocalDate reservationDate, 
+		    @Param("reservationTime") LocalTime reservationTime);
 }
