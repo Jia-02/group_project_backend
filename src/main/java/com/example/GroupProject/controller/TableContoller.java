@@ -12,6 +12,8 @@ import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.TableListRes;
 import com.example.GroupProject.service.TablesService;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin // 允許前端來源
 @RestController
 public class TableContoller {
@@ -20,7 +22,7 @@ public class TableContoller {
 	private TablesService tableService;
 	
 	@PostMapping(value = "table/add")
-	public BasicRes addTable(@RequestBody TablesDto table) {
+	public BasicRes addTable(@Valid @RequestBody TablesDto table) {
 		return tableService.addTable(table);
 	}
 	
@@ -35,10 +37,8 @@ public class TableContoller {
 	}
 	
 	@PostMapping(value = "table/update")
-	public BasicRes updateTable(@RequestBody TablesDto table) {
+	public BasicRes updateTable(@Valid @RequestBody TablesDto table) {
 		return tableService.updateTable(table);
 	}
-	
-	
 	
 }
