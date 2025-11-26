@@ -349,6 +349,8 @@ CREATE TABLE `tables` (
   `capacity` int NOT NULL DEFAULT '2',
   `position_x` int NOT NULL DEFAULT '0',
   `position_y` int NOT NULL DEFAULT '0',
+  `length_x` int DEFAULT '40',
+  `length_y` int DEFAULT '40',
   PRIMARY KEY (`table_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -359,7 +361,7 @@ CREATE TABLE `tables` (
 
 LOCK TABLES `tables` WRITE;
 /*!40000 ALTER TABLE `tables` DISABLE KEYS */;
-INSERT INTO `tables` VALUES ('A01','可預約',8,10,50),('A02','可預約',5,10,30),('A03','可預約',4,10,80),('A04','可預約',6,10,100);
+INSERT INTO `tables` VALUES ('A01','可預約',8,10,50,40,40),('A02','可預約',5,10,30,40,40),('A03','可預約',4,10,80,40,40),('A04','可預約',6,10,100,40,40);
 /*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,4 +424,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-26 10:30:25
+-- Dump completed on 2025-11-26 13:25:18
