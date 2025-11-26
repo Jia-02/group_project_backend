@@ -24,4 +24,9 @@ public interface CalendarDao {
 	public Calendar selectById(@Param("calendar_id") int calendar_id);
 
 	public List<Calendar> findActivitiesByDate(@Param("checkDate") LocalDateTime checkDate);
+
+	public List<Calendar> findActivitiesByDateRange(
+	        @Param("startDate") LocalDateTime startDate, 
+	        @Param("endDate") LocalDateTime endDate
+	    );
 }

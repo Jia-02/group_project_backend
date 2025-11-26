@@ -1,6 +1,8 @@
 package com.example.GroupProject.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,37 @@ public class CalendarController {
         }
         return "新增失敗。";
     }
+    // 2. 更新 (U - Update) - PUT /calendar
+    @PutMapping(value = "calendar/update") // 路徑: /calendar
+    public String updateCalendar(@RequestBody Calendar calendar) {
+        int rows = calendarDao.updateDataById(calendar);
+        if (rows > 0) {
+            return "更新成功，ID: " + calendar.getCalendar_id();
+        }
+        return "更新失敗，ID: " + calendar.getCalendar_id() + " 不存在。";
+    }
 
+    
+    // 3. 新增：查詢當天及後三天活動 - GET /calendar/upcoming
+    @GetMapping(value = "calendar/selectDate")
+    public List<Calendar> getUpcomingActivities() {
+        
+        // 1. 計算日期範圍
+        LocalDate today = LocalDate.now();
+        
+        // 範圍起始時間: 今天 00:00:00
+        LocalDateTime startDate = LocalDateTime.of(today, LocalTime.MIN);
+        
+        // 範圍結束時間: 今天 + 3 天的 23:59:59.999999999
+        // LocalTime.MAX 確保涵蓋當天的最後一毫秒
+        LocalDate endDateLimit = today.plusDays(3);
+        LocalDateTime endDate = LocalDateTime.of(endDateLimit, LocalTime.MAX);
+        
+        // 2. 呼叫 Dao 執行查詢
+        return calendarDao.findActivitiesByDateRange(startDate, endDate);
+    }
+    
+    
     // 2. 查詢 (R - Read by ID) - GET /calendar/{id}
     @GetMapping(value = "calendar/byId") // 路徑: /calendar/{calendar_id}
     public Calendar getCalendarById(@PathVariable("calendar_id") int calendar_id) {
@@ -53,15 +85,7 @@ public class CalendarController {
         return calendarDao.findActivitiesByDate(checkDate);
     }
     
-    // 3. 更新 (U - Update) - PUT /calendar
-    @PutMapping(value = "calendar/update") // 路徑: /calendar
-    public String updateCalendar(@RequestBody Calendar calendar) {
-        int rows = calendarDao.updateDataById(calendar);
-        if (rows > 0) {
-            return "更新成功，ID: " + calendar.getCalendar_id();
-        }
-        return "更新失敗，ID: " + calendar.getCalendar_id() + " 不存在。";
-    }
+    
     
     // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
     @DeleteMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}

@@ -28,9 +28,18 @@
 		calendar_photo = #{calendar_photo}		
 		where calendar_id = #{calendar_id}
 	</update>
+	
+	<select id="findActivitiesByDateRange"
+		resultType="com.example.GroupProject.dto.Calendar">
+		SELECT * FROM calendar
+		WHERE
+		calendar_start_date <![CDATA[ <= ]]> #{endDate}
+		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
+        </select>
+	
 
 	<select id="selectByIdList">
-		select * from calendarv where calendar_id = #{calendar_id}
+		select * from calendar where calendar_id = #{calendar_id}
 		<foreach item="idItem" collection="idList" open="and id in ("
 			separator="," close=")">
 			#{idItem}
