@@ -112,6 +112,7 @@
 		#{reservationDate}
 		AND reservation_phone = #{reservationPhone}
 	</delete>
+	
 
 	<!-- 查詢某一天之資訊桌位、預約資訊 -->
 	<select id="findReservationsByDate"

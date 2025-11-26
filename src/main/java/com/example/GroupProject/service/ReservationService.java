@@ -16,6 +16,7 @@ import com.example.GroupProject.dao.ReservationDao;
 import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.ReservationDto;
+import com.example.GroupProject.dto.TablesDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
@@ -119,7 +120,10 @@ public class ReservationService {
 	/** 刪除訂位 */
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes deleteReservation(LocalDate reservationDate, String reservationPhone) {
+		
 		int result = reservationDao.deleteReservation(reservationDate, reservationPhone);
+		
+		
 		if (result > 0) {
 			return new BasicRes(ResCodeMessage.SUCCESS.getCode(), //
 					ResCodeMessage.SUCCESS.getMessage());

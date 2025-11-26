@@ -12,7 +12,7 @@
 
 		<result property="tableId" column="table_id" />    
 		<result property="tableStatus" column="table_status" />   
-		<result property="capacity" column="capacity" />      
+		<result property="tableCapacity" column="capacity" />      
 		<result property="tablePositionX" column="position_x" />      
 		<result property="tablePositionY" column="position_y" />    
 		<result property="lengthX" column="length_x" />    
@@ -34,6 +34,7 @@
 	<select id="getTableList" resultMap="TableMap">
 		select * from tables
 	</select>
+	
 	
 	<!-- 透過id查詢桌位是否仍存在 -->
 	<select id="existsById" resultType="boolean">

@@ -27,6 +27,7 @@ public interface TablesDao {
 	
 	/** 更新桌位 */
 	public void updateByTableId(TablesDto table);
+	
 
 }
 	
