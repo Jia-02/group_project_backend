@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.ReservationAndTableByDate;
+import com.example.GroupProject.dto.ReservationAndTableByTime;
 import com.example.GroupProject.dto.ReservationDto;
+
 
 @Mapper
 public interface ReservationDao {
@@ -46,5 +48,10 @@ public interface ReservationDao {
 			@Param("reservationTime") LocalTime reservationTime);
 	
 	//查詢一天的訂位資料(含桌位)
-	public List<ReservationAndTableByDate> findReservationsByDate(LocalDate date);
+	public List<ReservationAndTableByDate> findReservationsByDate(LocalDate reservationDate);
+	
+	//查詢同一天某時段之資訊桌位、預約資訊
+	public List<ReservationAndTableByTime> findTableStatusByTimeSlot(
+		    @Param("reservationDate") LocalDate reservationDate, 
+		    @Param("reservationTime") LocalTime reservationTime);
 }

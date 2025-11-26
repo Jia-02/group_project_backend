@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.GroupProject.dto.TableDailyDto;
 import com.example.GroupProject.dto.TablesDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.TableListRes;
@@ -36,9 +37,16 @@ public class TableContoller {
 		return tableService.delTable(table);
 	}
 	
-	@PostMapping(value = "table/update")
-	public BasicRes updateTable(@Valid @RequestBody TablesDto table) {
-		return tableService.updateTable(table);
+	//新增桌位狀態
+	@PostMapping(value = "table/status/add")
+	public BasicRes insertStatus(@RequestBody TableDailyDto table) {
+		return tableService.insertStatus(table);
+	}
+	
+	//更新桌位狀態
+	@PostMapping(value = "table/status/update")
+	public BasicRes updateStatus(@RequestBody TableDailyDto table) {
+		return tableService.updateStatus(table);
 	}
 	
 }

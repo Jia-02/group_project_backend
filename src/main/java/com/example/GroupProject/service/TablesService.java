@@ -1,10 +1,15 @@
 package com.example.GroupProject.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.GroupProject.constants.ResCodeMessage;
+import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
+import com.example.GroupProject.dto.TableDailyDto;
 import com.example.GroupProject.dto.TablesDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.TableListRes;
@@ -14,6 +19,9 @@ public class TablesService {
 
 	@Autowired
 	private TablesDao tableDao;
+	
+	@Autowired
+	private TableDailyDao tableDailyDao;
 
 	// 新增桌位
 	public BasicRes addTable(TablesDto table) {
@@ -77,6 +85,7 @@ public class TablesService {
 
 	// 更新桌位
 	public BasicRes updateTable(TablesDto table) {
+<<<<<<< HEAD
 		
 		if(table.getTablePositionX() + table.getLengthX() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
@@ -116,9 +125,41 @@ public class TablesService {
 				}
 			}
 		}
+=======
+>>>>>>> 0cd5683bcb01e00661a6d032e76d4fbdd4548b01
 		tableDao.updateByTableId(table);
-
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
+
+    // 查某一天全部桌位的狀態
+    public List<TableDailyDto> getDailyStatus(LocalDate date) {
+        return tableDailyDao.getDailyStatus(date);
+    }
+
+    // 更新桌位狀態
+    public BasicRes updateStatus(TableDailyDto data) {
+        int updateStatusCount = tableDailyDao.updateStatus(data);
+        if(updateStatusCount < 0) {
+        	return new BasicRes( //
+        			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+        			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+        }
+        return new BasicRes( //
+        		ResCodeMessage.SUCCESS.getCode(), //
+        		ResCodeMessage.SUCCESS.getMessage());
+    }
+
+    // 新增桌位狀態
+    public BasicRes insertStatus(TableDailyDto data) {
+    	int insertStatusCount =tableDailyDao.insertStatus(data);
+        if(insertStatusCount < 0) {
+        return new BasicRes( //
+    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+    }
+    return new BasicRes( //
+    		ResCodeMessage.SUCCESS.getCode(), //
+    		ResCodeMessage.SUCCESS.getMessage());
+    }
 }

@@ -1,152 +1,52 @@
 package com.example.GroupProject.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
+
+import com.example.GroupProject.vo.ReservationVo;
 
 public class ReservationAndTableByDate {
 
-	//訂位資訊
-    private LocalDate reservationDate;   // DATE 預約日期
+	// 共同資訊
+    private String tableId;
+    private int capacity;
+    private boolean tableDailyStatus; // 當天是否開放
+    private List<ReservationVo> reservations; // 訂位列表
     
-    private String reservationPhone;     // VAR(45) 預約電話
-    
-    private LocalTime reservationTime;   // TIME 預約時間
-    
-    private String reservationName;      // VAR(100) 預約人姓名
-    
-    private int reservationCount;    // INT 用餐人數
-    
-    private int reservationAdultCount;    // INT 用餐大人人數
-    
-    private int reservationChildCount;    // INT 用餐小孩人數
-    
-    private boolean reservationStatus;      // TINYINT 預約狀態
-    
-    private String reservationNote;      // VAR(200) 備註
-    
-    //桌位資訊
-    
-	private String tableId;
-
-	private String tableStatus;
-
-	private int tableCapacity;
-
 	public ReservationAndTableByDate() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
-
-	public ReservationAndTableByDate(LocalDate reservationDate, String reservationPhone, LocalTime reservationTime,
-			String reservationName, int reservationCount, int reservationAdultCount, int reservationChildCount,
-			boolean reservationStatus, String reservationNote, String tableId, String tableStatus, int tableCapacity) {
+	public ReservationAndTableByDate(String tableId, int capacity, boolean tableDailyStatus,
+			List<ReservationVo> reservations) {
 		super();
-		this.reservationDate = reservationDate;
-		this.reservationPhone = reservationPhone;
-		this.reservationTime = reservationTime;
-		this.reservationName = reservationName;
-		this.reservationCount = reservationCount;
-		this.reservationAdultCount = reservationAdultCount;
-		this.reservationChildCount = reservationChildCount;
-		this.reservationStatus = reservationStatus;
-		this.reservationNote = reservationNote;
 		this.tableId = tableId;
-		this.tableStatus = tableStatus;
-		this.tableCapacity = tableCapacity;
+		this.capacity = capacity;
+		this.tableDailyStatus = tableDailyStatus;
+		this.reservations = reservations;
 	}
-
-	public LocalDate getReservationDate() {
-		return reservationDate;
-	}
-
-	public void setReservationDate(LocalDate reservationDate) {
-		this.reservationDate = reservationDate;
-	}
-
-	public String getReservationPhone() {
-		return reservationPhone;
-	}
-
-	public void setReservationPhone(String reservationPhone) {
-		this.reservationPhone = reservationPhone;
-	}
-
-	public LocalTime getReservationTime() {
-		return reservationTime;
-	}
-
-	public void setReservationTime(LocalTime reservationTime) {
-		this.reservationTime = reservationTime;
-	}
-
-	public String getReservationName() {
-		return reservationName;
-	}
-
-	public void setReservationName(String reservationName) {
-		this.reservationName = reservationName;
-	}
-
-	public int getReservationCount() {
-		return reservationCount;
-	}
-
-	public void setReservationCount(int reservationCount) {
-		this.reservationCount = reservationCount;
-	}
-
-	public int getReservationAdultCount() {
-		return reservationAdultCount;
-	}
-
-	public void setReservationAdultCount(int reservationAdultCount) {
-		this.reservationAdultCount = reservationAdultCount;
-	}
-
-	public int getReservationChildCount() {
-		return reservationChildCount;
-	}
-
-	public void setReservationChildCount(int reservationChildCount) {
-		this.reservationChildCount = reservationChildCount;
-	}
-
-	public boolean isReservationStatus() {
-		return reservationStatus;
-	}
-
-	public void setReservationStatus(boolean reservationStatus) {
-		this.reservationStatus = reservationStatus;
-	}
-
-	public String getReservationNote() {
-		return reservationNote;
-	}
-
-	public void setReservationNote(String reservationNote) {
-		this.reservationNote = reservationNote;
-	}
-
 	public String getTableId() {
 		return tableId;
 	}
-
 	public void setTableId(String tableId) {
 		this.tableId = tableId;
 	}
-
-	public String getTableStatus() {
-		return tableStatus;
+	public int getCapacity() {
+		return capacity;
+	}
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	public boolean isTableDailyStatus() {
+		return tableDailyStatus;
+	}
+	public void setTableDailyStatus(boolean tableDailyStatus) {
+		this.tableDailyStatus = tableDailyStatus;
+	}
+	public List<ReservationVo> getReservations() {
+		return reservations;
+	}
+	public void setReservations(List<ReservationVo> reservations) {
+		this.reservations = reservations;
 	}
 
-	public void setTableStatus(String tableStatus) {
-		this.tableStatus = tableStatus;
-	}
-
-	public int getTableCapacity() {
-		return tableCapacity;
-	}
-
-	public void setTableCapacity(int tableCapacity) {
-		this.tableCapacity = tableCapacity;
-	}
 }

@@ -22,9 +22,10 @@ public interface TablesDao {
 	/** 取得桌位容量人數大小 */
 	public int getTableCapacityById(@Param("tableId") String tableId);
     
-
+	/** 刪除桌位 */
 	public void delTableByTableId(TablesDto table);
 	
+	/** 更新桌位 */
 	public void updateByTableId(TablesDto table);
 
 }
