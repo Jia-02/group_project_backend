@@ -7,30 +7,32 @@
 <mapper namespace="com.example.GroupProject.dao.ReservationDao">
 
 
-<resultMap id="ReservationAndTableByDateResultMap"
-    type="com.example.GroupProject.dto.ReservationAndTableByDate">
-    <!-- 桌位資訊 -->
-    <id property="tableId" column="table_id" />
-    <result property="capacity" column="capacity" />
-    <result property="tableDailyStatus" column="table_daily_status" />
+	<resultMap id="ReservationVoResultMap" 
+	   type="com.example.GroupProject.vo.ReservationVo">
+		<result property="reservationPhone" column="reservation_phone" />
+		<result property="reservationTime" column="reservation_time" />
+		<result property="reservationName" column="reservation_name" />
+		<result property="reservationCount" column="reservation_count" />
+		<result property="reservationAdultCount"
+			column="reservation_adult_count" />
+		<result property="reservationChildCount"
+			column="reservation_child_count" />
+		<result property="reservationStatus"
+			column="reservation_status" />
+		<result property="reservationNote" column="reservation_note" />
+		<result property="childSeat" column="child_seat" />
+	</resultMap>
 
-    <!-- 訂位集合 -->
-    <collection property="reservations"
-        ofType="com.example.GroupProject.dto.ReservationDto">
-        <!-- 用複合 id -->
-        <id property="reservationDate" column="reservation_date" />
-        <id property="reservationPhone" column="reservation_phone" />
-        
-        <result property="reservationTime" column="reservation_time" />
-        <result property="reservationName" column="reservation_name" />
-        <result property="reservationCount" column="reservation_count" />
-        <result property="reservationAdultCount" column="reservation_adult_count" />
-        <result property="reservationChildCount" column="reservation_child_count" />
-        <result property="reservationStatus" column="reservation_status" />
-        <result property="reservationNote" column="reservation_note" />
-        <result property="childSeat" column="child_seat" />
-    </collection>
-</resultMap>
+	<resultMap id="ReservationAndTableByDateResultMap"
+		type="com.example.GroupProject.dto.ReservationAndTableByDate">
+		<id property="tableId" column="table_id" />
+		<result property="capacity" column="capacity" />
+		<result property="tableDailyStatus" column="table_daily_status" />
+
+		<collection property="reservations" ofType="ReservationVo"
+			resultMap="ReservationVoResultMap">
+		</collection>
+	</resultMap>
 
 
 	<!-- 新增訂位 -->
@@ -111,15 +113,13 @@
 		AND reservation_phone = #{reservationPhone}
 	</delete>
 
-     <!-- 查詢某一天之資訊桌位、預約資訊 -->
+	<!-- 查詢某一天之資訊桌位、預約資訊 -->
 	<select id="findReservationsByDate"
 		resultMap="ReservationAndTableByDateResultMap">
 		SELECT
 		t.table_id,
 		t.capacity,
-		COALESCE(d.table_daily_status,
-		1) AS table_daily_status,
-		r.reservation_date,
+		COALESCE(d.table_daily_status, 1) AS table_daily_status,
 		r.reservation_time,
 		r.reservation_phone,
 		r.reservation_name,
@@ -133,19 +133,18 @@
 		FROM tables t
 
 		LEFT JOIN table_daily d
-		ON t.table_id = d.table_id AND d.table_daily_date =
-		#{reservationDate}
+		ON t.table_id = d.table_id AND d.table_daily_date = #{reservationDate}
 
 		LEFT JOIN reservation r
-		ON t.table_id = r.table_id AND r.reservation_date =
-		#{reservationDate}
+		ON t.table_id = r.table_id AND r.reservation_date = #{reservationDate}
+
 		ORDER BY t.table_id, r.reservation_time
 	</select>
 
 
 	<!-- 查詢同一天某時段之資訊桌位、預約資訊 -->
 	<select id="findTableStatusByTimeSlot"
-		resultType="com.example.GroupProject.dto.ReservationAndTableByDate">
+		resultType="com.example.GroupProject.dto.ReservationAndTableByTime">
 		SELECT
 		t.table_id,
 		t.capacity,

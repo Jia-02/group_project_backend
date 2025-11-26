@@ -2,21 +2,22 @@ package com.example.GroupProject.dto;
 
 import java.util.List;
 
+import com.example.GroupProject.vo.ReservationVo;
+
 public class ReservationAndTableByDate {
 
 	// 共同資訊
     private String tableId;
     private int capacity;
     private boolean tableDailyStatus; // 當天是否開放
-    private List<ReservationDto> reservations; // 訂位列表
-    
+    private List<ReservationVo> reservations; // 訂位列表
     
 	public ReservationAndTableByDate() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	public ReservationAndTableByDate(String tableId, int capacity, boolean tableDailyStatus,
-			List<ReservationDto> reservations) {
+			List<ReservationVo> reservations) {
 		super();
 		this.tableId = tableId;
 		this.capacity = capacity;
@@ -41,10 +42,10 @@ public class ReservationAndTableByDate {
 	public void setTableDailyStatus(boolean tableDailyStatus) {
 		this.tableDailyStatus = tableDailyStatus;
 	}
-	public List<ReservationDto> getReservations() {
+	public List<ReservationVo> getReservations() {
 		return reservations;
 	}
-	public void setReservations(List<ReservationDto> reservations) {
+	public void setReservations(List<ReservationVo> reservations) {
 		this.reservations = reservations;
 	}
 

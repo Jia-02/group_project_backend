@@ -26,8 +26,10 @@ CREATE TABLE `calendar` (
   `calendar_id` int NOT NULL AUTO_INCREMENT,
   `calendar_title` varchar(60) DEFAULT NULL,
   `calendar_description` varchar(500) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `calendar_start_date` date DEFAULT NULL,
+  `calendar_end_date` date DEFAULT NULL,
+  `calendar_status` tinyint NOT NULL DEFAULT '1',
+  `calendar_photo` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`calendar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -277,7 +279,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-11-25','0912345675','12:00:00','小花',2,2,4,1,'嬰兒座椅',1,'A03'),('2025-11-25','0912345676','10:00:00','小王',2,2,4,0,'嬰兒座椅',1,'A01'),('2025-11-25','0912345677','14:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-11-25','0912345678','12:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02'),('2025-11-26','0912345674','17:30:00','小黃',2,2,4,0,'嬰兒座椅',1,'A04'),('2025-11-26','0912345675','17:30:00','小花',2,2,4,0,'嬰兒座椅',4,'A03');
+INSERT INTO `reservation` VALUES ('2025-11-26','0912345675','12:00:00','小花',2,2,4,1,'嬰兒座椅',1,'A03'),('2025-11-26','0912345676','10:00:00','小王',2,2,4,0,'嬰兒座椅',1,'A01'),('2025-11-26','0912345677','14:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-11-26','0912345678','12:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02'),('2025-11-27','0912345674','17:30:00','小黃',2,2,4,0,'嬰兒座椅',1,'A04'),('2025-11-27','0912345675','17:30:00','小花',2,2,4,0,'嬰兒座椅',4,'A03');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -330,7 +332,7 @@ CREATE TABLE `table_daily` (
 
 LOCK TABLES `table_daily` WRITE;
 /*!40000 ALTER TABLE `table_daily` DISABLE KEYS */;
-INSERT INTO `table_daily` VALUES ('2025-11-25',1,'A03'),('2025-11-25',0,'A04');
+INSERT INTO `table_daily` VALUES ('2025-11-25',1,'A03'),('2025-11-26',0,'A04');
 /*!40000 ALTER TABLE `table_daily` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-25 17:33:23
+-- Dump completed on 2025-11-26 10:30:25

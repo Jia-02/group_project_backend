@@ -19,6 +19,7 @@ import com.example.GroupProject.dto.ReservationDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
+import com.example.GroupProject.response.ReservationAndTableByTimeRes;
 import com.example.GroupProject.response.ReservationListRes;
 
 //使用排序
@@ -176,6 +177,7 @@ public class ReservationService {
 		return new ReservationAndTableByDateRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
+				reservationDate, //
 				reservationDao.findReservationsByDate(reservationDate));
 	}
 	
@@ -190,7 +192,7 @@ public class ReservationService {
 	
 	/** 查詢當下最接近的預約資訊 */
 	@Transactional(rollbackFor = Exception.class)
-	public ReservationAndTableByDateRes findTableStatusByNow() {
+	public ReservationAndTableByTimeRes findTableStatusByNow() {
 	    
 		//現在時間
 	    LocalDateTime now = LocalDateTime.now();
@@ -201,13 +203,13 @@ public class ReservationService {
 	    LocalTime queryTime = findCurrentOrPastSlot(now.toLocalTime(), SchedulTime); 
         System.out.println(queryTime);
 	    if (queryTime == null) {
-	         return new ReservationAndTableByDateRes(//
+	         return new ReservationAndTableByTimeRes(//
 	 	            ResCodeMessage.NOT_FOUND.getCode(), 
 		            ResCodeMessage.NOT_FOUND.getMessage());
 	    }
 	    
 	    // 執行資料庫查詢
-	    return new ReservationAndTableByDateRes(
+	    return new ReservationAndTableByTimeRes(
 	            ResCodeMessage.SUCCESS.getCode(), 
 	            ResCodeMessage.SUCCESS.getMessage(), 
 	            reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime));
@@ -248,9 +250,9 @@ public class ReservationService {
 	
 	/** 查詢同一天某時段之資訊桌位、預約資訊 */
 	@Transactional(rollbackFor = Exception.class)
-	public ReservationAndTableByDateRes findTableStatusByTimeSlot(LocalDate reservationDate, //
+	public ReservationAndTableByTimeRes findTableStatusByTimeSlot(LocalDate reservationDate, //
 			LocalTime reservationTime) {
-		return new ReservationAndTableByDateRes(//
+		return new ReservationAndTableByTimeRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
 				reservationDao.findTableStatusByTimeSlot(reservationDate,reservationTime));
