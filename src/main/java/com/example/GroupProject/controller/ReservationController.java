@@ -16,10 +16,9 @@ import com.example.GroupProject.request.ReservationDeleteReq;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
+import com.example.GroupProject.response.ReservationAndTableByTimeRes;
 import com.example.GroupProject.response.ReservationListRes;
 import com.example.GroupProject.service.ReservationService;
-
-import jakarta.validation.Valid;
 
 @CrossOrigin // 允許前端來源
 @RestController
@@ -40,7 +39,7 @@ public class ReservationController {
 		return reservationService.getReservationList();
 	}
 	
-    //顯示一天的訂位資料(含桌位)
+    //顯示一天的訂位資料(含桌位、狀態)
 	@GetMapping(value = "reservation/date_list")
 	public ReservationAndTableByDateRes findReservationsByDate(//
 			@RequestParam("reservation_date") LocalDate reservationDate) {
@@ -49,16 +48,22 @@ public class ReservationController {
 	
     //查詢同一天某時段之資訊桌位、預約資訊 
 	@GetMapping(value = "reservation/time_list")
-	public ReservationAndTableByDateRes findTableStatusByTimeSlot(//
+	public ReservationAndTableByTimeRes findTableStatusByTimeSlot(//
 			@RequestParam("reservation_date") LocalDate reservationDate, //
 			@RequestParam("reservation_time") LocalTime reservationTime
 			) {
 		return reservationService.findTableStatusByTimeSlot(reservationDate, reservationTime);
 	}
 	
+    //查詢當下資訊桌位、預約資訊 
+	@GetMapping(value = "reservation/now_time_list")
+	public ReservationAndTableByTimeRes findTableStatusByNow() {
+		return reservationService.findTableStatusByNow();
+	}
+	
 	//刪除訂位
     @PostMapping("reservation/delete")
-    public BasicRes deleteReservation(@Valid @RequestBody ReservationDeleteReq req) {
+    public BasicRes deleteReservation(@RequestBody ReservationDeleteReq req) {
         return reservationService.deleteReservation(req.getReservationDate(),req.getReservationPhone());
     }
     

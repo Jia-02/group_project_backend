@@ -1,21 +1,29 @@
 package com.example.GroupProject.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.ReservationDao;
+import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.ReservationDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
+import com.example.GroupProject.response.ReservationAndTableByTimeRes;
 import com.example.GroupProject.response.ReservationListRes;
 
+//使用排序
+@EnableScheduling
 @Service
 public class ReservationService {
 
@@ -24,6 +32,9 @@ public class ReservationService {
 
 	@Autowired
 	private TablesDao tableDao;
+	
+	@Autowired
+	private TableDailyDao tableDailyDao;
 
 	/** 新增訂位 */
 	@Transactional(rollbackFor = Exception.class)
@@ -48,7 +59,6 @@ public class ReservationService {
 		final int maxChildSeat = 5; // 店家總庫存數
 		if(childSeat > 0) {
 			int reservedSeats = reservationDao.sumChildSeatsByDateAndTime(date, time);
-			System.out.println(reservedSeats);
 			if (childSeat + reservedSeats > maxChildSeat) {
                 return new BasicRes(
     					ResCodeMessage.CHILD_SEAT_INSUFFICIENT.getCode(), //
@@ -69,6 +79,13 @@ public class ReservationService {
 		if (!tableDao.existsById(reservationDto.getTableId())) { //
 			return new BasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(), //
 					ResCodeMessage.TABLE_NOT_FOUND.getMessage());
+		}
+		
+		//檢查桌位狀態如果是未開放無法訂位
+		Integer tableStatus = tableDailyDao.getTableStatus(date, tableId);
+		if(tableStatus != null && tableStatus == 0) {
+			return new BasicRes(ResCodeMessage.TABLE_IS_NOT_OPEN.getCode(), //
+					ResCodeMessage.TABLE_IS_NOT_OPEN.getMessage());
 		}
 
 		// 檢查桌位容納數量 > 用餐人數
@@ -154,20 +171,88 @@ public class ReservationService {
 				reservationDao.getReservationList());
 	}
 	
-	/** 查詢一天的訂位資料(含桌位) */
+	/** 查詢一天的訂位資料(含桌位、桌位狀態) */
 	@Transactional(rollbackFor = Exception.class)
 	public ReservationAndTableByDateRes findReservationsByDate(LocalDate reservationDate) {
 		return new ReservationAndTableByDateRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
+				reservationDate, //
 				reservationDao.findReservationsByDate(reservationDate));
 	}
 	
+	private static final List<LocalTime> SchedulTime = Arrays.asList(
+	        LocalTime.of(10, 0, 0), 
+	        LocalTime.of(12, 0, 0), 
+	        LocalTime.of(14, 0, 0), 
+	        LocalTime.of(16, 0, 0), 
+	        LocalTime.of(18, 0, 0),
+	        LocalTime.of(20, 0, 0)
+	    );
+	
+	/** 查詢當下最接近的預約資訊 */
+	@Transactional(rollbackFor = Exception.class)
+	public ReservationAndTableByTimeRes findTableStatusByNow() {
+	    
+		//現在時間
+	    LocalDateTime now = LocalDateTime.now();
+	    //取日期
+	    LocalDate reservationDate = now.toLocalDate();
+
+	    // 呼叫方法判斷當前時段
+	    LocalTime queryTime = findCurrentOrPastSlot(now.toLocalTime(), SchedulTime); 
+        System.out.println(queryTime);
+	    if (queryTime == null) {
+	         return new ReservationAndTableByTimeRes(//
+	 	            ResCodeMessage.NOT_FOUND.getCode(), 
+		            ResCodeMessage.NOT_FOUND.getMessage());
+	    }
+	    
+	    // 執行資料庫查詢
+	    return new ReservationAndTableByTimeRes(
+	            ResCodeMessage.SUCCESS.getCode(), 
+	            ResCodeMessage.SUCCESS.getMessage(), 
+	            reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime));
+	}
+
+	
+	//私有方法查詢與現在時間最接近的時段
+	//假設10.00 11.30兩個時段，如果現在是10.30會顯示10點)
+	private LocalTime findCurrentOrPastSlot(LocalTime currentTime, List<LocalTime> fixedSlots) {
+	    
+		//設一個值存放最接近的時段
+	    LocalTime queryTime = null;
+
+	    for (LocalTime slot : fixedSlots) {
+	        // 當前(current) >= 時段起始 (slot)
+	        if (currentTime.isAfter(slot) || currentTime.equals(slot)) {
+	            queryTime = slot; // 暫存這個時段
+	        } else {
+	            break; 
+	        }
+	    }
+	    
+	    // 所有時段都已過或尚未開始
+	    if (queryTime == null) {
+	        return null;
+	    }
+	    
+	    // currentTime > lastSlot關店時間 (22:00)，queryTime 是 22:00
+	    LocalTime lastSlot = LocalTime.of(22, 0, 0);
+	    if (currentTime.isAfter(lastSlot) && queryTime.equals(lastSlot)) {
+	         return null;
+	    }
+	    return queryTime;
+	}
+
+	
+	
+	
 	/** 查詢同一天某時段之資訊桌位、預約資訊 */
 	@Transactional(rollbackFor = Exception.class)
-	public ReservationAndTableByDateRes findTableStatusByTimeSlot(LocalDate reservationDate, //
+	public ReservationAndTableByTimeRes findTableStatusByTimeSlot(LocalDate reservationDate, //
 			LocalTime reservationTime) {
-		return new ReservationAndTableByDateRes(//
+		return new ReservationAndTableByTimeRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
 				reservationDao.findTableStatusByTimeSlot(reservationDate,reservationTime));

@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.GroupProject.dto.TableDailyDto;
 import com.example.GroupProject.dto.TablesDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.TableListRes;
 import com.example.GroupProject.service.TablesService;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin // 允許前端來源
 @RestController
@@ -20,7 +23,7 @@ public class TableContoller {
 	private TablesService tableService;
 	
 	@PostMapping(value = "table/add")
-	public BasicRes addTable(@RequestBody TablesDto table) {
+	public BasicRes addTable(@Valid @RequestBody TablesDto table) {
 		return tableService.addTable(table);
 	}
 	
@@ -34,11 +37,16 @@ public class TableContoller {
 		return tableService.delTable(table);
 	}
 	
-	@PostMapping(value = "table/update")
-	public BasicRes updateTable(@RequestBody TablesDto table) {
-		return tableService.updateTable(table);
+	//新增桌位狀態
+	@PostMapping(value = "table/status/add")
+	public BasicRes insertStatus(@RequestBody TableDailyDto table) {
+		return tableService.insertStatus(table);
 	}
 	
-	
+	//更新桌位狀態
+	@PostMapping(value = "table/status/update")
+	public BasicRes updateStatus(@RequestBody TableDailyDto table) {
+		return tableService.updateStatus(table);
+	}
 	
 }

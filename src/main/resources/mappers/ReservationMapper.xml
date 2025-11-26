@@ -7,29 +7,31 @@
 <mapper namespace="com.example.GroupProject.dao.ReservationDao">
 
 
-	<!-- 對應 DTO 欄位的 resultMap -->
-	<resultMap id="ReservationMap"
-		type="com.example.GroupProject.dto.ReservationDto">
-
-		<!-- 複合主鍵 -->
-		<id property="reservationDate" column="reservation_date" />      <!-- DATE 預約日期 -->
-		<id property="reservationPhone" column="reservation_phone" />    <!-- VAR(45) 預約電話 -->
-
-		<!-- 一般欄位 -->
-		<result property="reservationTime" column="reservation_time" />      <!-- TIME 預約時間 -->
-		<result property="reservationName" column="reservation_name" />      <!-- VAR(100) 預約人姓名 -->
-		<result property="reservationCount" column="reservation_count" />    <!-- INT 用餐人數 -->
+	<resultMap id="ReservationVoResultMap" 
+	   type="com.example.GroupProject.vo.ReservationVo">
+		<result property="reservationPhone" column="reservation_phone" />
+		<result property="reservationTime" column="reservation_time" />
+		<result property="reservationName" column="reservation_name" />
+		<result property="reservationCount" column="reservation_count" />
 		<result property="reservationAdultCount"
-			column="reservation_adult_count" />    <!-- INT 用餐大人人數 -->
+			column="reservation_adult_count" />
 		<result property="reservationChildCount"
-			column="reservation_child_count" />    <!-- INT 用餐小孩人數 -->
+			column="reservation_child_count" />
 		<result property="reservationStatus"
-			column="reservation_status" />  <!-- TINYINT 預約狀態 -->
-		<result property="reservationNote" column="reservation_note" />      <!-- VAR(200) 備註 -->
-		<result property="childSeat" column="child_seat" />    <!-- INT 安全座椅數量 -->
-		<!-- 外鍵（FK） -->
-		<result property="tableId" column="table_id" />                        <!-- VAR(20) 桌位編號 -->
+			column="reservation_status" />
+		<result property="reservationNote" column="reservation_note" />
+		<result property="childSeat" column="child_seat" />
+	</resultMap>
 
+	<resultMap id="ReservationAndTableByDateResultMap"
+		type="com.example.GroupProject.dto.ReservationAndTableByDate">
+		<id property="tableId" column="table_id" />
+		<result property="capacity" column="capacity" />
+		<result property="tableDailyStatus" column="table_daily_status" />
+
+		<collection property="reservations" ofType="ReservationVo"
+			resultMap="ReservationVoResultMap">
+		</collection>
 	</resultMap>
 
 
@@ -86,7 +88,8 @@
 		FROM
 		reservation
 		WHERE
-		reservation_date = #{reservationDate}
+		reservation_date =
+		#{reservationDate}
 		AND reservation_time = #{reservationTime}
 	</select>
 
@@ -110,11 +113,13 @@
 		AND reservation_phone = #{reservationPhone}
 	</delete>
 
-	<!-- 查詢一天的已訂位之資訊(含桌位) -->
+	<!-- 查詢某一天之資訊桌位、預約資訊 -->
 	<select id="findReservationsByDate"
-		resultType="com.example.GroupProject.dto.ReservationAndTableByDate">
+		resultMap="ReservationAndTableByDateResultMap">
 		SELECT
-		r.reservation_date,
+		t.table_id,
+		t.capacity,
+		COALESCE(d.table_daily_status, 1) AS table_daily_status,
 		r.reservation_time,
 		r.reservation_phone,
 		r.reservation_name,
@@ -122,32 +127,30 @@
 		r.reservation_adult_count,
 		r.reservation_child_count,
 		r.reservation_status,
-		r.child_seat,
 		r.reservation_note,
-		r.table_id, 
-		t.table_id,
-		t.capacity, 
+		r.child_seat
 
-		CASE 
-		    WHEN r.reservation_status = TRUE THEN '已報到' 
-            WHEN r.reservation_status = FALSE THEN '已預約'
-            ELSE '已預約'
-		END AS table_status
+		FROM tables t
 
-		FROM
-		tables t
-		JOIN
-		reservation r ON t.table_id = r.table_id
-        WHERE
-		r.reservation_date = #{reservationDate}
-		ORDER BY
-		r.reservation_time ASC
+		LEFT JOIN table_daily d
+		ON t.table_id = d.table_id AND d.table_daily_date = #{reservationDate}
+
+		LEFT JOIN reservation r
+		ON t.table_id = r.table_id AND r.reservation_date = #{reservationDate}
+
+		ORDER BY t.table_id, r.reservation_time
 	</select>
-	
+
+
 	<!-- 查詢同一天某時段之資訊桌位、預約資訊 -->
 	<select id="findTableStatusByTimeSlot"
-		resultType="com.example.GroupProject.dto.ReservationAndTableByDate">
+		resultType="com.example.GroupProject.dto.ReservationAndTableByTime">
 		SELECT
+		t.table_id,
+		t.capacity,
+		COALESCE(d.table_daily_status,
+		1) AS
+		table_daily_status,
 		r.reservation_date,
 		r.reservation_time,
 		r.reservation_phone,
@@ -158,30 +161,35 @@
 		r.reservation_status,
 		r.child_seat,
 		r.reservation_note,
-		
-		t.table_id,
-		t.capacity, 
 
-		CASE 
-			WHEN r.table_id IS NOT NULL AND r.reservation_status = TRUE THEN '使用中'
-			WHEN r.table_id IS NOT NULL THEN '已預約'
-			
-			WHEN t.table_status = '未開放' THEN '未開放'
-			ELSE '可預約'
+		CASE
+		WHEN
+		COALESCE(d.table_daily_status, 1) = 0 THEN '未開放'
+		WHEN r.table_id
+		IS NOT
+		NULL AND r.reservation_status = TRUE THEN '使用中'
+		WHEN r.table_id
+		IS NOT
+		NULL THEN '已預約'
+		ELSE '可預約'
 		END AS table_status
 
-		FROM
-		tables t
-		LEFT JOIN
-		reservation r ON t.table_id = r.table_id
-		
-		AND
-		r.reservation_date = #{reservationDate}
-		AND 
-		r.reservation_time = #{reservationTime} 
+		FROM tables t
 
+		LEFT JOIN
+		table_daily d
+		ON t.table_id = d.table_id
+		AND d.table_daily_date =
+		#{reservationDate}
+
+		LEFT JOIN reservation r
+		ON t.table_id = r.table_id
+		AND r.reservation_date =
+		#{reservationDate}
+		AND r.reservation_time =
+		#{reservationTime}
 		ORDER BY
-		t.table_id ASC
+		t.table_id;
 	</select>
 
 </mapper>

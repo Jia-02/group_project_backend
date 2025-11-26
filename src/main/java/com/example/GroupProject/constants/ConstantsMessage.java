@@ -28,6 +28,18 @@ public class ConstantsMessage {
 	
 	public static final String QUESTION_OPTIONS_NAME_ERROR = "Question options name error!!";
 	
+	public static final String TABLE_CAPACITY_ERROR = "桌位容納人數錯誤";
+	
+	public static final String TABLE_ID_ERROR = "桌位id錯誤";
+	
+	public static final String TABLE_POSITION_ERROR = "桌位位置錯誤";
+	
+	public static final String TABLE_STATUS_ERROR = "桌位狀態錯誤";
+	
+	public static final String TABLE_LENGTH_X_ERROR = "桌位寬度錯誤";
+	
+	public static final String TABLE_LENGTH_Y_ERROR = "桌位長度錯誤";
+	
 	
 	
 }

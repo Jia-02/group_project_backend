@@ -26,8 +26,10 @@ CREATE TABLE `calendar` (
   `calendar_id` int NOT NULL AUTO_INCREMENT,
   `calendar_title` varchar(60) DEFAULT NULL,
   `calendar_description` varchar(500) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `calendar_start_date` date DEFAULT NULL,
+  `calendar_end_date` date DEFAULT NULL,
+  `calendar_status` tinyint NOT NULL DEFAULT '1',
+  `calendar_photo` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`calendar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -277,7 +279,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-12-15','0912345677','20:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-12-15','0912345678','20:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02');
+INSERT INTO `reservation` VALUES ('2025-11-26','0912345675','12:00:00','小花',2,2,4,1,'嬰兒座椅',1,'A03'),('2025-11-26','0912345676','10:00:00','小王',2,2,4,0,'嬰兒座椅',1,'A01'),('2025-11-26','0912345677','14:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-11-26','0912345678','12:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02'),('2025-11-27','0912345674','17:30:00','小黃',2,2,4,0,'嬰兒座椅',1,'A04'),('2025-11-27','0912345675','17:30:00','小花',2,2,4,0,'嬰兒座椅',4,'A03');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,6 +312,31 @@ LOCK TABLES `setting` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `table_daily`
+--
+
+DROP TABLE IF EXISTS `table_daily`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `table_daily` (
+  `table_daily_date` date NOT NULL,
+  `table_daily_status` tinyint NOT NULL DEFAULT '1',
+  `table_id` varchar(20) NOT NULL,
+  PRIMARY KEY (`table_daily_date`,`table_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `table_daily`
+--
+
+LOCK TABLES `table_daily` WRITE;
+/*!40000 ALTER TABLE `table_daily` DISABLE KEYS */;
+INSERT INTO `table_daily` VALUES ('2025-11-25',1,'A03'),('2025-11-26',0,'A04');
+/*!40000 ALTER TABLE `table_daily` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tables`
 --
 
@@ -322,6 +349,8 @@ CREATE TABLE `tables` (
   `capacity` int NOT NULL DEFAULT '2',
   `position_x` int NOT NULL DEFAULT '0',
   `position_y` int NOT NULL DEFAULT '0',
+  `length_x` int DEFAULT '40',
+  `length_y` int DEFAULT '40',
   PRIMARY KEY (`table_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -332,7 +361,7 @@ CREATE TABLE `tables` (
 
 LOCK TABLES `tables` WRITE;
 /*!40000 ALTER TABLE `tables` DISABLE KEYS */;
-INSERT INTO `tables` VALUES ('A01','已預約',8,10,50),('A02','可預約',5,10,30),('A03','已預約',4,10,80),('A04','已預約',2,10,100);
+INSERT INTO `tables` VALUES ('A01','可預約',8,10,50,40,40),('A02','可預約',5,10,30,40,40),('A03','可預約',4,10,80,40,40),('A04','可預約',6,10,100,40,40);
 /*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -395,4 +424,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-24 16:29:59
+-- Dump completed on 2025-11-26 13:25:18
