@@ -17,6 +17,26 @@ public class Calendar {
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime calendar_end_date;
+	
+	private Boolean calendar_status;
+	
+	private String calendar_photo;
+
+	public Boolean getCalendar_status() {
+		return calendar_status;
+	}
+
+	public void setCalendar_status(Boolean calendar_status) {
+		this.calendar_status = calendar_status;
+	}
+
+	public String getCalendar_photo() {
+		return calendar_photo;
+	}
+
+	public void setCalendar_photo(String calendar_photo) {
+		this.calendar_photo = calendar_photo;
+	}
 
 	public int getCalendar_id() {
 		return calendar_id;

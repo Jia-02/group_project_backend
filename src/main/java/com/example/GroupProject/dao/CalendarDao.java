@@ -1,5 +1,10 @@
 package com.example.GroupProject.dao;
 
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.Calendar;
@@ -14,5 +19,9 @@ public interface CalendarDao {
 	/* update */
 	public int updateDataById(Calendar calendar);
 	/* delete */
-	public void deleteById(@Param("calendar_id") int calendar_id);
+	public int deleteById(@Param("calendar_id") int calendar_id);
+	
+	public Calendar selectById(@Param("calendar_id") int calendar_id);
+
+	public List<Calendar> findActivitiesByDate(@Param("checkDate") LocalDateTime checkDate);
 }
