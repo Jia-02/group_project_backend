@@ -57,6 +57,7 @@
 	<select id="getReservationList"
 		resultType="com.example.GroupProject.dto.ReservationDto">
 		SELECT * FROM reservation
+		ORDER BY reservation_date ASC, reservation_time ASC;
 	</select>
 
 	<!-- 查詢一筆訂位資料 -->
