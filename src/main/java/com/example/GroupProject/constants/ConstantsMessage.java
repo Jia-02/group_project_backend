@@ -36,6 +36,10 @@ public class ConstantsMessage {
 	
 	public static final String TABLE_STATUS_ERROR = "桌位狀態錯誤";
 	
+	public static final String TABLE_LENGTH_X_ERROR = "桌位寬度錯誤";
+	
+	public static final String TABLE_LENGTH_Y_ERROR = "桌位長度錯誤";
+	
 	
 	
 }

@@ -19,6 +19,7 @@ public enum ResCodeMessage {
 	TABLE_CAPACITY_INSUFFICIENT(400, "桌位容納不下這個人數"), //
 	TABLE_ID_EXIST(400,"桌位ID已存在"),//
 	TABLE_POSITION_EXIST(400,"桌位位置已存在其他桌位"),//
+	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

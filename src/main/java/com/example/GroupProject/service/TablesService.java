@@ -17,7 +17,6 @@ public class TablesService {
 
 	// 新增桌位
 	public BasicRes addTable(TablesDto table) {
-		
 
 		for (TablesDto item : tableDao.getTableList()) {
 			// 迴圈檢查存在中的桌位ID是否有與新增的桌位ID重複
@@ -58,18 +57,19 @@ public class TablesService {
 
 	// list查詢
 	public TableListRes getTableList() {
-		
-		if(tableDao.getTableList().isEmpty()) {
-			return new TableListRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(), ResCodeMessage.TABLE_NOT_FOUND.getMessage());
+
+		if (tableDao.getTableList().isEmpty()) {
+			return new TableListRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
+					ResCodeMessage.TABLE_NOT_FOUND.getMessage());
 		}
-		
+
 		return new TableListRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
 				tableDao.getTableList());
 	}
 
 	// 刪除桌位
 	public BasicRes delTable(TablesDto table) {
-		
+
 		tableDao.delTableByTableId(table);
 
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
@@ -78,6 +78,44 @@ public class TablesService {
 	// 更新桌位
 	public BasicRes updateTable(TablesDto table) {
 		
+		if(table.getTablePositionX() + table.getLengthX() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+		
+		if(table.getTablePositionY() + table.getLengthY() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+
+		for (TablesDto item : tableDao.getTableList()) {
+			// 迴圈檢查該位置是否已存在桌位
+			if (item.getTablePositionX() >= table.getTablePositionX() && //
+					item.getTablePositionX() <= table.getTablePositionX() + table.getLengthX()
+					&& !(item.getTableId().equalsIgnoreCase(table.getTableId()))) {
+				if (item.getTablePositionY() >= table.getTablePositionY() && //
+						item.getTablePositionY() <= table.getTablePositionY() + table.getLengthY()) {
+					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
+							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
+				} else if (item.getTablePositionY() <= table.getTablePositionY() && //
+						item.getTablePositionY() + item.getLengthY() >= table.getTablePositionY()) {
+					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
+							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
+				}
+			} else if (item.getTablePositionX() <= table.getTablePositionX() && //
+					item.getTablePositionX() + item.getLengthX() >= table.getTablePositionX()
+					&& !(item.getTableId().equalsIgnoreCase(table.getTableId()))) {
+				if (item.getTablePositionY() >= table.getTablePositionY() && //
+						item.getTablePositionY() <= table.getTablePositionY() + table.getLengthY()) {
+					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
+							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
+				} else if (item.getTablePositionY() <= table.getTablePositionY() && //
+						item.getTablePositionY() + item.getLengthY() >= table.getTablePositionY()) {
+					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
+							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
+				}
+			}
+		}
 		tableDao.updateByTableId(table);
 
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
