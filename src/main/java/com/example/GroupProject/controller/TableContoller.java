@@ -44,14 +44,20 @@ public class TableContoller {
 	
 	//新增桌位狀態
 	@PostMapping(value = "table/status/add")
-	public BasicRes insertStatus(@RequestBody TableDailyDto table) {
-		return tableService.insertStatus(table);
+	public BasicRes insertTableStatus(@RequestBody TableDailyDto table) {
+		return tableService.insertTableStatus(table);
 	}
 	
 	//更新桌位狀態
 	@PostMapping(value = "table/status/update")
-	public BasicRes updateStatus(@RequestBody TableDailyDto table) {
-		return tableService.updateStatus(table);
+	public BasicRes updateTableStatus(@RequestBody TableDailyDto table) {
+		return tableService.updateTableStatus(table);
+	}
+	
+	//刪除桌位狀態
+	@PostMapping(value = "table/status/del")
+	public BasicRes delTableStatus(@RequestBody TableDailyDto table) {
+		return tableService.delTableStatus(table);
 	}
 	
 }

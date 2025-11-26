@@ -147,8 +147,8 @@ public class TablesService {
     }
 
     // 更新桌位狀態
-    public BasicRes updateStatus(TableDailyDto data) {
-        int updateStatusCount = tableDailyDao.updateStatus(data);
+    public BasicRes updateTableStatus(TableDailyDto data) {
+        int updateStatusCount = tableDailyDao.updateTableStatus(data);
         if(updateStatusCount < 0) {
         	return new BasicRes( //
         			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
@@ -160,9 +160,22 @@ public class TablesService {
     }
 
     // 新增桌位狀態
-    public BasicRes insertStatus(TableDailyDto data) {
-    	int insertStatusCount =tableDailyDao.insertStatus(data);
+    public BasicRes insertTableStatus(TableDailyDto data) {
+    	int insertStatusCount =tableDailyDao.insertTableStatus(data);
         if(insertStatusCount < 0) {
+        return new BasicRes( //
+    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+    }
+    return new BasicRes( //
+    		ResCodeMessage.SUCCESS.getCode(), //
+    		ResCodeMessage.SUCCESS.getMessage());
+    }
+    
+    //刪除桌位狀態
+    public BasicRes delTableStatus(TableDailyDto data) {
+    	int delTableStatusCount =tableDailyDao.delTableStatus(data);
+        if(delTableStatusCount < 0) {
         return new BasicRes( //
     			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
     			ResCodeMessage.ADD_INFO_FAILED.getMessage());

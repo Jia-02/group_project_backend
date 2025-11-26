@@ -20,8 +20,10 @@ public interface TableDailyDao {
 			@Param("tableId") String tableId
 			);
 
-	public int insertStatus(TableDailyDto tableDailyDto);
+	public int insertTableStatus(TableDailyDto tableDailyDto);
 
-	public int updateStatus(TableDailyDto tableDailyDto);
+	public int updateTableStatus(TableDailyDto tableDailyDto);
+	
+	public int delTableStatus(TableDailyDto tableDailyDto);
 
 }
