@@ -22,6 +22,14 @@ public enum ResCodeMessage {
 	TABLE_POSITION_EXIST(400,"桌位位置已存在其他桌位"),//
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	
+	//分類錯誤CATEGORY
+	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
+	CATEGORY_TYPE_ERROR(400, "菜單分類不可空白。"), //
+	CATEGORY_ALREADY_EXISTS(400, "菜單分類已存在。"), //
+	
+	//工作台錯誤WORKSTATION
+	WORKSTATION_ID_ERROR(400, "工作台ID不可小於0"), //
+	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
 	NOT_FOUND(404, "Not found!!"), //

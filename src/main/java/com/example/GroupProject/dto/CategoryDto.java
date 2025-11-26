@@ -2,8 +2,8 @@ package com.example.GroupProject.dto;
 
 public class CategoryDto {
 	
-	private int categoryId; //菜單分類
-	private String categoryType; //菜單種類
+	private int categoryId; //菜單id
+	private String categoryType; //菜單種類 熱食、飲料吧
 	private int workstationId; //工作台Id
 	
 	public int getCategoryId() {
