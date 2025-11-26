@@ -27,7 +27,7 @@
 	</select>
 	
 	<!-- 新增 -->
-	<insert id="insertStatus"
+	<insert id="insertTableStatus"
 		parameterType="com.example.GroupProject.dto.TableDailyDto">
 		INSERT INTO table_daily (
 		table_daily_date, table_id,
@@ -40,7 +40,7 @@
 	</insert>
 
 	<!-- 更新狀態 -->
-	<update id="updateStatus"
+	<update id="updateTableStatus"
 		parameterType="com.example.GroupProject.dto.TableDailyDto">
 		UPDATE table_daily
 		SET table_daily_status =
@@ -49,6 +49,14 @@
 		AND
 		table_id = #{tableId}
 	</update>
+	
+		<!-- 刪除狀態 -->
+	<delete id="delTableStatus"
+			parameterType="com.example.GroupProject.dto.TableDailyDto">
+		delete from table_daily
+		where table_id = #{tableId}
+		and table_daily_date = #{tableDailyDate}
+	</delete>
 
 
 </mapper>
