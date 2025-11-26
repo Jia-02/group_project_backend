@@ -25,6 +25,16 @@ public class TablesService {
 
 	// 新增桌位
 	public BasicRes addTable(TablesDto table) {
+		
+		if(table.getTablePositionX() + table.getLengthX() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+		
+		if(table.getTablePositionY() + table.getLengthY() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
 
 		for (TablesDto item : tableDao.getTableList()) {
 			// 迴圈檢查存在中的桌位ID是否有與新增的桌位ID重複
@@ -85,7 +95,7 @@ public class TablesService {
 
 	// 更新桌位
 	public BasicRes updateTable(TablesDto table) {
-<<<<<<< HEAD
+
 		
 		if(table.getTablePositionX() + table.getLengthX() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
@@ -125,8 +135,7 @@ public class TablesService {
 				}
 			}
 		}
-=======
->>>>>>> 0cd5683bcb01e00661a6d032e76d4fbdd4548b01
+		
 		tableDao.updateByTableId(table);
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
