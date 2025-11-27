@@ -1,5 +1,7 @@
 package com.example.GroupProject.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,5 +30,8 @@ public interface CategoryDao {
 	
 	//更新分類
 	public int updateCategory(CategoryDto categoryDto);
+	
+	//查詢分類列表
+	public List<CategoryDto> getCategoryList();
 
 }

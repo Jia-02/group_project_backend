@@ -52,6 +52,11 @@
 		</set>
 		WHERE category_id = #{categoryId}
 	</update>
+	
+		<!-- 查詢分類列表 -->
+	<select id="getCategoryList" resultType="com.example.GroupProject.dto.CategoryDto">
+		SELECT * FROM category
+	</select>
 
 
 </mapper>
