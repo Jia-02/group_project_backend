@@ -16,7 +16,6 @@ import com.example.GroupProject.dao.ReservationDao;
 import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.ReservationDto;
-import com.example.GroupProject.dto.TablesDto;
 import com.example.GroupProject.request.ReservationUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ReservationAndTableByDateRes;
