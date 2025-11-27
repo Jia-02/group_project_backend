@@ -6,46 +6,27 @@
 
 <mapper namespace="com.example.GroupProject.dao.CalendarDao">
 	<insert id="create">
-		<!-- 原生 SQL 語句 -->
-		<!-- #{變數名稱}: 對應到 Dao 的方法參數中 @Param("變數名稱") -->
 		insert into calendar (calendar_id, calendar_title,
 		calendar_description, calendar_start_date, calendar_end_date,calendar_status,calendar_photo)
 		values
-		(#{calendar_id}, #{calendar_title}, #{calendar_description},
-		#{calendar_start_date},
-		#{calendar_end_date},#{calendar_status},#{calendar_photo}
+		(#{calendarId}, #{calendarTitle}, #{calendarDescription},
+		#{calendarStartDate},
+		#{calendarEndDate},#{calendarStatus},#{calendarPhoto}
 		)
 	</insert>
 
-	<!-- 更新語法 -->
 	<update id="updateDataById">
 		update calendar set
-		calendar_title = #{calendar_title},
-		calendar_description = #{calendar_description},
-		calendar_start_date = #{calendar_start_date},
-		calendar_end_date = #{calendar_end_date},
-		calendar_status = #{calendar_status},
-		calendar_photo = #{calendar_photo}		
-		where calendar_id = #{calendar_id}
+		calendar_title = #{calendarTitle},
+		calendar_description = #{calendarDescription},
+		calendar_start_date = #{calendarStartDate},
+		calendar_end_date = #{calendarEndDate},
+		calendar_status = #{calendarStatus},
+		calendar_photo = #{calendarPhoto}		
+		where calendar_id = #{calendarId}
 	</update>
 	
-	<select id="findActivitiesByDateRange"
-		resultType="com.example.GroupProject.dto.Calendar">
-		SELECT * FROM calendar
-		WHERE
-		calendar_start_date <![CDATA[ <= ]]> #{endDate}
-		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
-        </select>
-	
-
-	<select id="selectByIdList">
-		select * from calendar where calendar_id = #{calendar_id}
-		<foreach item="idItem" collection="idList" open="and id in ("
-			separator="," close=")">
-			#{idItem}
-		</foreach>
-	</select>
-	<select id="findActivitiesByDateRange"
+    <select id="findActivitiesByDateRange"
 		resultType="com.example.GroupProject.dto.Calendar">
 		SELECT * FROM calendar
 		WHERE
@@ -53,7 +34,16 @@
 		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
     </select>
 	
-	<select id="findActivitiesByDate"
+
+	<select id="selectByIdList">
+		select * from calendar where calendar_id = #{calendarId} 
+		<foreach item="idItem" collection="idList" open="and id in ("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</select>
+    
+    <select id="findActivitiesByDate"
 		resultType="com.example.GroupProject.dto.Calendar">
 		SELECT * FROM calendar
 		WHERE
@@ -63,11 +53,16 @@
 		#{checkDate}
 	</select>
 	
-	<!-- 刪除語法 -->
 	<delete id="deleteById">
 		delete from calendar where calendar_id =
-		#{calendar_id}
-	</delete>
+		#{calendarId} </delete>
 
 
 </mapper>
+
+---
+
+### ⚠️ 重要提醒：重複 ID 與 DTO 欄位
+
+1.  **重複的 Select ID：** 您的原始 XML 中有兩個 `<select id="findActivitiesByDateRange">` 標籤。MyBatis 不允許 Mapper 中有重複的 ID。我已經刪除了第二個重複的標籤。請確保您的 `CalendarDao` 介面中只對應一個 `findActivitiesByDateRange` 方法。
+2.  **`deleteById` 參數：** `deleteById` 通常是透過 `@Param("calendar_id") int calendar_id` 傳入參數。這裡我將其改為 `#{calendarId}`，**這是假設您將 DAO 介面的 `@Param` 名稱也修正為 `calendarId`**，或者您直接傳遞 DTO 物件。如果 DAO 傳入的參數仍是 `@Param("calendar_id")`，您可能需要保留 `#{calendar_id}`。
