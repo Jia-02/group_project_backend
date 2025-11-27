@@ -46,9 +46,9 @@ public class CalendarController {
     public String updateCalendar(@RequestBody Calendar calendar) {
         int rows = calendarService.updateDataById(calendar);
         if (rows > 0) {
-            return "更新成功，ID: " + calendar.getCalendar_id();
+            return "更新成功，ID: " + calendar.getCalendarId();
         }
-        return "更新失敗，ID: " + calendar.getCalendar_id() + " 不存在。";
+        return "更新失敗，ID: " + calendar.getCalendarId() + " 不存在。";
     }
 
     
@@ -76,24 +76,24 @@ public class CalendarController {
     @GetMapping(value = "calendar/byId") // 路徑: /calendar/{calendar_id}
     public Calendar getCalendarById(@PathVariable("calendar_id") int calendar_id) {
         // 確保參數名稱與 @PathVariable 匹配
-        return calendarDao.selectById(calendar_id); 
+        return calendarService.getCalendarById(calendar_id); 
     }
     
-    @GetMapping(value = "calendar/byDate") 
-    public List<Calendar> getActivitiesByDate(
-        @RequestParam("date") 
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // 假設傳入完整的 ISO 8601 時間格式
-        LocalDateTime checkDate) {
-        
-        return calendarDao.findActivitiesByDate(checkDate);
-    }
+//    @GetMapping(value = "calendar/byDate") 
+//    public List<Calendar> getActivitiesByDate(
+//        @RequestParam("date") 
+//        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // 假設傳入完整的 ISO 8601 時間格式
+//        LocalDateTime checkDate) {
+//        
+//        return calendarDao.findActivitiesByDate(checkDate);
+//    }
     
     
     
     // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
     @DeleteMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}
     public String deleteCalendar(@PathVariable("calendar_id") int calendar_id) {
-        int rows = calendarDao.deleteById(calendar_id);
+        int rows = calendarService.deleteCalendar(calendar_id);
         if (rows > 0) {
             return "刪除成功，ID: " + calendar_id;
         }

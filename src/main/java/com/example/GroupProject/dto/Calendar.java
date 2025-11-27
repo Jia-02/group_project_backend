@@ -6,77 +6,61 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Calendar {
 
-	private int calendar_id;
-	
-	private String calendar_title;
-
-	private String calendar_description;
+	private int calendarId; 
+	private String calendarTitle;
+	private String calendarDescription;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime calendar_start_date;
+	private LocalDateTime calendarStartDate; // calendar_start_date -> calendarStartDate
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime calendar_end_date;
+	private LocalDateTime calendarEndDate;   // calendar_end_date -> calendarEndDate
 	
-	private Boolean calendar_status;
+	private Boolean calendarStatus;
+	private String calendarPhoto;
+	public int getCalendarId() {
+		return calendarId;
+	}
+	public void setCalendarId(int calendarId) {
+		this.calendarId = calendarId;
+	}
+	public String getCalendarTitle() {
+		return calendarTitle;
+	}
+	public void setCalendarTitle(String calendarTitle) {
+		this.calendarTitle = calendarTitle;
+	}
+	public String getCalendarDescription() {
+		return calendarDescription;
+	}
+	public void setCalendarDescription(String calendarDescription) {
+		this.calendarDescription = calendarDescription;
+	}
+	public LocalDateTime getCalendarStartDate() {
+		return calendarStartDate;
+	}
+	public void setCalendarStartDate(LocalDateTime calendarStartDate) {
+		this.calendarStartDate = calendarStartDate;
+	}
+	public LocalDateTime getCalendarEndDate() {
+		return calendarEndDate;
+	}
+	public void setCalendarEndDate(LocalDateTime calendarEndDate) {
+		this.calendarEndDate = calendarEndDate;
+	}
+	public Boolean getCalendarStatus() {
+		return calendarStatus;
+	}
+	public void setCalendarStatus(Boolean calendarStatus) {
+		this.calendarStatus = calendarStatus;
+	}
+	public String getCalendarPhoto() {
+		return calendarPhoto;
+	}
+	public void setCalendarPhoto(String calendarPhoto) {
+		this.calendarPhoto = calendarPhoto;
+	}
 	
-	private String calendar_photo;
-
-	public Boolean getCalendar_status() {
-		return calendar_status;
-	}
-
-	public void setCalendar_status(Boolean calendar_status) {
-		this.calendar_status = calendar_status;
-	}
-
-	public String getCalendar_photo() {
-		return calendar_photo;
-	}
-
-	public void setCalendar_photo(String calendar_photo) {
-		this.calendar_photo = calendar_photo;
-	}
-
-	public int getCalendar_id() {
-		return calendar_id;
-	}
-
-	public void setCalendar_id(int calendar_id) {
-		this.calendar_id = calendar_id;
-	}
-
-	public String getCalendar_title() {
-		return calendar_title;
-	}
-
-	public void setCalendar_title(String calendar_title) {
-		this.calendar_title = calendar_title;
-	}
-
-	public String getCalendar_description() {
-		return calendar_description;
-	}
-
-	public void setCalendar_description(String calendar_description) {
-		this.calendar_description = calendar_description;
-	}
-
-	public LocalDateTime getCalendar_start_date() {
-		return calendar_start_date;
-	}
-
-	public void setCalendar_start_date(LocalDateTime calendar_start_date) {
-		this.calendar_start_date = calendar_start_date;
-	}
-
-	public LocalDateTime getCalendar_end_date() {
-		return calendar_end_date;
-	}
-
-	public void setCalendar_end_date(LocalDateTime calendar_end_date) {
-		this.calendar_end_date = calendar_end_date;
-	}
 	
 	
 }

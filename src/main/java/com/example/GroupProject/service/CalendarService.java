@@ -23,7 +23,21 @@ public class CalendarService {
     
     // --- 創建方法 (包含驗證邏輯) ---
     public BasicRes create(Calendar calendar) {
+    	
+    	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
+        if (calendar.getCalendarTitle().trim().isEmpty()) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+                "活動標題不得為空。");
+        }
+        
+        // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
+        if (calendar.getCalendarStartDate().isAfter(calendar.getCalendarEndDate())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+                ResCodeMessage.CALENDAR_DATE_ERROR.getMessage()); 
+        }
+    	
     	// 執行資料庫操作 (回傳 int)
+        // 注意：DAO 呼叫中的參數 (calendar) 會自動使用 DTO 的新 Getter 來取值
         int rows = calendarDao.create(calendar); 
 
         if (rows > 0) {
@@ -32,19 +46,7 @@ public class CalendarService {
         } else {
             // 失敗：例如 ID 已存在或資料庫錯誤
             return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(), "新增失敗，請檢查數據。");
-        }    
-//    	// 1. 驗證：標題不得為空
-//        if (calendar.getCalendar_title().trim().isEmpty()) {
-//            return  new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
-//					ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
-//        }
-//        // 2. 驗證：開始時間晚於結束時間
-//        if (calendar.getCalendar_start_date().isAfter(calendar.getCalendar_end_date())) {
-//        	return  new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
-//					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage()); 
-//        }
-//        
-//        return calendarDao.create(calendar);
+        } 
     }
     
     // --- 查詢當天及後三天活動 (邏輯從 Controller 移入) ---
@@ -61,23 +63,27 @@ public class CalendarService {
     
     public int updateDataById(Calendar calendar) {
         // 假設已經有狀態檢查邏輯
-    	// 1. 驗證：標題不得為空
-        if (calendar.getCalendar_title().trim().isEmpty()) {
+    	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
+        if (calendar.getCalendarTitle().trim().isEmpty()) {
             return -1; 
         }
-        // 2. 驗證：開始時間晚於結束時間
-        if (calendar.getCalendar_start_date().isAfter(calendar.getCalendar_end_date())) {
-        		return -2; 
+        // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
+        if (calendar.getCalendarStartDate().isAfter(calendar.getCalendarEndDate())) {
+            return -2; 
         }
+        
+        // DAO 呼叫保持不變，因為參數是 DTO 物件
         return calendarDao.updateDataById(calendar);
     }
 
-    public Calendar getCalendarById(int calendar_id) {
-        return calendarDao.selectById(calendar_id);
+    public Calendar getCalendarById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
+    	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
+        return calendarDao.selectById(calendarId); 
     }
 
-    public int deleteCalendar(int calendar_id) {
-        return calendarDao.deleteById(calendar_id);
+    public int deleteCalendar(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
+    	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
+        return calendarDao.deleteById(calendarId);
     }
+    
 }
-
