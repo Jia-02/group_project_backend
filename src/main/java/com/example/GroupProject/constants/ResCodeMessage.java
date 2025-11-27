@@ -22,11 +22,11 @@ public enum ResCodeMessage {
 	TABLE_POSITION_EXIST(400,"桌位位置已存在其他桌位"),//
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	
-<<<<<<< HEAD
+
 	//活動錯誤
 	CALENDAR_DATE_ERROR(400,"Calendar date error!!"),//
 	CALENDAR_NOT_FOUND(400,"Calendar 沒填寫!!"),//
-=======
+
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
 	CATEGORY_TYPE_ERROR(400, "菜單分類不可空白。"), //
@@ -40,7 +40,6 @@ public enum ResCodeMessage {
 	
 	//餐點錯誤
 	
->>>>>>> fa14f799924da63e104d512e1bd7ad67399860f5
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
