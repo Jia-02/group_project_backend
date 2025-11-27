@@ -22,6 +22,10 @@ public enum ResCodeMessage {
 	TABLE_POSITION_EXIST(400,"桌位位置已存在其他桌位"),//
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	
+	//活動錯誤
+	CALENDAR_DATE_ERROR(400,"Calendar date error!!"),//
+	CALENDAR_NOT_FOUND(400,"Calendar 沒填寫!!"),//
+	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
 	NOT_FOUND(404, "Not found!!"), //

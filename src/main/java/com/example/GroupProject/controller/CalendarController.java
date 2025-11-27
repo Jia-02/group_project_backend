@@ -14,34 +14,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GroupProject.dao.CalendarDao;
 import com.example.GroupProject.dto.Calendar;
+import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.service.CalendarService;
 
 @CrossOrigin // 允許前端來源
 @RestController
 
 public class CalendarController {
+	
+	@Autowired
+	private CalendarService calendarService;
     
     @Autowired
     private CalendarDao calendarDao; // 假設您直接使用 DAO
 
     // 1. 創建 (C - Create) - POST /calendar
     @PostMapping(value = "calendar/create") // 路徑: /calendar
-    public String createCalendar(@RequestBody Calendar calendar) {
-        int rows = calendarDao.create(calendar);
-        if (rows > 0) {
-            return "新增成功，ID: " + calendar.getCalendar_id(); // 假設 MyBatis 會回寫 ID
-        }
-        return "新增失敗。";
+    public BasicRes createCalendar(@RequestBody Calendar calendar) {
+    		return calendarService.create(calendar);
+        
     }
+    
+    
     // 2. 更新 (U - Update) - PUT /calendar
     @PutMapping(value = "calendar/update") // 路徑: /calendar
     public String updateCalendar(@RequestBody Calendar calendar) {
-        int rows = calendarDao.updateDataById(calendar);
+        int rows = calendarService.updateDataById(calendar);
         if (rows > 0) {
             return "更新成功，ID: " + calendar.getCalendar_id();
         }
