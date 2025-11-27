@@ -60,13 +60,39 @@ public class ProductService {
 		}
 	}
 
-	// 查看商品
+	// 查看商品 (管理者)
 	@Transactional(rollbackFor = Exception.class)
 	public ProductRes getProductList(int categoryId) {
+		
+		// 分類ID不存在
+		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+			return new ProductRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+		
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
 				productDao.getProductList(categoryId));
 	}
+	
+	//查看商品(點餐時)-不顯示active=0
+	@Transactional(rollbackFor = Exception.class)
+	public ProductRes getUserProductList(int categoryId) {
+		
+		// 分類ID不存在
+		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+			return new ProductRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+		
+		return new ProductRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				productDao.getUserProductList(categoryId));
+	}
+	
 
 }

@@ -25,10 +25,16 @@ public class ProductController {
 		return productService.addProduct(dto);
 	}
 	
-	//查看商品列表
+	//查看商品列表(管理者)
 	@GetMapping(value = "product/list")
-	public ProductRes getProductList(@RequestParam("category_id") int categoryId){
+	public ProductRes getProductList(@RequestParam("categoryId") int categoryId){
 		return productService.getProductList(categoryId);
+	}
+	
+	//查看商品列表(使用者)
+	@GetMapping(value = "product/list/user")
+	public ProductRes getUserProductList(@RequestParam("categoryId") int categoryId){
+		return productService.getUserProductList(categoryId);
 	}
 	
 	

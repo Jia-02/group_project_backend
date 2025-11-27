@@ -25,4 +25,19 @@
 		SELECT * FROM product WHERE category_id = #{categoryId}
 	</select>
 
+	<select id="getUserProductList"
+		resultType="com.example.GroupProject.dto.ProductDto">
+		SELECT product_id,
+		product_name,
+		product_price,
+		product_active,
+		product_description,
+		image_url,
+		product_note,
+		category_id
+		FROM product
+		WHERE category_id = #{categoryId}
+		AND product_active = 1
+	</select>
+
 </mapper>
