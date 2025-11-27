@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.CategoryDao">
+
+	<!-- 新增分類 -->
+	<insert id="addCategory"
+		parameterType="com.example.GroupProject.dto.CategoryDto">
+		INSERT INTO category (category_type, workstation_id)
+		VALUES (#{categoryType}, #{workstationId})
+	</insert>
+
+	<!-- 確認分類是否已存在 -->
+	<select id="checkCategoryExists" resultType="boolean">
+		SELECT
+		COUNT(*) > 0
+		FROM category
+		WHERE category_type = #{categoryType}
+	</select>
+
+	<!-- 刪除分類 -->
+	<delete id="delCategoryById"
+		parameterType="com.example.GroupProject.dto.CategoryDto">
+		DELETE FROM category
+		WHERE category_id = #{categoryId}
+	</delete>
+
+	<!-- 使用中的分類 -->
+	<select id="checkCategoryUsed" resultType="int">
+		SELECT COUNT(*) FROM
+		product WHERE category_id = #{categoryId}
+	</select>
+
+    <!-- 分類id存在與否 -->
+	<select id="checkCategoryExist" resultType="int">
+		SELECT COUNT(*) FROM category WHERE category_id = #{categoryId}
+	</select>
+
+	<!-- 透過分類id更新，可更新type或工作台id -->
+	<update id="updateCategory"
+		parameterType="com.example.GroupProject.dto.CategoryDto">
+		UPDATE category
+		<set>
+			<if test="categoryType != null and categoryType != ''">
+				category_type = #{categoryType},
+			</if>
+			<if test="workstationId != null and workstationId > 0">
+				workstation_id = #{workstationId},
+			</if>
+		</set>
+		WHERE category_id = #{categoryId}
+	</update>
+
+
+</mapper>
