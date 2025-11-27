@@ -12,36 +12,52 @@ import com.example.GroupProject.response.BasicRes;
 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryDao categoryDao;
-	
+
+	/** 私有共同判斷輸入值 */
+	private BasicRes validateCategory(CategoryDto dto) {
+
+		// 餐點分類不可 null，且至少非一個空白字元
+		if (!StringUtils.hasText(dto.getCategoryType())) {
+			return new BasicRes(ResCodeMessage.CATEGORY_TYPE_ERROR.getCode(),
+					ResCodeMessage.CATEGORY_TYPE_ERROR.getMessage());
+		}
+		// 工作台 id 必須大於 0
+		if (dto.getWorkstationId() <= 0) {
+			return new BasicRes(ResCodeMessage.WORKSTATION_ID_ERROR.getCode(),
+					ResCodeMessage.WORKSTATION_ID_ERROR.getMessage());
+		}
+		//判斷工作台是否存在 - 等待創完工作台解鎖
+//		if (dto.getWorkstationId() != null) {
+//		    int exist = workstationDao.checkWorkstationExist(dto.getWorkstationId());
+//		    if (exist == 0) {
+//		        return new BasicRes(
+//		            ResCodeMessage.WORKSTATION_NOT_FOUND.getCode(),
+//		            ResCodeMessage.WORKSTATION_NOT_FOUND.getMessage()
+//		        );
+//		    }
+//		}
+		return null;
+	}
+
 	/** 新增分類 */
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addCategory(CategoryDto dto) {
-		
-		//餐點分類不可null，且至少非一個空白字元
-		if(!StringUtils.hasText(dto.getCategoryType())) {
-			return new BasicRes(//
-					ResCodeMessage.CATEGORY_TYPE_ERROR.getCode(), //
-					ResCodeMessage.CATEGORY_TYPE_ERROR.getMessage());
+
+		BasicRes validateRes = validateCategory(dto);
+		if (validateRes != null) {
+			return validateRes;
 		}
 		
-		//工作台id小於0
-		if(dto.getWorkstationId() <= 0) {
-			return new BasicRes(//
-					ResCodeMessage.WORKSTATION_ID_ERROR.getCode(), //
-					ResCodeMessage.WORKSTATION_ID_ERROR.getMessage());
+		// 不可重複輸入同名稱之分類
+		if (categoryDao.checkCategoryExists(dto.getCategoryType(), dto.getWorkstationId())) {
+			return new BasicRes(ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(),
+					ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
 		}
-		
-		//不可重複輸入同名稱之分類
-	     if (categoryDao.checkCategoryExists(dto.getCategoryType(), dto.getWorkstationId())) {
-	         return new BasicRes(
-						ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(), //
-						ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
-	     }
-		
-		//成功通過判斷後新增分類
+
+		// 成功通過判斷後新增分類
 		int result = categoryDao.addCategory(dto);
 		if (result > 0) {
 			return new BasicRes(//
@@ -53,11 +69,25 @@ public class CategoryService {
 					ResCodeMessage.CREATE_CATEGORY_FAILED.getMessage());
 		}
 	}
-	
+
 	/** 刪除分類 */
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes delCategoryById(CategoryDto dto) {
-		//成功通過判斷後新增分類
+
+		// 分類ID不存在
+		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+			return new BasicRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		// 於商品中使用的分類不可刪除
+		if (categoryDao.checkCategoryUsed(dto.getCategoryId()) > 0) {
+			return new BasicRes(//
+					ResCodeMessage.CATEGORY_IS_USED.getCode(), //
+					ResCodeMessage.CATEGORY_IS_USED.getMessage());
+		}
+		// 成功通過判斷後刪除
 		int result = categoryDao.delCategoryById(dto);
 		if (result > 0) {
 			return new BasicRes(//
@@ -69,5 +99,33 @@ public class CategoryService {
 					ResCodeMessage.CREATE_CATEGORY_FAILED.getMessage());
 		}
 	}
-	
+
+	/** 更新分類 */
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes updateCategory(CategoryDto dto) {
+
+		// 分類ID不存在
+		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+			return new BasicRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		BasicRes validateRes = validateCategory(dto);
+		if (validateRes != null) {
+			return validateRes;
+		}
+
+		int result = categoryDao.updateCategory(dto);
+		if (result > 0) {
+			return new BasicRes(//
+					ResCodeMessage.SUCCESS.getCode(), //
+					ResCodeMessage.SUCCESS.getMessage());
+		} else {
+			return new BasicRes(//
+					ResCodeMessage.CREATE_CATEGORY_FAILED.getCode(), //
+					ResCodeMessage.CREATE_CATEGORY_FAILED.getMessage());
+		}
+	}
+
 }

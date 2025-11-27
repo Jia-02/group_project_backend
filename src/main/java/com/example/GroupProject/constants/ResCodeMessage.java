@@ -26,9 +26,15 @@ public enum ResCodeMessage {
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
 	CATEGORY_TYPE_ERROR(400, "菜單分類不可空白。"), //
 	CATEGORY_ALREADY_EXISTS(400, "菜單分類已存在。"), //
+	CATEGORY_IS_USED(400, "菜單分類使用中。"), //
+	CATEGORY_IS_NOT_FOUND(400, "菜單分類ID找不到。"), //
 	
 	//工作台錯誤WORKSTATION
 	WORKSTATION_ID_ERROR(400, "工作台ID不可小於0"), //
+	WORKSTATION_NOT_FOUND(400, "工作台不存在"), //
+	
+	//餐點錯誤
+	
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

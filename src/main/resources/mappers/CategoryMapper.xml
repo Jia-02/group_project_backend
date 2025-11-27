@@ -27,8 +27,19 @@
 		WHERE category_id = #{categoryId}
 	</delete>
 
-	<!-- 更新分類，可更新type或工作台id -->
-	<update id="updateCategoryById"
+	<!-- 使用中的分類 -->
+	<select id="checkCategoryUsed" resultType="int">
+		SELECT COUNT(*) FROM
+		product WHERE category_id = #{categoryId}
+	</select>
+
+    <!-- 分類id存在與否 -->
+	<select id="checkCategoryExist" resultType="int">
+		SELECT COUNT(*) FROM category WHERE category_id = #{categoryId}
+	</select>
+
+	<!-- 透過分類id更新，可更新type或工作台id -->
+	<update id="updateCategory"
 		parameterType="com.example.GroupProject.dto.CategoryDto">
 		UPDATE category
 		<set>

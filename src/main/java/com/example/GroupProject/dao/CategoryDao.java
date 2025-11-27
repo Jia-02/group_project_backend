@@ -20,7 +20,13 @@ public interface CategoryDao {
 	//刪除分類
 	public int delCategoryById(CategoryDto categoryDto);
 	
+	//使用中的分類
+	public int checkCategoryUsed(@Param("categoryId") int categoryId);
+	
+	//分類ID是否存在
+	public int checkCategoryExist(@Param("categoryId") int categoryId);
+	
 	//更新分類
-	public int updateCategoryById(CategoryDto categoryDto);
+	public int updateCategory(CategoryDto categoryDto);
 
 }

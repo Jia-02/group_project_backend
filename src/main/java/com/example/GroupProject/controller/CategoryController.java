@@ -22,5 +22,16 @@ public class CategoryController {
 	public BasicRes addTable(@RequestBody CategoryDto categoryDto) {
 		return categoryService.addCategory(categoryDto);
 	}
-
+	
+	//刪除分類
+	@PostMapping(value = "category/del")
+	public BasicRes delCategoryById(@RequestBody CategoryDto categoryDto) {
+		return categoryService.delCategoryById(categoryDto);
+	}
+	
+	//更新分類
+	@PostMapping(value = "category/update")
+	public BasicRes updateCategory(@RequestBody CategoryDto categoryDto) {
+		return categoryService.updateCategory(categoryDto);
+	}
 }
