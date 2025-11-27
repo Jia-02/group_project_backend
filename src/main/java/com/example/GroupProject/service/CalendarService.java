@@ -49,13 +49,19 @@ public class CalendarService {
         } 
     }
     
-    // --- 查詢當天及後三天活動 (邏輯從 Controller 移入) ---
+ // ⭐ 查詢當天及後三天活動的核心邏輯 ⭐
     public List<Calendar> getUpcomingActivities() {
+        // 1. 取得今天日期
         LocalDate today = LocalDate.now();
+        
+        // 2. 範圍起始時間: 今天 00:00:00
         LocalDateTime startDate = LocalDateTime.of(today, LocalTime.MIN);
+        
+        // 3. 範圍結束時間: 今天 + 3 天的 23:59:59.999999999
         LocalDate endDateLimit = today.plusDays(3);
         LocalDateTime endDate = LocalDateTime.of(endDateLimit, LocalTime.MAX);
         
+        // 4. 呼叫 DAO 執行查詢
         return calendarDao.findActivitiesByDateRange(startDate, endDate);
     }
     

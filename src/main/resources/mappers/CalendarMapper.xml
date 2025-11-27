@@ -45,15 +45,24 @@
 			#{idItem}
 		</foreach>
 	</select>
+	<select id="findActivitiesByDateRange"
+		resultType="com.example.GroupProject.dto.Calendar">
+		SELECT * FROM calendar
+		WHERE
+		calendar_start_date <![CDATA[ <= ]]> #{endDate}
+		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
+    </select>
+	
 	<select id="findActivitiesByDate"
 		resultType="com.example.GroupProject.dto.Calendar">
-		SELECT * 	FROM calendar
+		SELECT * FROM calendar
 		WHERE
 		calendar_start_date <![CDATA[ <= ]]>
 		#{checkDate}
 		AND calendar_end_date <![CDATA[ >= ]]>
 		#{checkDate}
 	</select>
+	
 	<!-- 刪除語法 -->
 	<delete id="deleteById">
 		delete from calendar where calendar_id =
