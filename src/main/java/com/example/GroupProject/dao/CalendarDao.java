@@ -18,9 +18,9 @@ public interface CalendarDao {
 	/* update */
 	public int updateDataById(Calendar calendar);
 	/* delete */
-	public int deleteById(@Param("calendar_id") int calendar_id);
+	public int deleteById(@Param("calendarId") int calendarId);
 	
-	public Calendar selectById(@Param("calendar_id") int calendar_id);
+	public Calendar selectById(@Param("calendarId") int calendarId);
 
 	public List<Calendar> findActivitiesByDate(@Param("checkDate") LocalDateTime checkDate);
 
