@@ -3,6 +3,7 @@ package com.example.GroupProject.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.ProductDto;
 
@@ -13,6 +14,6 @@ public interface ProductDao {
 	public int addProduct(ProductDto productDto);
 	
 	//查看商品列表
-	public List<ProductDto> getProductList();
+	public List<ProductDto> getProductList(@Param("categoryId") int categoryId);
 
 }

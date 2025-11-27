@@ -9,10 +9,20 @@
 	<insert id="addProduct"
 		parameterType="com.example.GroupProject.dto.ProductDto">
 		INSERT INTO product ( product_id,
-		product_name, product_price, product_active, product_description,
-		image_url, product_note, category_id
-		) VALUES ( #{productId}, #{productName}, #{productPrice}, #{productActive},
-		#{productDescription}, #{imageUrl}, #{productNote}, #{categoryId})
+		product_name,
+		product_price, product_active, product_description,
+		image_url,
+		product_note, category_id
+		) VALUES ( #{productId}, #{productName},
+		#{productPrice}, #{productActive},
+		#{productDescription}, #{imageUrl},
+		#{productNote}, #{categoryId})
 	</insert>
+
+	<!-- 透過分類ID查詢商品 -->
+	<select id="getProductList"
+		resultType="com.example.GroupProject.dto.ProductDto">
+		SELECT * FROM product WHERE category_id = #{categoryId}
+	</select>
 
 </mapper>

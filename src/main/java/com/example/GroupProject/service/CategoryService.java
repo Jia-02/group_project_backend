@@ -135,8 +135,7 @@ public class CategoryService {
 		return new CategoryListRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				categoryDao.getCategoryList()
-				);
+				categoryDao.getCategoryList());
 	}
 
 }

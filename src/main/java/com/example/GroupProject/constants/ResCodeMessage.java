@@ -34,6 +34,9 @@ public enum ResCodeMessage {
 	WORKSTATION_NOT_FOUND(400, "工作台不存在"), //
 	
 	//餐點錯誤
+	PRODUCT_ERROR(400, "餐點錯誤"), //
+	PRODUCT_PRICE_ERROR(400, "餐點價格錯誤"), //
+	CREATE_PRODUCT_FAILED(400, "新增餐點失敗。"), //
 	
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
