@@ -51,31 +51,13 @@ public class CalendarController {
     	 	return calendarService.getUpcomingActivities();
      }
     
-//    // 3. 新增：查詢當天及後三天活動 - GET /calendar/upcoming
-//    @GetMapping(value = "calendar/selectDate")
-//    public List<Calendar> getUpcomingActivities() {
-//        
-//        // 1. 計算日期範圍
-//        LocalDate today = LocalDate.now();
-//        
-//        // 範圍起始時間: 今天 00:00:00
-//        LocalDateTime startDate = LocalDateTime.of(today, LocalTime.MIN);
-//        
-//        // 範圍結束時間: 今天 + 3 天的 23:59:59.999999999
-//        // LocalTime.MAX 確保涵蓋當天的最後一毫秒
-//        LocalDate endDateLimit = today.plusDays(3);
-//        LocalDateTime endDate = LocalDateTime.of(endDateLimit, LocalTime.MAX);
-//        
-//        // 2. 呼叫 Dao 執行查詢
-//        return calendarDao.findActivitiesByDateRange(startDate, endDate);
-//    }
-//    
+
     
     // 2. 查詢 (R - Read by ID) - GET /calendar/{id}
     @GetMapping(value = "calendar/byId") // 路徑: /calendar/{calendar_id}
-    public Calendar getCalendarById(@PathVariable("calendar_id") int calendar_id) {
+    public Calendar getCalendarById(@PathVariable("calendarId") int calendarId) {
         // 確保參數名稱與 @PathVariable 匹配
-        return calendarService.getCalendarById(calendar_id); 
+        return calendarService.getCalendarById(calendarId); 
     }
     
 //    @GetMapping(value = "calendar/byDate") 
@@ -91,11 +73,11 @@ public class CalendarController {
     
     // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
     @DeleteMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}
-    public String deleteCalendar(@PathVariable("calendar_id") int calendar_id) {
-        int rows = calendarService.deleteCalendar(calendar_id);
+    public String deleteCalendar(@PathVariable("calendarId") int calendarId) {
+        int rows = calendarService.deleteCalendar(calendarId);
         if (rows > 0) {
-            return "刪除成功，ID: " + calendar_id;
+            return "刪除成功，ID: " + calendarId;
         }
-        return "刪除失敗，ID: " + calendar_id + " 不存在。";
+        return "刪除失敗，ID: " + calendarId + " 不存在。";
     }
 }
