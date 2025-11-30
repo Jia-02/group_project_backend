@@ -43,4 +43,10 @@ public class ProductController {
 		return productService.delProductById(dto);
 	}
 	
+	//更新商品
+	@PostMapping(value = "product/update")
+	public BasicRes updateProduct(@RequestBody ProductDto dto) {
+		return productService.updateProduct(dto);
+	}
+	
 }

@@ -28,4 +28,7 @@ public interface ProductDao {
 	//確認商品是否上架中
 	public boolean getProductActive(@Param("productId") int productId);
 
+	//更新商品
+	public int updateProduct(ProductDto productDto);
+	
 }
