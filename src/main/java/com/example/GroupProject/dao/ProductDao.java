@@ -18,5 +18,14 @@ public interface ProductDao {
 	
 	//查看商品列表(使用者)
 	public List<ProductDto> getUserProductList(@Param("categoryId") int categoryId);
+	
+	//刪除商品
+	public int delProductById(ProductDto dto);
+	
+	//確認商品存在數量
+	public int checkProductExist(@Param("productId") int productId);
+	
+	//確認商品是否上架中
+	public boolean getProductActive(@Param("productId") int productId);
 
 }

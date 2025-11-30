@@ -37,5 +37,10 @@ public class ProductController {
 		return productService.getUserProductList(categoryId);
 	}
 	
+	//刪除商品
+	@PostMapping(value = "product/del")
+	public BasicRes delProductById(@RequestBody ProductDto dto) {
+		return productService.delProductById(dto);
+	}
 	
 }

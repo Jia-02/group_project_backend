@@ -34,7 +34,7 @@ public class ProductService {
 
 		// 餐點名稱、敘述、圖片網址不可 null，且至少非一個空白字元
 		if (!StringUtils.hasText(dto.getProductName()) || //
-				!StringUtils.hasText(dto.getProductDescription()) ||//
+				!StringUtils.hasText(dto.getProductDescription()) || //
 				!StringUtils.hasText(dto.getImageUrl())) {
 			return new BasicRes( //
 					ResCodeMessage.PRODUCT_ERROR.getCode(), //
@@ -61,38 +61,75 @@ public class ProductService {
 	}
 
 	// 查看商品 (管理者)
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ProductRes getProductList(int categoryId) {
-		
+
 		// 分類ID不存在
 		if (categoryDao.checkCategoryExist(categoryId) == 0) {
 			return new ProductRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-		
+
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
 				productDao.getProductList(categoryId));
 	}
-	
-	//查看商品(點餐時)-不顯示active=0
-	@Transactional(rollbackFor = Exception.class)
+
+	// 查看商品(點餐時)-不顯示active=0
+	@Transactional(readOnly = true)
 	public ProductRes getUserProductList(int categoryId) {
-		
+
 		// 分類ID不存在
 		if (categoryDao.checkCategoryExist(categoryId) == 0) {
 			return new ProductRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-		
+
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
 				productDao.getUserProductList(categoryId));
 	}
-	
+
+	// 刪除商品
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes delProductById(ProductDto dto) {
+		
+		//確認商品id是否 > 0
+		if(dto.getProductId() < 0) {
+			return new BasicRes(//
+					ResCodeMessage.PRODUCT_ID_ERROR.getCode(), //
+					ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
+		}
+		
+		//確認商品不可不存在
+	    if (productDao.checkProductExist(dto.getProductId()) == 0) {
+	        return new BasicRes(
+	                ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
+	                ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
+	    }
+	    
+	    //如果商品上架中，不可刪除
+	    if(productDao.getProductActive(dto.getProductId())) {
+	        return new BasicRes(
+	                ResCodeMessage.PRODUCT_IS_USED.getCode(),
+	                ResCodeMessage.PRODUCT_IS_USED.getMessage());
+	    }
+
+		int result = productDao.delProductById(dto);
+		if (result > 0) {
+			return new BasicRes(//
+					ResCodeMessage.SUCCESS.getCode(), //
+					ResCodeMessage.SUCCESS.getMessage());
+		} else {
+			return new BasicRes(//
+					ResCodeMessage.DELETE_PRODUCT_FAILED.getCode(), //
+					ResCodeMessage.DELETE_PRODUCT_FAILED.getMessage());
+		}
+
+	}
 
 }

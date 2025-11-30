@@ -5,9 +5,9 @@
 
 <mapper namespace="com.example.GroupProject.dao.ProductDao">
 
+	<!-- resultType : 查詢後回傳的參數，其他都不用設定type -->
 	<!-- 新增商品 -->
-	<insert id="addProduct"
-		parameterType="com.example.GroupProject.dto.ProductDto">
+	<insert id="addProduct">
 		INSERT INTO product ( product_id,
 		product_name,
 		product_price, product_active, product_description,
@@ -19,12 +19,13 @@
 		#{productNote}, #{categoryId})
 	</insert>
 
-	<!-- 透過分類ID查詢商品 -->
+	<!-- 透過分類ID查詢商品(管理者) -->
 	<select id="getProductList"
 		resultType="com.example.GroupProject.dto.ProductDto">
 		SELECT * FROM product WHERE category_id = #{categoryId}
 	</select>
 
+	<!-- 透過分類ID查詢商品(使用者) -->
 	<select id="getUserProductList"
 		resultType="com.example.GroupProject.dto.ProductDto">
 		SELECT product_id,
@@ -38,6 +39,23 @@
 		FROM product
 		WHERE category_id = #{categoryId}
 		AND product_active = 1
+	</select>
+
+	<!-- 刪除商品 -->
+	<delete id="delProductById">
+		DELETE FROM product
+		WHERE product_id = #{productId}
+	</delete>
+
+	<!-- 確認商品存在數量 -->
+	<select id="checkProductExist" resultType="int">
+		SELECT COUNT(1) FROM
+		product WHERE product_id = #{productId}
+	</select>
+
+	<!-- 確認商品上架中 -->
+	<select id="getProductActive" resultType="boolean">
+		SELECT product_active FROM product WHERE product_id = #{productId}
 	</select>
 
 </mapper>

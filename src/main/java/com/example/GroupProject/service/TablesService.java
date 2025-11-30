@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.TableDailyDao;
@@ -24,6 +25,7 @@ public class TablesService {
 	private TableDailyDao tableDailyDao;
 
 	// 新增桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addTable(TablesDto table) {
 		
 		if(table.getTablePositionX() + table.getLengthX() > 500) {
@@ -74,6 +76,7 @@ public class TablesService {
 	}
 
 	// list查詢
+	@Transactional(readOnly = true)
 	public TableListRes getTableList() {
 
 		if (tableDao.getTableList().isEmpty()) {
@@ -86,6 +89,7 @@ public class TablesService {
 	}
 
 	// 刪除桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes delTable(TablesDto table) {
 
 		tableDao.delTableByTableId(table);
@@ -94,6 +98,7 @@ public class TablesService {
 	}
 
 	// 更新桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes updateTable(TablesDto table) {
 
 		
@@ -142,11 +147,13 @@ public class TablesService {
 
 
     // 查某一天全部桌位的狀態
+	@Transactional(readOnly = true)
     public List<TableDailyDto> getDailyStatus(LocalDate date) {
         return tableDailyDao.getDailyStatus(date);
     }
 
     // 更新桌位狀態
+	@Transactional(rollbackFor = Exception.class)
     public BasicRes updateTableStatus(TableDailyDto data) {
         int updateStatusCount = tableDailyDao.updateTableStatus(data);
         if(updateStatusCount < 0) {
@@ -160,6 +167,7 @@ public class TablesService {
     }
 
     // 新增桌位狀態
+	@Transactional(rollbackFor = Exception.class)
     public BasicRes insertTableStatus(TableDailyDto data) {
     	int insertStatusCount =tableDailyDao.insertTableStatus(data);
         if(insertStatusCount < 0) {

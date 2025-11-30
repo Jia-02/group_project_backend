@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `calendar`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `calendar` (
   `calendar_id` int NOT NULL AUTO_INCREMENT,
-  `calendar_title` varchar(60) DEFAULT NULL,
-  `calendar_description` varchar(500) DEFAULT NULL,
-  `calendar_start_date` date DEFAULT NULL,
-  `calendar_end_date` date DEFAULT NULL,
+  `calendar_title` varchar(60) NOT NULL,
+  `calendar_description` varchar(500) NOT NULL,
+  `calendar_start_date` date NOT NULL,
+  `calendar_end_date` date NOT NULL,
   `calendar_status` tinyint NOT NULL DEFAULT '1',
-  `calendar_photo` varchar(500) DEFAULT NULL,
+  `calendar_photo` varchar(500) NOT NULL,
   PRIMARY KEY (`calendar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -222,7 +222,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4);
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,1,'123','https://example.com/images/burger.jpg','含豬肉、蛋',4);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,7 +281,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-11-26','0912345675','12:00:00','小花',2,2,4,1,'嬰兒座椅',1,'A03'),('2025-11-26','0912345676','10:00:00','小王',2,2,4,0,'嬰兒座椅',1,'A01'),('2025-11-26','0912345677','14:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-11-26','0912345678','12:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02'),('2025-11-27','0912345674','17:30:00','小黃',2,2,4,0,'嬰兒座椅',1,'A04'),('2025-11-27','0912345675','17:30:00','小花',2,2,4,0,'嬰兒座椅',4,'A03');
+INSERT INTO `reservation` VALUES ('2025-11-30','0912345678','18:30:00','珈',1,3,4,0,'靠窗座位',1,'A01');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -334,7 +334,7 @@ CREATE TABLE `table_daily` (
 
 LOCK TABLES `table_daily` WRITE;
 /*!40000 ALTER TABLE `table_daily` DISABLE KEYS */;
-INSERT INTO `table_daily` VALUES ('2025-11-26',0,'A04');
+INSERT INTO `table_daily` VALUES ('2025-11-26',0,'A04'),('2025-11-30',0,'A04');
 /*!40000 ALTER TABLE `table_daily` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -426,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-27 15:24:43
+-- Dump completed on 2025-11-30 11:49:17
