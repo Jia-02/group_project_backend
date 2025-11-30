@@ -55,7 +55,22 @@
 
 	<!-- 確認商品上架中 -->
 	<select id="getProductActive" resultType="boolean">
-		SELECT product_active FROM product WHERE product_id = #{productId}
+		SELECT product_active
+		FROM product WHERE product_id = #{productId}
 	</select>
+
+	<!-- 更新商品 -->
+	<update id="updateProduct">
+		UPDATE product
+		SET
+		product_name = #{productName},
+		product_price = #{productPrice},
+		product_active = #{productActive},
+		product_description = #{productDescription},
+		image_url = #{imageUrl},
+		product_note = #{productNote},
+		category_id = #{categoryId}
+		WHERE product_id = #{productId}
+	</update>
 
 </mapper>
