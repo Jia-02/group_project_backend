@@ -6,8 +6,7 @@
 <mapper namespace="com.example.GroupProject.dao.CategoryDao">
 
 	<!-- 新增分類 -->
-	<insert id="addCategory"
-		parameterType="com.example.GroupProject.dto.CategoryDto">
+	<insert id="addCategory">
 		INSERT INTO category (category_type, workstation_id)
 		VALUES (#{categoryType}, #{workstationId})
 	</insert>
@@ -21,8 +20,7 @@
 	</select>
 
 	<!-- 刪除分類 -->
-	<delete id="delCategoryById"
-		parameterType="com.example.GroupProject.dto.CategoryDto">
+	<delete id="delCategoryById">
 		DELETE FROM category
 		WHERE category_id = #{categoryId}
 	</delete>
@@ -39,8 +37,7 @@
 	</select>
 
 	<!-- 透過分類id更新，可更新type或工作台id -->
-	<update id="updateCategory"
-		parameterType="com.example.GroupProject.dto.CategoryDto">
+	<update id="updateCategory">
 		UPDATE category
 		<set>
 			<if test="categoryType != null and categoryType != ''">

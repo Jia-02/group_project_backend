@@ -27,8 +27,7 @@
 	</select>
 	
 	<!-- 新增 -->
-	<insert id="insertStatus"
-		parameterType="com.example.GroupProject.dto.TableDailyDto">
+	<insert id="insertStatus">
 		INSERT INTO table_daily (
 		table_daily_date, table_id,
 		table_daily_status
@@ -40,8 +39,7 @@
 	</insert>
 
 	<!-- 更新狀態 -->
-	<update id="updateStatus"
-		parameterType="com.example.GroupProject.dto.TableDailyDto">
+	<update id="updateStatus">
 		UPDATE table_daily
 		SET table_daily_status =
 		#{tableDailyStatus}

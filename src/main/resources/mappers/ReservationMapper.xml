@@ -36,8 +36,7 @@
 
 
 	<!-- 新增訂位 -->
-	<insert id="createReservation"
-		parameterType="com.example.GroupProject.dto.ReservationDto">
+	<insert id="createReservation">
 		INSERT INTO reservation
 		(reservation_date,
 		reservation_phone, reservation_time, reservation_name,
@@ -96,14 +95,12 @@
 
 	<!-- 查詢該時段之該桌號是否已預定 -->
 	<select id="isTableReservedAtSameTime" resultType="boolean">
-    <![CDATA[
     SELECT COUNT(1) > 0
     FROM reservation
     WHERE table_id = #{tableId}
       AND reservation_date = #{reservationDate}
       AND reservation_time = #{reservationTime}
       AND reservation_status = 0  -- 未報到或有效預約
-    ]]>
 	</select>
 
 	<!-- 刪除訂位 -->
