@@ -78,9 +78,9 @@ DROP TABLE IF EXISTS `check_out`;
 CREATE TABLE `check_out` (
   `order_id` varchar(60) NOT NULL,
   `total_price` int NOT NULL DEFAULT '0',
-  `payment_type` varchar(60) DEFAULT NULL,
-  `payment_time` datetime DEFAULT NULL,
-  `is_paid` tinyint NOT NULL DEFAULT '0',
+  `payment_type` varchar(60) NOT NULL,
+  `payment_time` datetime NOT NULL,
+  `paid` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -103,7 +103,7 @@ DROP TABLE IF EXISTS `inner_order`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inner_order` (
   `inner_id` varchar(60) NOT NULL,
-  `date` date NOT NULL,
+  `payment_time` date NOT NULL,
   `table_id` varchar(45) NOT NULL,
   PRIMARY KEY (`inner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -222,7 +222,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,1,'123','https://example.com/images/burger.jpg','含豬肉、蛋',4);
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,7 +380,7 @@ CREATE TABLE `take_out` (
   `customer_name` varchar(60) NOT NULL,
   `customer_phone` varchar(60) NOT NULL,
   `customer_address` varchar(100) DEFAULT NULL,
-  `date` datetime NOT NULL,
+  `payment_time` datetime NOT NULL,
   PRIMARY KEY (`take_out_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -426,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-30 11:49:17
+-- Dump completed on 2025-11-30 16:46:19
