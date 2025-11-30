@@ -55,14 +55,15 @@
 	
 	<delete id="deleteById">
 		delete from calendar where calendar_id =
-		#{calendarId} </delete>
+		#{calendarId} 
+	</delete>
+	
+	<select id="selectAll"
+        resultType="com.example.GroupProject.dto.Calendar">
+        SELECT * FROM calendar
+        ORDER BY calendar_id ASC
+    </select>
 
 
 </mapper>
 
----
-
-### ⚠️ 重要提醒：重複 ID 與 DTO 欄位
-
-1.  **重複的 Select ID：** 您的原始 XML 中有兩個 `<select id="findActivitiesByDateRange">` 標籤。MyBatis 不允許 Mapper 中有重複的 ID。我已經刪除了第二個重複的標籤。請確保您的 `CalendarDao` 介面中只對應一個 `findActivitiesByDateRange` 方法。
-2.  **`deleteById` 參數：** `deleteById` 通常是透過 `@Param("calendar_id") int calendar_id` 傳入參數。這裡我將其改為 `#{calendarId}`，**這是假設您將 DAO 介面的 `@Param` 名稱也修正為 `calendarId`**，或者您直接傳遞 DTO 物件。如果 DAO 傳入的參數仍是 `@Param("calendar_id")`，您可能需要保留 `#{calendar_id}`。

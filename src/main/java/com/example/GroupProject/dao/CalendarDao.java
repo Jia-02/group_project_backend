@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.Calendar;
+import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.CalendarRes;
 
 public interface CalendarDao {
 
@@ -18,15 +20,15 @@ public interface CalendarDao {
 	/* update */
 	public int updateDataById(Calendar calendar);
 	/* delete */
-	public int deleteById(@Param("calendarId") int calendarId);
+	public BasicRes deleteById(@Param("calendarId") int calendarId);
 	
 	public Calendar selectById(@Param("calendarId") int calendarId);
 
-	public List<Calendar> findActivitiesByDate(@Param("checkDate") LocalDateTime checkDate);
-
-	public List<Calendar> findActivitiesByDateRange(
+	public CalendarRes findActByDateRange(
 	        @Param("startDate") LocalDateTime startDate, 
 	        @Param("endDate") LocalDateTime endDate
 	    );
+	
+	public List<Calendar> selectAll();
 	
 }

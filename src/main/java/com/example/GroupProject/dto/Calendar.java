@@ -16,7 +16,7 @@ public class Calendar {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime calendarEndDate;   // calendar_end_date -> calendarEndDate
 	
-	private Boolean calendarStatus;
+	private boolean calendarStatus;
 	private String calendarPhoto;
 	public int getCalendarId() {
 		return calendarId;

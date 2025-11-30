@@ -3,16 +3,17 @@ package com.example.GroupProject.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CalendarDao;
 import com.example.GroupProject.dto.Calendar;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.CalendarRes;
 //使用排序
 @EnableScheduling
 @Service
@@ -25,9 +26,9 @@ public class CalendarService {
     public BasicRes create(Calendar calendar) {
     	
     	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
-        if (calendar.getCalendarTitle().trim().isEmpty()) {
+        if (!StringUtils.hasText(calendar.getCalendarTitle())) {
             return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
-                "活動標題不得為空。");
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
         }
         
         // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
@@ -35,6 +36,11 @@ public class CalendarService {
             return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
                 ResCodeMessage.CALENDAR_DATE_ERROR.getMessage()); 
         }
+        //驗證：結束時間早於開始時間
+        if(calendar.getCalendarEndDate().isBefore(calendar.getCalendarStartDate())) {
+			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+		}
     	
     	// 執行資料庫操作 (回傳 int)
         // 注意：DAO 呼叫中的參數 (calendar) 會自動使用 DTO 的新 Getter 來取值
@@ -45,12 +51,12 @@ public class CalendarService {
             return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage()); 
         } else {
             // 失敗：例如 ID 已存在或資料庫錯誤
-            return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(), "新增失敗，請檢查數據。");
+            return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
         } 
     }
     
  // ⭐ 查詢當天及後三天活動的核心邏輯 ⭐
-    public List<Calendar> getUpcomingActivities() {
+    public CalendarRes getUpcomingActivities() {
         // 1. 取得今天日期
         LocalDate today = LocalDate.now();
         
@@ -62,34 +68,56 @@ public class CalendarService {
         LocalDateTime endDate = LocalDateTime.of(endDateLimit, LocalTime.MAX);
         
         // 4. 呼叫 DAO 執行查詢
-        return calendarDao.findActivitiesByDateRange(startDate, endDate);
+        return calendarDao.findActByDateRange(startDate, endDate);
     }
     
     // ... 其他方法直接寫在這裡 (updateCalendarData, getCalendarById, deleteCalendar) ...
     
-    public int updateDataById(Calendar calendar) {
+    public BasicRes updateDataById(Calendar calendar) {
         // 假設已經有狀態檢查邏輯
     	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
-        if (calendar.getCalendarTitle().trim().isEmpty()) {
-            return -1; 
+        if (!StringUtils.hasText(calendar.getCalendarTitle())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
         }
         // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
         if (calendar.getCalendarStartDate().isAfter(calendar.getCalendarEndDate())) {
-            return -2; 
+            return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+                ResCodeMessage.CALENDAR_DATE_ERROR.getMessage()); 
         }
+        //驗證：結束時間早於開始時間
+        if(calendar.getCalendarEndDate().isBefore(calendar.getCalendarStartDate())) {
+			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+		}
         
+        int res= calendarDao.updateDataById(calendar);
+        if(res == 0) {
+			return new BasicRes(ResCodeMessage.NOT_FOUND.getCode(),
+					ResCodeMessage.NOT_FOUND.getMessage());
+		}
         // DAO 呼叫保持不變，因為參數是 DTO 物件
-        return calendarDao.updateDataById(calendar);
+        
+        return new BasicRes(ResCodeMessage.SUCCESS.getCode(), 
+				ResCodeMessage.SUCCESS.getMessage());
     }
 
-    public Calendar getCalendarById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
-    	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
-        return calendarDao.selectById(calendarId); 
-    }
+//    public Calendar getCalendarById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
+//    	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
+//        return calendarDao.selectById(calendarId); 
+//    }
 
-    public int deleteCalendar(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
+    public BasicRes deleteById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
     	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
         return calendarDao.deleteById(calendarId);
     }
+    
+    public CalendarRes selectAll() {    		
+    		return new CalendarRes(ResCodeMessage.SUCCESS.getCode(), 
+    				ResCodeMessage.SUCCESS.getMessage(),calendarDao.selectAll());
+    		
+    }
+    
+    
     
 }

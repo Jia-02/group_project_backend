@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GroupProject.dto.Calendar;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.CalendarRes;
 import com.example.GroupProject.service.CalendarService;
 
 @CrossOrigin // 允許前端來源
@@ -32,52 +33,38 @@ public class CalendarController {
     public BasicRes createCalendar(@RequestBody Calendar calendar) {
     		return calendarService.create(calendar);
         
-    }
-    
+    }    
     
     // 2. 更新 (U - Update) - PUT /calendar
     @PutMapping(value = "calendar/update") // 路徑: /calendar
-    public String updateCalendar(@RequestBody Calendar calendar) {
-        int rows = calendarService.updateDataById(calendar);
-        if (rows > 0) {
-            return "更新成功，ID: " + calendar.getCalendarId();
-        }
-        return "更新失敗，ID: " + calendar.getCalendarId() + " 不存在。";
+    public BasicRes updateCalendar(@RequestBody Calendar calendar) {        
+        return calendarService.updateDataById(calendar);
     }
 
+    // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
+    @PostMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}
+    public BasicRes deleteById(@PathVariable("calendarId") int calendarId) {
+    		return calendarService.deleteById(calendarId);
+    }
+    
     		// ⭐ 查詢當天及後三天活動的 API ⭐
      @GetMapping(value = "calendar/selectDate")
-     public List<Calendar> getUpcomingActivities(){
+     public CalendarRes getUpcomingActivities(){
     	 	return calendarService.getUpcomingActivities();
      }
     
+     @GetMapping(value = "calendar/all")
+     public CalendarRes selectAll() {
+         return calendarService.selectAll();
+     }
+    
+//    // 2. 查詢 (R - Read by ID) - GET /calendar/{id}
+//    @GetMapping(value = "calendar/byId") // 路徑: /calendar/{calendar_id}
+//    public Calendar getCalendarById(@PathVariable("calendarId") int calendarId) {
+//        // 確保參數名稱與 @PathVariable 匹配
+//        return calendarService.getCalendarById(calendarId); 
+//    }
 
     
-    // 2. 查詢 (R - Read by ID) - GET /calendar/{id}
-    @GetMapping(value = "calendar/byId") // 路徑: /calendar/{calendar_id}
-    public Calendar getCalendarById(@PathVariable("calendarId") int calendarId) {
-        // 確保參數名稱與 @PathVariable 匹配
-        return calendarService.getCalendarById(calendarId); 
-    }
     
-//    @GetMapping(value = "calendar/byDate") 
-//    public List<Calendar> getActivitiesByDate(
-//        @RequestParam("date") 
-//        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // 假設傳入完整的 ISO 8601 時間格式
-//        LocalDateTime checkDate) {
-//        
-//        return calendarDao.findActivitiesByDate(checkDate);
-//    }
-    
-    
-    
-    // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
-    @DeleteMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}
-    public String deleteCalendar(@PathVariable("calendarId") int calendarId) {
-        int rows = calendarService.deleteCalendar(calendarId);
-        if (rows > 0) {
-            return "刪除成功，ID: " + calendarId;
-        }
-        return "刪除失敗，ID: " + calendarId + " 不存在。";
-    }
 }
