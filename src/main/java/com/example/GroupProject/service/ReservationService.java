@@ -175,7 +175,7 @@ public class ReservationService {
 	}
 
 	/** 查詢一天的訂位資料(含桌位、桌位狀態) */
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ReservationAndTableByDateRes findReservationsByDate(LocalDate reservationDate) {
 
 		return new ReservationAndTableByDateRes(//
@@ -189,7 +189,7 @@ public class ReservationService {
 			LocalTime.of(14, 0, 0), LocalTime.of(16, 0, 0), LocalTime.of(18, 0, 0), LocalTime.of(20, 0, 0));
 
 	/** 查詢當下最接近的預約資訊 */
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ReservationAndTableByTimeRes findTableStatusByNow() {
 
 		// 現在時間
@@ -248,7 +248,7 @@ public class ReservationService {
 	}
 
 	/** 查詢同一天某時段之資訊桌位、預約資訊 */
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ReservationAndTableByTimeRes findTableStatusByTimeSlot(LocalDate reservationDate, //
 			LocalTime reservationTime) {
 		return new ReservationAndTableByTimeRes(//

@@ -130,7 +130,7 @@ public class CategoryService {
 	}
 	
 	/** 查看分類列表 */
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public CategoryListRes getCategoryList() {
 		return new CategoryListRes(//
 				ResCodeMessage.SUCCESS.getCode(), //

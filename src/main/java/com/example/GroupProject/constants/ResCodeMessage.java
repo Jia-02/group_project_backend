@@ -37,10 +37,23 @@ public enum ResCodeMessage {
 	WORKSTATION_NOT_FOUND(400, "工作台不存在"), //
 	
 	//餐點錯誤
-	PRODUCT_ERROR(400, "餐點錯誤"), //
+	PRODUCT_NAME_ERROR(400, "餐點名稱錯誤"), //
+	PRODUCT_ID_ERROR(400, "餐點ID錯誤"), //
 	PRODUCT_PRICE_ERROR(400, "餐點價格錯誤"), //
 	CREATE_PRODUCT_FAILED(400, "新增餐點失敗。"), //
+	DELETE_PRODUCT_FAILED(400, "刪除餐點失敗。"), //
+	PRODUCT_NOT_FOUND(400, "找不到餐點。"), //
+	PRODUCT_IS_USED(400, "商品上架中。"), //
+	UPDATE_PRODUCT_FAILED(400, "餐點更新失敗。"), //
 	
+	//客製化
+	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
+	OPTION_ID_ERROR(400, "客製化ID錯誤"), //
+	OPTION_DETAIL_ERROR(400, "客製化細節錯誤"), //
+	OPTION_NAME_ERROR(400, "客製化名稱錯誤"), //
+	OPTION_DETAIL_NAME_EMPTY(400, "客製化細節名稱為空"), //
+	OPTION_DETAIL_PRICE_INVALID(400, "客製化價格小於0"), //
+	OPTION_DETAIL_DUPLICATE(400, "客製化名稱重複"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

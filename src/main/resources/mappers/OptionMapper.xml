@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.OptionDao">
+
+<!-- 新增客製化 -->
+	<insert id="addOption">
+        INSERT INTO options(option_id, option_name, option_detail, category_id)
+        VALUES (#{optionId}, #{optionName}, #{optionDetail}, #{categoryId})
+	</insert>
+
+
+</mapper>

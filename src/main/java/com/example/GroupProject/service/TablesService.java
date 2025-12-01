@@ -76,6 +76,7 @@ public class TablesService {
 	}
 
 	// list查詢
+
 	@Transactional(rollbackFor = Exception.class)
 	public TableListRes getTableList() {
 
@@ -163,51 +164,52 @@ public class TablesService {
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
-	// 查某一天全部桌位的狀態
-	@Transactional(rollbackFor = Exception.class)
-	public List<TableDailyDto> getDailyStatus(LocalDate date) {
-		return tableDailyDao.getDailyStatus(date);
-	}
 
-	// 更新桌位狀態
-	@Transactional(rollbackFor = Exception.class)
-	public BasicRes updateTableStatus(TableDailyDto data) {
-		int updateStatusCount = tableDailyDao.updateTableStatus(data);
-		if (updateStatusCount < 0) {
-			return new BasicRes( //
-					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-					ResCodeMessage.ADD_INFO_FAILED.getMessage());
-		}
-		return new BasicRes( //
-				ResCodeMessage.SUCCESS.getCode(), //
-				ResCodeMessage.SUCCESS.getMessage());
-	}
+    // 查某一天全部桌位的狀態
+	@Transactional(readOnly = true)
+    public List<TableDailyDto> getDailyStatus(LocalDate date) {
+        return tableDailyDao.getDailyStatus(date);
+    }
 
-	// 新增桌位狀態
+    // 更新桌位狀態
 	@Transactional(rollbackFor = Exception.class)
-	public BasicRes insertTableStatus(TableDailyDto data) {
-		int insertStatusCount = tableDailyDao.insertTableStatus(data);
-		if (insertStatusCount < 0) {
-			return new BasicRes( //
-					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-					ResCodeMessage.ADD_INFO_FAILED.getMessage());
-		}
-		return new BasicRes( //
-				ResCodeMessage.SUCCESS.getCode(), //
-				ResCodeMessage.SUCCESS.getMessage());
-	}
+    public BasicRes updateTableStatus(TableDailyDto data) {
+        int updateStatusCount = tableDailyDao.updateTableStatus(data);
+        if(updateStatusCount < 0) {
+        	return new BasicRes( //
+        			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+        			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+        }
+        return new BasicRes( //
+        		ResCodeMessage.SUCCESS.getCode(), //
+        		ResCodeMessage.SUCCESS.getMessage());
+    }
 
-	// 刪除桌位狀態
+    // 新增桌位狀態
 	@Transactional(rollbackFor = Exception.class)
-	public BasicRes delTableStatus(TableDailyDto data) {
-		int delTableStatusCount = tableDailyDao.delTableStatus(data);
-		if (delTableStatusCount < 0) {
-			return new BasicRes( //
-					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-					ResCodeMessage.ADD_INFO_FAILED.getMessage());
-		}
-		return new BasicRes( //
-				ResCodeMessage.SUCCESS.getCode(), //
-				ResCodeMessage.SUCCESS.getMessage());
-	}
+    public BasicRes insertTableStatus(TableDailyDto data) {
+    	int insertStatusCount =tableDailyDao.insertTableStatus(data);
+        if(insertStatusCount < 0) {
+        return new BasicRes( //
+    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+    }
+    return new BasicRes( //
+    		ResCodeMessage.SUCCESS.getCode(), //
+    		ResCodeMessage.SUCCESS.getMessage());
+    }
+    
+    //刪除桌位狀態
+    public BasicRes delTableStatus(TableDailyDto data) {
+    	int delTableStatusCount =tableDailyDao.delTableStatus(data);
+        if(delTableStatusCount < 0) {
+        return new BasicRes( //
+    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
+    }
+    return new BasicRes( //
+    		ResCodeMessage.SUCCESS.getCode(), //
+    		ResCodeMessage.SUCCESS.getMessage());
+    }
+
 }

@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `calendar`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `calendar` (
   `calendar_id` int NOT NULL AUTO_INCREMENT,
-  `calendar_title` varchar(60) DEFAULT NULL,
-  `calendar_description` varchar(500) DEFAULT NULL,
-  `calendar_start_date` date DEFAULT NULL,
-  `calendar_end_date` date DEFAULT NULL,
+  `calendar_title` varchar(60) NOT NULL,
+  `calendar_description` varchar(500) NOT NULL,
+  `calendar_start_date` date NOT NULL,
+  `calendar_end_date` date NOT NULL,
   `calendar_status` tinyint NOT NULL DEFAULT '1',
-  `calendar_photo` varchar(500) DEFAULT NULL,
+  `calendar_photo` varchar(500) NOT NULL,
   PRIMARY KEY (`calendar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -55,7 +55,7 @@ CREATE TABLE `category` (
   `category_type` varchar(300) NOT NULL,
   `workstation_id` int NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,6 +64,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'燉飯',2),(4,'漢堡',2),(5,'飲料',1);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,9 +78,9 @@ DROP TABLE IF EXISTS `check_out`;
 CREATE TABLE `check_out` (
   `order_id` varchar(60) NOT NULL,
   `total_price` int NOT NULL DEFAULT '0',
-  `payment_type` varchar(60) DEFAULT NULL,
-  `payment_time` datetime DEFAULT NULL,
-  `is_paid` tinyint NOT NULL DEFAULT '0',
+  `payment_type` varchar(60) NOT NULL,
+  `payment_time` datetime NOT NULL,
+  `paid` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -102,7 +103,7 @@ DROP TABLE IF EXISTS `inner_order`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inner_order` (
   `inner_id` varchar(60) NOT NULL,
-  `date` date NOT NULL,
+  `payment_time` date NOT NULL,
   `table_id` varchar(45) NOT NULL,
   PRIMARY KEY (`inner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -143,13 +144,13 @@ LOCK TABLES `meal_status` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `option`
+-- Table structure for table `options`
 --
 
-DROP TABLE IF EXISTS `option`;
+DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `option` (
+CREATE TABLE `options` (
   `option_id` int NOT NULL,
   `option_name` varchar(100) NOT NULL,
   `option_detail` varchar(1000) NOT NULL,
@@ -159,12 +160,13 @@ CREATE TABLE `option` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `option`
+-- Dumping data for table `options`
 --
 
-LOCK TABLES `option` WRITE;
-/*!40000 ALTER TABLE `option` DISABLE KEYS */;
-/*!40000 ALTER TABLE `option` ENABLE KEYS */;
+LOCK TABLES `options` WRITE;
+/*!40000 ALTER TABLE `options` DISABLE KEYS */;
+INSERT INTO `options` VALUES (1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',1),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5),(3,'加肉','[{\"option\":\"一層肉\",\"addPrice\":20},{\"option\":\"雙層肉\",\"addPrice\":40}]',4);
+/*!40000 ALTER TABLE `options` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -221,6 +223,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,7 +282,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-11-26','0912345675','12:00:00','小花',2,2,4,1,'嬰兒座椅',1,'A03'),('2025-11-26','0912345676','10:00:00','小王',2,2,4,0,'嬰兒座椅',1,'A01'),('2025-11-26','0912345677','14:00:00','小明',1,3,4,0,'嬰兒座椅',3,'A03'),('2025-11-26','0912345678','12:00:00','小嘉',1,3,4,0,'沒有要求',0,'A02'),('2025-11-27','0912345674','17:30:00','小黃',2,2,4,0,'嬰兒座椅',1,'A04'),('2025-11-27','0912345675','17:30:00','小花',2,2,4,0,'嬰兒座椅',4,'A03');
+INSERT INTO `reservation` VALUES ('2025-11-30','0912345678','18:30:00','珈',1,3,4,0,'靠窗座位',1,'A01');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +335,7 @@ CREATE TABLE `table_daily` (
 
 LOCK TABLES `table_daily` WRITE;
 /*!40000 ALTER TABLE `table_daily` DISABLE KEYS */;
-INSERT INTO `table_daily` VALUES ('2025-11-25',1,'A03'),('2025-11-26',0,'A04');
+INSERT INTO `table_daily` VALUES ('2025-11-26',0,'A04'),('2025-11-30',0,'A04');
 /*!40000 ALTER TABLE `table_daily` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -378,7 +381,7 @@ CREATE TABLE `take_out` (
   `customer_name` varchar(60) NOT NULL,
   `customer_phone` varchar(60) NOT NULL,
   `customer_address` varchar(100) DEFAULT NULL,
-  `date` datetime NOT NULL,
+  `payment_time` datetime NOT NULL,
   PRIMARY KEY (`take_out_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -424,4 +427,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-26 13:25:18
+-- Dump completed on 2025-12-01 13:27:14
