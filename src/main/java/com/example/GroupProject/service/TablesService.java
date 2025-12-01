@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.TableDailyDao;
@@ -19,19 +20,20 @@ public class TablesService {
 
 	@Autowired
 	private TablesDao tableDao;
-	
+
 	@Autowired
 	private TableDailyDao tableDailyDao;
 
 	// 新增桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addTable(TablesDto table) {
-		
-		if(table.getTablePositionX() + table.getLengthX() > 500) {
+
+		if (table.getTablePositionX() + table.getLengthX() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
-		
-		if(table.getTablePositionY() + table.getLengthY() > 500) {
+
+		if (table.getTablePositionY() + table.getLengthY() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
@@ -74,6 +76,7 @@ public class TablesService {
 	}
 
 	// list查詢
+	@Transactional(rollbackFor = Exception.class)
 	public TableListRes getTableList() {
 
 		if (tableDao.getTableList().isEmpty()) {
@@ -86,6 +89,7 @@ public class TablesService {
 	}
 
 	// 刪除桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes delTable(TablesDto table) {
 
 		tableDao.delTableByTableId(table);
@@ -94,15 +98,34 @@ public class TablesService {
 	}
 
 	// 更新桌位
+	@Transactional(rollbackFor = Exception.class)
 	public BasicRes updateTable(TablesDto table) {
-
-		
-		if(table.getTablePositionX() + table.getLengthX() > 500) {
+		if (table.getTablePositionX() < 0) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
-		
-		if(table.getTablePositionY() + table.getLengthY() > 500) {
+		if (table.getTablePositionY() < 0) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+		if (table.getLengthX() < 60) {
+			return new BasicRes(ResCodeMessage.TABLE_WIDTH_ERROR.getCode(),
+					ResCodeMessage.TABLE_WIDTH_ERROR.getMessage());
+		}
+		if (table.getLengthY() < 60) {
+			return new BasicRes(ResCodeMessage.TABLE_HEIGHT_ERROR.getCode(),
+					ResCodeMessage.TABLE_HEIGHT_ERROR.getMessage());
+		}
+		if (table.getTableCapacity() < 2) {
+			return new BasicRes(ResCodeMessage.TABLE_CAPACITY_ERROR.getCode(),
+					ResCodeMessage.TABLE_CAPACITY_ERROR.getMessage());
+		}
+		if (table.getTablePositionX() + table.getLengthX() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+
+		if (table.getTablePositionY() + table.getLengthY() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
@@ -135,53 +158,56 @@ public class TablesService {
 				}
 			}
 		}
-		
-		tableDao.updateByTableId(table);
+
+		tableDao.updateByTable(table);
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
+	// 查某一天全部桌位的狀態
+	@Transactional(rollbackFor = Exception.class)
+	public List<TableDailyDto> getDailyStatus(LocalDate date) {
+		return tableDailyDao.getDailyStatus(date);
+	}
 
-    // 查某一天全部桌位的狀態
-    public List<TableDailyDto> getDailyStatus(LocalDate date) {
-        return tableDailyDao.getDailyStatus(date);
-    }
+	// 更新桌位狀態
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes updateTableStatus(TableDailyDto data) {
+		int updateStatusCount = tableDailyDao.updateTableStatus(data);
+		if (updateStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 
-    // 更新桌位狀態
-    public BasicRes updateTableStatus(TableDailyDto data) {
-        int updateStatusCount = tableDailyDao.updateTableStatus(data);
-        if(updateStatusCount < 0) {
-        	return new BasicRes( //
-        			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-        			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-        }
-        return new BasicRes( //
-        		ResCodeMessage.SUCCESS.getCode(), //
-        		ResCodeMessage.SUCCESS.getMessage());
-    }
+	// 新增桌位狀態
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes insertTableStatus(TableDailyDto data) {
+		int insertStatusCount = tableDailyDao.insertTableStatus(data);
+		if (insertStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 
-    // 新增桌位狀態
-    public BasicRes insertTableStatus(TableDailyDto data) {
-    	int insertStatusCount =tableDailyDao.insertTableStatus(data);
-        if(insertStatusCount < 0) {
-        return new BasicRes( //
-    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-    }
-    return new BasicRes( //
-    		ResCodeMessage.SUCCESS.getCode(), //
-    		ResCodeMessage.SUCCESS.getMessage());
-    }
-    
-    //刪除桌位狀態
-    public BasicRes delTableStatus(TableDailyDto data) {
-    	int delTableStatusCount =tableDailyDao.delTableStatus(data);
-        if(delTableStatusCount < 0) {
-        return new BasicRes( //
-    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-    }
-    return new BasicRes( //
-    		ResCodeMessage.SUCCESS.getCode(), //
-    		ResCodeMessage.SUCCESS.getMessage());
-    }
+	// 刪除桌位狀態
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes delTableStatus(TableDailyDto data) {
+		int delTableStatusCount = tableDailyDao.delTableStatus(data);
+		if (delTableStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 }

@@ -18,9 +18,12 @@ public enum ResCodeMessage {
 	TABLE_IS_RESERVATION(400, "桌位已被訂位"), //
 	TABLE_IS_NOT_OPEN(400, "桌位未開放"), //
 	TABLE_CAPACITY_INSUFFICIENT(400, "桌位容納不下這個人數"), //
+	TABLE_CAPACITY_ERROR(400, "桌位可容納人數錯誤"), //
 	TABLE_ID_EXIST(400,"桌位ID已存在"),//
 	TABLE_POSITION_EXIST(400,"桌位位置已存在其他桌位"),//
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
+	TABLE_WIDTH_ERROR(400,"桌位寬度錯誤"),//
+	TABLE_HEIGHT_ERROR(400,"桌位長度錯誤"),//
 	
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //

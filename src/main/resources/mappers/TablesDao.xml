@@ -55,12 +55,15 @@
 	</delete>
 	
 	<!-- 更新桌位 -->
-	<update id="updateByTableId"
+	<update id="updateByTable"
 			parameterType="com.example.GroupProject.dto.TablesDto">
 		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,
 			position_x = #{tablePositionX}, position_y = #{tablePositionY} ,
 			length_x = #{lengthX} , length_y = #{lengthY} where table_id = #{tableId}
-			
+	</update>
+	
+	<update id="updateStatusByTableId">
+		update tables set table_status = #{tableStatus} where table_id = #{tableId}
 	</update>
 
 </mapper>
