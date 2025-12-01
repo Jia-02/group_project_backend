@@ -2,84 +2,55 @@ package com.example.GroupProject.vo;
 
 public class ProductVo {
 
-	private int id;
-
-	private int workStationId;
-
-	private String type;
-
-	private String name;
-
-	private String description;
-
-	private int price;
-
-	private String imgUrl;
-
-	private boolean active;
-
-	public int getId() {
-		return id;
+	private int productId;         // product_id (INT)
+    private String productName;        // product_name (VARCHAR(100))
+    private int productPrice;      // product_price (INT)
+    private boolean productActive;        // product_active (TINYINT)
+    private String productDescription; // product_description (VARCHAR(300))
+    private String imageUrl;           // image_url (VARCHAR(300))
+    private String productNote;        // product_note (VARCHAR(300), NULL)
+    
+	public int getProductId() {
+		return productId;
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setProductId(int productId) {
+		this.productId = productId;
 	}
-
-	public int getWorkStationId() {
-		return workStationId;
+	public String getProductName() {
+		return productName;
 	}
-
-	public void setWorkStationId(int workStationId) {
-		this.workStationId = workStationId;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
-
-	public String getType() {
-		return type;
+	public int getProductPrice() {
+		return productPrice;
 	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setProductPrice(int productPrice) {
+		this.productPrice = productPrice;
 	}
-
-	public String getName() {
-		return name;
+	public boolean isProductActive() {
+		return productActive;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setProductActive(boolean productActive) {
+		this.productActive = productActive;
 	}
-
-	public String getDescription() {
-		return description;
+	public String getProductDescription() {
+		return productDescription;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setProductDescription(String productDescription) {
+		this.productDescription = productDescription;
 	}
-
-	public int getPrice() {
-		return price;
+	public String getImageUrl() {
+		return imageUrl;
 	}
-
-	public void setPrice(int price) {
-		this.price = price;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
-
-	public String getImgUrl() {
-		return imgUrl;
+	public String getProductNote() {
+		return productNote;
 	}
-
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setProductNote(String productNote) {
+		this.productNote = productNote;
 	}
 
 }

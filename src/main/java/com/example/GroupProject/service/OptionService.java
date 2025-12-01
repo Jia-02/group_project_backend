@@ -1,6 +1,8 @@
 package com.example.GroupProject.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.request.OptionCreatReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.OptionListRes;
+import com.example.GroupProject.vo.OptionVo;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -39,9 +44,9 @@ public class OptionService {
 					ResCodeMessage.OPTION_NAME_ERROR.getCode(), //
 					ResCodeMessage.OPTION_NAME_ERROR.getMessage());
 		}
-		
-		//客製化名稱重複
-		if(optionDao.checkOptionName(req.getOptionName())) {
+
+		// 客製化名稱重複
+		if (optionDao.checkOptionName(req.getOptionName())) {
 			return new BasicRes( //
 					ResCodeMessage.OPTION_NAME_IS_USED.getCode(), //
 					ResCodeMessage.OPTION_NAME_IS_USED.getMessage());
@@ -66,7 +71,7 @@ public class OptionService {
 			return new BasicRes(ResCodeMessage.OPTION_DETAIL_ERROR.getCode(),
 					ResCodeMessage.OPTION_DETAIL_ERROR.getMessage());
 		}
-		
+
 		Set<String> names = new HashSet<>();
 
 		// detail 名稱為空、價格小於0、名稱已存在
@@ -173,5 +178,42 @@ public class OptionService {
 			throw new RuntimeException(addRes.getCode() + addRes.getMessage());
 		}
 		return addRes;
+	}
+
+	// 查詢客製化列表(透過分類ID)
+	@Transactional(readOnly = true)
+	public OptionListRes getOptionList(int categoryId) throws Exception {
+
+		// 分類id存在與否
+		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+			return new OptionListRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		// 從資料庫拿 DTO 全部資料
+		List<OptionDto> dtoList = optionDao.getOptionList(categoryId);
+
+		// 建立voList 存放列表
+		List<OptionVo> voList = new ArrayList<>();
+		for (OptionDto dto : dtoList) {
+			OptionVo vo = new OptionVo();
+			// 基本資料加入
+			vo.setOptionId(dto.getOptionId());
+			vo.setOptionName(dto.getOptionName());
+
+			// 把 JSON 字串轉成 List<OptionDetailDto>
+			if (dto.getOptionDetail() != null && !dto.getOptionDetail().isEmpty()) {
+				List<OptionDetailDto> detailList = mapper.readValue(dto.getOptionDetail(),
+						new TypeReference<List<OptionDetailDto>>() {
+						});
+				vo.setOptionDetail(detailList);
+			}
+			// 客製化細節加入
+			voList.add(vo);
+		}
+		return new OptionListRes(//
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), categoryId, voList);
 	}
 }

@@ -1,5 +1,7 @@
 package com.example.GroupProject.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ProductRes;
+import com.example.GroupProject.vo.ProductVo;
 
 @Service
 public class ProductService {
@@ -84,11 +87,13 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-
+		List<ProductVo> productList = productDao.getProductList(categoryId);
+		
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				productDao.getProductList(categoryId));
+				categoryId,
+				productList);
 	}
 
 	// 查看商品(點餐時)-不顯示active=0
@@ -101,11 +106,14 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
+		
+		List<ProductVo> productList = productDao.getUserProductList(categoryId);
 
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				productDao.getUserProductList(categoryId));
+				categoryId,
+				productList);
 	}
 
 	// 刪除商品

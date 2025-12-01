@@ -2,13 +2,16 @@ package com.example.GroupProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.request.OptionCreatReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.OptionListRes;
 import com.example.GroupProject.service.OptionService;
 
 @RestController
@@ -36,4 +39,9 @@ public class OptionController {
 		return optionService.updateOption(req);
 	}
 	
+	//查詢客製化列表(透過分類ID)
+	@GetMapping(value = "option/list")
+	public OptionListRes getOptionList(@RequestParam("categoryId") int categoryId) throws Exception{
+		return optionService.getOptionList(categoryId);
+	}
 }

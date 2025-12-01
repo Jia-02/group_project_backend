@@ -1,10 +1,14 @@
-package com.example.GroupProject.dto;
-public class OptionDto {
+package com.example.GroupProject.vo;
+
+import java.util.List;
+
+import com.example.GroupProject.dto.OptionDetailDto;
+
+public class OptionVo {
 	
     private int optionId;
     private String optionName;
-    private String optionDetail;
-    private int categoryId;
+    private List<OptionDetailDto> optionDetail;
     
 	public int getOptionId() {
 		return optionId;
@@ -18,17 +22,14 @@ public class OptionDto {
 	public void setOptionName(String optionName) {
 		this.optionName = optionName;
 	}
-	public String getOptionDetail() {
+
+	public List<OptionDetailDto> getOptionDetail() {
 		return optionDetail;
 	}
-	public void setOptionDetail(String optionDetail) {
+	public void setOptionDetail(List<OptionDetailDto> optionDetail) {
 		this.optionDetail = optionDetail;
 	}
-	public int getCategoryId() {
-		return categoryId;
-	}
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
+	
+	
 
 }

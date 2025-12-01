@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.ProductDto;
+import com.example.GroupProject.vo.ProductVo;
 
 @Mapper
 public interface ProductDao {
@@ -14,10 +15,10 @@ public interface ProductDao {
 	public int addProduct(ProductDto productDto);
 	
 	//查看商品列表(管理者)
-	public List<ProductDto> getProductList(@Param("categoryId") int categoryId);
+	public List<ProductVo> getProductList(@Param("categoryId") int categoryId);
 	
 	//查看商品列表(使用者)
-	public List<ProductDto> getUserProductList(@Param("categoryId") int categoryId);
+	public List<ProductVo> getUserProductList(@Param("categoryId") int categoryId);
 	
 	//刪除商品
 	public int delProductById(ProductDto dto);

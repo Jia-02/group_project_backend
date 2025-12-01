@@ -24,13 +24,21 @@
 		SELECT COUNT(1) FROM
 		options WHERE option_id = #{optionId}
 	</select>
-	
+
 	<!-- 客製化名稱重複 -->
 	<select id="checkOptionName" resultType="boolean">
 		SELECT
 		COUNT(*) > 0
-		FROM options
+		FROM
+		options
 		WHERE option_name = #{optionName}
+	</select>
+
+	<!-- 查詢客製化列表(透過分類ID) -->
+	<select id="getOptionList"
+		resultType="com.example.GroupProject.dto.OptionDto">
+		SELECT * FROM options
+		WHERE category_id = #{categoryId}
 	</select>
 
 </mapper>

@@ -21,21 +21,29 @@
 
 	<!-- 透過分類ID查詢商品(管理者) -->
 	<select id="getProductList"
-		resultType="com.example.GroupProject.dto.ProductDto">
-		SELECT * FROM product WHERE category_id = #{categoryId}
-	</select>
-
-	<!-- 透過分類ID查詢商品(使用者) -->
-	<select id="getUserProductList"
-		resultType="com.example.GroupProject.dto.ProductDto">
+		resultType="com.example.GroupProject.vo.ProductVo">
 		SELECT product_id,
 		product_name,
 		product_price,
 		product_active,
 		product_description,
 		image_url,
-		product_note,
-		category_id
+		product_note
+		FROM product
+		WHERE
+		category_id = #{categoryId}
+	</select>
+
+	<!-- 透過分類ID查詢商品(使用者) -->
+	<select id="getUserProductList"
+		resultType="com.example.GroupProject.vo.ProductVo">
+		SELECT product_id,
+		product_name,
+		product_price,
+		product_active,
+		product_description,
+		image_url,
+		product_note
 		FROM product
 		WHERE category_id = #{categoryId}
 		AND product_active = 1
@@ -52,12 +60,13 @@
 		SELECT COUNT(1) FROM
 		product WHERE product_id = #{productId}
 	</select>
-	
-		<!-- 商品名稱重複 -->
+
+	<!-- 商品名稱重複 -->
 	<select id="checkProductName" resultType="boolean">
 		SELECT
 		COUNT(*) > 0
-		FROM product
+		FROM
+		product
 		WHERE product_name = #{productName}
 	</select>
 
