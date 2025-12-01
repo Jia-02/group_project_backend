@@ -26,6 +26,7 @@ public enum ResCodeMessage {
 	//活動錯誤
 	CALENDAR_DATE_ERROR(400,"Calendar date error!!"),//
 	CALENDAR_NOT_FOUND(400,"Calendar 標題不得為空!!"),//
+	CALENDAR_IS_EMPTY(400,"Calendar 標題不得為空字串!!"),//
 
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //

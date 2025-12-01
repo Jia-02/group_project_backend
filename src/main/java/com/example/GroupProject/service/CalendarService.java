@@ -28,12 +28,34 @@ public class CalendarService {
 	@Transactional(rollbackFor = Exception.class)
     public BasicRes create(Calendar calendar) {
     	
-    	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
+		// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
         if (!StringUtils.hasText(calendar.getCalendarTitle())) {
             return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
             		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
         }
+        if (calendar.getCalendarTitle()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
+        }
+        // 1.2 驗證：敘述不得為空
+        if (!StringUtils.hasText(calendar.getCalendarDescription())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
+        }
+        if (calendar.getCalendarDescription()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
+        }
         
+        // 1.3 驗證：圖片URL不得為空
+        if (!StringUtils.hasText(calendar.getCalendarPhoto())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
+        }
+        if (calendar.getCalendarPhoto()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
+        }
         // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
         if (calendar.getCalendarStartDate().isAfter(calendar.getCalendarEndDate())) {
             return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
@@ -41,6 +63,11 @@ public class CalendarService {
         }
         //驗證：結束時間早於開始時間
         if(calendar.getCalendarEndDate().isBefore(calendar.getCalendarStartDate())) {
+			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+		}
+        //驗證：結束時間相等於開始時間
+        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
 			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
 					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
 		}
@@ -93,10 +120,32 @@ public class CalendarService {
     @Transactional(rollbackFor = Exception.class)
     public BasicRes updateDataById(Calendar calendar) {
         // 假設已經有狀態檢查邏輯
-    	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
+    		// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
         if (!StringUtils.hasText(calendar.getCalendarTitle())) {
             return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
             		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
+        }
+        if (calendar.getCalendarTitle()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
+        }
+        // 1.2 驗證：敘述不得為空
+        if (!StringUtils.hasText(calendar.getCalendarDescription())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
+        }
+        if (calendar.getCalendarDescription()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
+        }
+        // 1.3 驗證：圖片URL不得為空
+        if (!StringUtils.hasText(calendar.getCalendarPhoto())) {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage()); 
+        }
+        if (calendar.getCalendarPhoto()=="") {
+            return new BasicRes(ResCodeMessage.CALENDAR_NOT_FOUND.getCode(),
+            		ResCodeMessage.CALENDAR_NOT_FOUND.getMessage());
         }
         // 2. 驗證：開始時間晚於結束時間 (呼叫 getCalendarStartDate(), getCalendarEndDate())
         if (calendar.getCalendarStartDate().isAfter(calendar.getCalendarEndDate())) {
@@ -105,6 +154,11 @@ public class CalendarService {
         }
         //驗證：結束時間早於開始時間
         if(calendar.getCalendarEndDate().isBefore(calendar.getCalendarStartDate())) {
+			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+		}
+        //驗證：結束時間相等於開始時間
+        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
 			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
 					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
 		}

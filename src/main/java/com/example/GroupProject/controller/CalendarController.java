@@ -49,7 +49,7 @@ public class CalendarController {
     	 	return calendarService.findActivitiesByDate();
      }
     
-     @GetMapping(value = "/calendar/all")
+     @GetMapping(value = "calendar/all")
      public CalendarRes selectAll() {
          return calendarService.selectAll();
      }
