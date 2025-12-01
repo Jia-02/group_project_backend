@@ -59,7 +59,6 @@
 		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,
 			position_x = #{tablePositionX}, position_y = #{tablePositionY} ,
 			length_x = #{lengthX} , length_y = #{lengthY} where table_id = #{tableId}
-			
 	</update>
 
 </mapper>

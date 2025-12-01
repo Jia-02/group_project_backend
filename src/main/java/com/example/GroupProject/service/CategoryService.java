@@ -9,6 +9,7 @@ import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
 import com.example.GroupProject.dto.CategoryDto;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.CategoryListRes;
 
 @Service
 public class CategoryService {
@@ -126,6 +127,15 @@ public class CategoryService {
 					ResCodeMessage.CREATE_CATEGORY_FAILED.getCode(), //
 					ResCodeMessage.CREATE_CATEGORY_FAILED.getMessage());
 		}
+	}
+	
+	/** 查看分類列表 */
+	@Transactional(readOnly = true)
+	public CategoryListRes getCategoryList() {
+		return new CategoryListRes(//
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				categoryDao.getCategoryList());
 	}
 
 }

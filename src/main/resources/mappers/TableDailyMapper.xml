@@ -18,17 +18,17 @@
 		ORDER BY table_id
 	</select>
 
-    <!-- 查某一天某一桌狀態 -->
+	<!-- 查某一天某一桌狀態 -->
 	<select id="getTableStatus" resultType="Integer">
 		SELECT table_daily_status
 		FROM table_daily
 		WHERE table_daily_date = #{tableDailyDate}
-		AND table_id = #{tableId}
+		AND table_id
+		= #{tableId}
 	</select>
-	
+
 	<!-- 新增 -->
-	<insert id="insertStatus"
-		parameterType="com.example.GroupProject.dto.TableDailyDto">
+	<insert id="insertTableStatus">
 		INSERT INTO table_daily (
 		table_daily_date, table_id,
 		table_daily_status
@@ -40,8 +40,7 @@
 	</insert>
 
 	<!-- 更新狀態 -->
-	<update id="updateStatus"
-		parameterType="com.example.GroupProject.dto.TableDailyDto">
+	<update id="updateTableStatus">
 		UPDATE table_daily
 		SET table_daily_status =
 		#{tableDailyStatus}
@@ -49,6 +48,13 @@
 		AND
 		table_id = #{tableId}
 	</update>
+
+	<!-- 刪除狀態 -->
+	<delete id="delTableStatus">
+		delete from table_daily
+		where table_id = #{tableId}
+		and table_daily_date = #{tableDailyDate}
+	</delete>
 
 
 </mapper>

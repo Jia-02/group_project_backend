@@ -39,18 +39,20 @@ public class ReservationController {
 		return reservationService.getReservationList();
 	}
 	
+	//根據日期、手機顯示單筆資料
+	
     //顯示一天的訂位資料(含桌位、狀態)
 	@GetMapping(value = "reservation/date_list")
 	public ReservationAndTableByDateRes findReservationsByDate(//
-			@RequestParam("reservation_date") LocalDate reservationDate) {
+			@RequestParam("reservationDate") LocalDate reservationDate) {
 		return reservationService.findReservationsByDate(reservationDate);
 	}
 	
     //查詢同一天某時段之資訊桌位、預約資訊 
 	@GetMapping(value = "reservation/time_list")
 	public ReservationAndTableByTimeRes findTableStatusByTimeSlot(//
-			@RequestParam("reservation_date") LocalDate reservationDate, //
-			@RequestParam("reservation_time") LocalTime reservationTime
+			@RequestParam("reservationDate") LocalDate reservationDate, //
+			@RequestParam("reservationTime") LocalTime reservationTime
 			) {
 		return reservationService.findTableStatusByTimeSlot(reservationDate, reservationTime);
 	}
