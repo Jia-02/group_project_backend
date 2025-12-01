@@ -24,7 +24,7 @@ public interface CalendarDao {
 	
 	public Calendar selectById(@Param("calendarId") int calendarId);
 
-	public CalendarRes findActByDateRange(
+	public List<Calendar> findActByDateRange(
 	        @Param("startDate") LocalDateTime startDate, 
 	        @Param("endDate") LocalDateTime endDate
 	    );

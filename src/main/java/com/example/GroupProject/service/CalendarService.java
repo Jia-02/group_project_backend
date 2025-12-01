@@ -3,6 +3,7 @@ package com.example.GroupProject.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -59,7 +60,7 @@ public class CalendarService {
     
  // ⭐ 查詢當天及後三天活動的核心邏輯 ⭐
 	@Transactional(readOnly = true)
-    public CalendarRes getUpcomingActivities() {
+    public CalendarRes findActivitiesByDate() {
         // 1. 取得今天日期
         LocalDate today = LocalDate.now();
         
@@ -71,7 +72,21 @@ public class CalendarService {
         LocalDateTime endDate = LocalDateTime.of(endDateLimit, LocalTime.MAX);
         
         // 4. 呼叫 DAO 執行查詢
-        return calendarDao.findActByDateRange(startDate, endDate);
+        
+        List<Calendar> activities = calendarDao.findActByDateRange(startDate, endDate); 
+        
+        // 5. 執行業務邏輯檢查（可選）
+        if (activities == null || activities.isEmpty()) {
+            return new CalendarRes(ResCodeMessage.NOT_FOUND.getCode(), 
+            		ResCodeMessage.NOT_FOUND.getMessage(),null);
+        }
+        
+        // 6. 封裝結果並回傳 CalendarRes
+        return new CalendarRes(
+            ResCodeMessage.SUCCESS.getCode(), 
+            ResCodeMessage.SUCCESS.getMessage(),
+            activities // 傳入 List<Calendar>
+        );
     }
     
     // ... 其他方法直接寫在這裡 (updateCalendarData, getCalendarById, deleteCalendar) ...
