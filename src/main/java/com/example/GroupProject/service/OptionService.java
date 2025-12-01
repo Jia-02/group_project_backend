@@ -101,4 +101,36 @@ public class OptionService {
 					ResCodeMessage.CREATE_OPTION_FAILED.getMessage());
 		}
 	}
+	
+	//刪除客製化
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes delOptionById(OptionDto dto) {
+		
+		// 確認客製化id是否 > 0
+		if (dto.getOptionId() <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.OPTION_ID_ERROR.getCode(), //
+					ResCodeMessage.OPTION_ID_ERROR.getMessage());
+		}
+		
+		//確認客製化存在與否
+		if (optionDao.checkOptionExist(dto.getOptionId()) == 0) {
+			return new BasicRes(
+					ResCodeMessage.OPTION_NOT_FOUND.getCode(), //
+					ResCodeMessage.OPTION_NOT_FOUND.getMessage());
+		}
+		
+		// 成功通過判斷後新增客製化
+		int result = optionDao.delOptionById(dto);
+		if (result > 0) {
+			return new BasicRes(//
+					ResCodeMessage.SUCCESS.getCode(), //
+					ResCodeMessage.SUCCESS.getMessage());
+		} else {
+			return new BasicRes(//
+					ResCodeMessage.DELETE_OPTION_FAILED.getCode(), //
+					ResCodeMessage.DELETE_OPTION_FAILED.getMessage());
+		}
+	}
+	
 }

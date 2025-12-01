@@ -25,10 +25,16 @@
 		WHERE category_id = #{categoryId}
 	</delete>
 
-	<!-- 使用中的分類 -->
-	<select id="checkCategoryUsed" resultType="int">
+	<!-- (商品)使用中的分類 -->
+	<select id="checkProductCategoryUsed" resultType="int">
 		SELECT COUNT(*) FROM
 		product WHERE category_id = #{categoryId}
+	</select>
+	
+	<!-- (客製化)使用中的分類 -->
+	<select id="checkOptionCategoryUsed" resultType="int">
+		SELECT COUNT(*) FROM
+		options WHERE category_id = #{categoryId}
 	</select>
 
     <!-- 分類id存在與否 -->

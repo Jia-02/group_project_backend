@@ -5,11 +5,23 @@
 
 <mapper namespace="com.example.GroupProject.dao.OptionDao">
 
-<!-- 新增客製化 -->
+	<!-- 新增客製化 -->
 	<insert id="addOption">
-        INSERT INTO options(option_id, option_name, option_detail, category_id)
-        VALUES (#{optionId}, #{optionName}, #{optionDetail}, #{categoryId})
+		INSERT INTO options(option_id, option_name, option_detail, category_id)
+		VALUES (#{optionId}, #{optionName}, #{optionDetail}, #{categoryId})
 	</insert>
+
+	<!-- 刪除客製化 -->
+	<delete id="delOptionById">
+		DELETE FROM options
+		WHERE option_id = #{optionId}
+	</delete>
+	
+   <!-- 確認客製化存在數量 -->
+	<select id="checkOptionExist" resultType="int">
+		SELECT COUNT(1) FROM
+		options WHERE option_id = #{optionId}
+	</select>
 
 
 </mapper>

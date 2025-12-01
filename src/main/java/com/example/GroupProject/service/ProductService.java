@@ -120,7 +120,9 @@ public class ProductService {
 
 		// 如果商品上架中，不可刪除
 		if (productDao.getProductActive(dto.getProductId())) {
-			return new BasicRes(ResCodeMessage.PRODUCT_IS_USED.getCode(), ResCodeMessage.PRODUCT_IS_USED.getMessage());
+			return new BasicRes( //
+					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
+					ResCodeMessage.PRODUCT_IS_USED.getMessage());
 		}
 
 		int result = productDao.delProductById(dto);
