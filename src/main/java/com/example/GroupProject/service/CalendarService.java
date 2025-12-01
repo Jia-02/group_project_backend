@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
@@ -23,6 +24,7 @@ public class CalendarService {
     private CalendarDao calendarDao;
     
     // --- 創建方法 (包含驗證邏輯) ---
+	@Transactional(rollbackFor = Exception.class)
     public BasicRes create(Calendar calendar) {
     	
     	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
@@ -56,6 +58,7 @@ public class CalendarService {
     }
     
  // ⭐ 查詢當天及後三天活動的核心邏輯 ⭐
+	@Transactional(readOnly = true)
     public CalendarRes getUpcomingActivities() {
         // 1. 取得今天日期
         LocalDate today = LocalDate.now();
@@ -72,7 +75,7 @@ public class CalendarService {
     }
     
     // ... 其他方法直接寫在這裡 (updateCalendarData, getCalendarById, deleteCalendar) ...
-    
+    @Transactional(rollbackFor = Exception.class)
     public BasicRes updateDataById(Calendar calendar) {
         // 假設已經有狀態檢查邏輯
     	// 1. 驗證：標題不得為空 (呼叫 getCalendarTitle())
@@ -107,11 +110,13 @@ public class CalendarService {
 //        return calendarDao.selectById(calendarId); 
 //    }
 
+    @Transactional(rollbackFor = Exception.class)
     public BasicRes deleteById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
     	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
         return calendarDao.deleteById(calendarId);
     }
     
+    @Transactional(readOnly = true)
     public CalendarRes selectAll() {    		
     		return new CalendarRes(ResCodeMessage.SUCCESS.getCode(), 
     				ResCodeMessage.SUCCESS.getMessage(),calendarDao.selectAll());
