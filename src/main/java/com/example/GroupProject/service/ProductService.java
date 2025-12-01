@@ -24,6 +24,13 @@ public class ProductService {
 	// 新增商品
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addProduct(ProductDto dto) {
+		
+		// 確認商品id是否 > 0
+		if (dto.getProductId() <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.PRODUCT_ID_ERROR.getCode(), //
+					ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
+		}
 
 		// 分類ID不存在
 		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
