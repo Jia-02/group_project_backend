@@ -20,7 +20,7 @@ public interface CalendarDao {
 	/* update */
 	public int updateDataById(Calendar calendar);
 	/* delete */
-	public BasicRes deleteById(@Param("calendarId") int calendarId);
+	public int deleteById(@Param("calendarId") int calendarId);
 	
 	public Calendar selectById(@Param("calendarId") int calendarId);
 

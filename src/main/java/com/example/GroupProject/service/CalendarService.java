@@ -113,7 +113,15 @@ public class CalendarService {
     @Transactional(rollbackFor = Exception.class)
     public BasicRes deleteById(int calendarId) { // 這裡的參數可以選擇是否改成 calendarId
     	// 這裡的 DAO 呼叫是傳入基本類型 int，保持不變
-        return calendarDao.deleteById(calendarId);
+    	int res= calendarDao.deleteById(calendarId);
+    	if(res == 0) {
+			return new BasicRes(ResCodeMessage.NOT_FOUND.getCode(),
+					ResCodeMessage.NOT_FOUND.getMessage());
+		}
+        // DAO 呼叫保持不變，因為參數是 DTO 物件
+        
+        return new BasicRes(ResCodeMessage.SUCCESS.getCode(), 
+				ResCodeMessage.SUCCESS.getMessage());
     }
     
     @Transactional(readOnly = true)

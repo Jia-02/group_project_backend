@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GroupProject.dto.Calendar;
@@ -39,7 +40,7 @@ public class CalendarController {
 
     // 4. 刪除 (D - Delete) - DELETE /calendar/{id}
     @PostMapping(value = "calendar/del") // 路徑: /calendar/{calendar_id}
-    public BasicRes deleteById(@PathVariable("calendarId") int calendarId) {
+    public BasicRes deleteById(@RequestParam("calendarId") int calendarId) {
     		return calendarService.deleteById(calendarId);
     }
     
