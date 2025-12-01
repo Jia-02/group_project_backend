@@ -26,7 +26,7 @@
 		where calendar_id = #{calendarId}
 	</update>
 	
-    <select id="findActivitiesByDateRange"
+    <select id="findActByDateRange"
 		resultType="com.example.GroupProject.dto.Calendar">
 		SELECT * FROM calendar
 		WHERE
