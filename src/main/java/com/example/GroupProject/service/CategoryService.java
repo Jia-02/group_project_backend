@@ -54,7 +54,7 @@ public class CategoryService {
 		}
 		
 		// 不可重複輸入同名稱之分類
-		if (categoryDao.checkCategoryExists(dto.getCategoryType(), dto.getWorkstationId())) {
+		if (categoryDao.checkCategoryExists(dto.getCategoryType())) {
 			return new BasicRes(ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(),
 					ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
 		}

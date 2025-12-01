@@ -52,6 +52,14 @@
 		SELECT COUNT(1) FROM
 		product WHERE product_id = #{productId}
 	</select>
+	
+		<!-- 商品名稱重複 -->
+	<select id="checkProductName" resultType="boolean">
+		SELECT
+		COUNT(*) > 0
+		FROM product
+		WHERE product_name = #{productName}
+	</select>
 
 	<!-- 確認商品上架中 -->
 	<select id="getProductActive" resultType="boolean">
@@ -70,7 +78,8 @@
 		image_url = #{imageUrl},
 		product_note = #{productNote},
 		category_id = #{categoryId}
-		WHERE product_id = #{productId}
+		WHERE
+		product_id = #{productId}
 	</update>
 
 </mapper>

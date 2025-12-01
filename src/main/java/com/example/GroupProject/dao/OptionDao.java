@@ -16,4 +16,8 @@ public interface OptionDao {
 	
 	//確認該客製化存在
 	public int checkOptionExist(@Param("optionId") int optionId);
+	
+	//客製化重複
+	public boolean checkOptionName(@Param("optionName") String optionName);
+	
 }

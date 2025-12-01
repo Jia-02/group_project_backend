@@ -30,4 +30,10 @@ public class OptionController {
 		return optionService.delOptionById(dto);
 	}
 	
+	//更新客製化
+	@PostMapping(value = "option/update")
+	public BasicRes updateOption(@RequestBody OptionCreatReq req) throws Exception {
+		return optionService.updateOption(req);
+	}
+	
 }

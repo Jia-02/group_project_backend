@@ -54,6 +54,13 @@ public class ProductService {
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getCode(), //
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getMessage());
 		}
+		
+		//商品名稱重複
+		if(productDao.checkProductName(dto.getProductName())) {
+			return new BasicRes( //
+					ResCodeMessage.PRODUCT_NAME_IS_USED.getCode(), //
+					ResCodeMessage.PRODUCT_NAME_IS_USED.getMessage());
+		}
 
 		int result = productDao.addProduct(dto);
 		if (result > 0) {

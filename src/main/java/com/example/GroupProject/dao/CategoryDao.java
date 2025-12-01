@@ -15,9 +15,7 @@ public interface CategoryDao {
 	public int addCategory(CategoryDto categoryDto);
 	
 	//確認分類是否已存在
-	public boolean checkCategoryExists( //
-			@Param("categoryType") String categoryType, //
-			@Param("workstationId") int workstationId);
+	public boolean checkCategoryExists(@Param("categoryType") String categoryType);
 	
 	//刪除分類
 	public int delCategoryById(CategoryDto categoryDto);
