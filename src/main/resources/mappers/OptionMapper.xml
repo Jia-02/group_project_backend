@@ -8,9 +8,9 @@
 	<!-- 新增客製化 -->
 	<insert id="addOption">
 		INSERT INTO options(option_id, option_name,
-		option_detail, category_id)
+		option_detail, max_select, category_id)
 		VALUES (#{optionId}, #{optionName},
-		#{optionDetail}, #{categoryId})
+		#{optionDetail}, #{maxSelect}, #{categoryId})
 	</insert>
 
 	<!-- 刪除客製化 -->

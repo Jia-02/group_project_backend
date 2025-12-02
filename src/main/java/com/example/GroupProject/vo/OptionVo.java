@@ -8,6 +8,7 @@ public class OptionVo {
 	
     private int optionId;
     private String optionName;
+    private int maxSelect;
     private List<OptionDetailDto> optionDetail;
     
 	public int getOptionId() {
@@ -29,7 +30,11 @@ public class OptionVo {
 	public void setOptionDetail(List<OptionDetailDto> optionDetail) {
 		this.optionDetail = optionDetail;
 	}
-	
-	
+	public int getMaxSelect() {
+		return maxSelect;
+	}
+	public void setMaxSelect(int maxSelect) {
+		this.maxSelect = maxSelect;
+	}
 
 }

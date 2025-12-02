@@ -58,6 +58,13 @@ public class OptionService {
 					ResCodeMessage.OPTION_ID_ERROR.getCode(), //
 					ResCodeMessage.OPTION_ID_ERROR.getMessage());
 		}
+		
+		//客製化選項數量不可小於等於0
+		if (req.getMaxSelect() <= 0) {
+		    return new BasicRes(
+		    		ResCodeMessage.MAXSELECT_ERROR.getCode(), //
+					ResCodeMessage.MAXSELECT_ERROR.getMessage());
+		}
 
 		// 分類id存在與否
 		if (categoryDao.checkCategoryExist(req.getCategoryId()) == 0) {
@@ -97,6 +104,7 @@ public class OptionService {
 		dto.setOptionId(req.getOptionId());
 		dto.setOptionName(req.getOptionName());
 		dto.setCategoryId(req.getCategoryId());
+		dto.setMaxSelect(req.getMaxSelect());
 
 		// 字串存放轉換的detail
 		String jsonString = mapper.writeValueAsString(req.getOptionDetail());
@@ -148,6 +156,13 @@ public class OptionService {
 	// 更新客製化
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes updateOption(OptionCreatReq req) throws Exception {
+		
+		//客製化選項數量不可小於等於0
+		if (req.getMaxSelect() <= 0) {
+		    return new BasicRes(
+		    		ResCodeMessage.MAXSELECT_ERROR.getCode(), //
+					ResCodeMessage.MAXSELECT_ERROR.getMessage());
+		}
 
 		// 確認客製化id是否 > 0
 		if (req.getOptionId() <= 0) {
@@ -201,6 +216,7 @@ public class OptionService {
 			// 基本資料加入
 			vo.setOptionId(dto.getOptionId());
 			vo.setOptionName(dto.getOptionName());
+			vo.setMaxSelect(dto.getMaxSelect());
 
 			// 把 JSON 字串轉成 List<OptionDetailDto>
 			if (dto.getOptionDetail() != null && !dto.getOptionDetail().isEmpty()) {

@@ -55,6 +55,7 @@ public enum ResCodeMessage {
 	OPTION_NOT_FOUND(400, "找不到客製化。"), //
 	OPTION_IS_USED(400, "客製化使用中。"), //
 	DELETE_OPTION_FAILED(400, "客製化刪除失敗。"), //
+	MAXSELECT_ERROR(400, "客製化最大選項數量失敗。"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

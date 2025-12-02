@@ -8,17 +8,19 @@ public class OptionCreatReq {
 	
     private int optionId;
     private String optionName;
+    private int maxSelect;
     private List<OptionDetailDto> optionDetail; 
     private int categoryId;
-    
     
 	public OptionCreatReq() {
 		super();
 	}
-	public OptionCreatReq(int optionId, String optionName, List<OptionDetailDto> optionDetail, int categoryId) {
+	public OptionCreatReq(int optionId, String optionName, int maxSelect, List<OptionDetailDto> optionDetail,
+			int categoryId) {
 		super();
 		this.optionId = optionId;
 		this.optionName = optionName;
+		this.maxSelect = maxSelect;
 		this.optionDetail = optionDetail;
 		this.categoryId = categoryId;
 	}
@@ -34,6 +36,12 @@ public class OptionCreatReq {
 	public void setOptionName(String optionName) {
 		this.optionName = optionName;
 	}
+	public int getMaxSelect() {
+		return maxSelect;
+	}
+	public void setMaxSelect(int maxSelect) {
+		this.maxSelect = maxSelect;
+	}
 	public List<OptionDetailDto> getOptionDetail() {
 		return optionDetail;
 	}
@@ -46,6 +54,5 @@ public class OptionCreatReq {
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
- 
 
 }
