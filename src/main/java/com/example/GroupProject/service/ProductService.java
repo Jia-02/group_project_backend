@@ -1,5 +1,7 @@
 package com.example.GroupProject.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.ProductRes;
+import com.example.GroupProject.vo.ProductVo;
 
 @Service
 public class ProductService {
@@ -24,6 +27,13 @@ public class ProductService {
 	// 新增商品
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addProduct(ProductDto dto) {
+		
+		// 確認商品id是否 > 0
+		if (dto.getProductId() <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.PRODUCT_ID_ERROR.getCode(), //
+					ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
+		}
 
 		// 分類ID不存在
 		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
@@ -46,6 +56,13 @@ public class ProductService {
 			return new BasicRes( //
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getCode(), //
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getMessage());
+		}
+		
+		//商品名稱重複
+		if(productDao.checkProductName(dto.getProductName())) {
+			return new BasicRes( //
+					ResCodeMessage.PRODUCT_NAME_IS_USED.getCode(), //
+					ResCodeMessage.PRODUCT_NAME_IS_USED.getMessage());
 		}
 
 		int result = productDao.addProduct(dto);
@@ -70,11 +87,13 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-
+		List<ProductVo> productList = productDao.getProductList(categoryId);
+		
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				productDao.getProductList(categoryId));
+				categoryId,
+				productList);
 	}
 
 	// 查看商品(點餐時)-不顯示active=0
@@ -87,11 +106,14 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
+		
+		List<ProductVo> productList = productDao.getUserProductList(categoryId);
 
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				productDao.getUserProductList(categoryId));
+				categoryId,
+				productList);
 	}
 
 	// 刪除商品
@@ -113,7 +135,9 @@ public class ProductService {
 
 		// 如果商品上架中，不可刪除
 		if (productDao.getProductActive(dto.getProductId())) {
-			return new BasicRes(ResCodeMessage.PRODUCT_IS_USED.getCode(), ResCodeMessage.PRODUCT_IS_USED.getMessage());
+			return new BasicRes( //
+					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
+					ResCodeMessage.PRODUCT_IS_USED.getMessage());
 		}
 
 		int result = productDao.delProductById(dto);

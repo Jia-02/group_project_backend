@@ -17,6 +17,7 @@ public class CategoryService {
 	@Autowired
 	private CategoryDao categoryDao;
 
+
 	/** 私有共同判斷輸入值 */
 	private BasicRes validateCategory(CategoryDto dto) {
 
@@ -53,7 +54,7 @@ public class CategoryService {
 		}
 		
 		// 不可重複輸入同名稱之分類
-		if (categoryDao.checkCategoryExists(dto.getCategoryType(), dto.getWorkstationId())) {
+		if (categoryDao.checkCategoryExists(dto.getCategoryType())) {
 			return new BasicRes(ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(),
 					ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
 		}
@@ -83,11 +84,19 @@ public class CategoryService {
 		}
 
 		// 於商品中使用的分類不可刪除
-		if (categoryDao.checkCategoryUsed(dto.getCategoryId()) > 0) {
+		if (categoryDao.checkProductCategoryUsed(dto.getCategoryId()) > 0) {
 			return new BasicRes(//
-					ResCodeMessage.CATEGORY_IS_USED.getCode(), //
-					ResCodeMessage.CATEGORY_IS_USED.getMessage());
+					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
+					ResCodeMessage.PRODUCT_IS_USED.getMessage());
 		}
+		
+		//客製化使用中的分類不可刪除
+		if (categoryDao.checkOptionCategoryUsed(dto.getCategoryId()) > 0) {
+			return new BasicRes(//
+					ResCodeMessage.OPTION_IS_USED.getCode(), //
+					ResCodeMessage.OPTION_IS_USED.getMessage());
+		}
+		
 		// 成功通過判斷後刪除
 		int result = categoryDao.delCategoryById(dto);
 		if (result > 0) {

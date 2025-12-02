@@ -29,7 +29,6 @@ public enum ResCodeMessage {
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
 	CATEGORY_TYPE_ERROR(400, "菜單分類不可空白。"), //
 	CATEGORY_ALREADY_EXISTS(400, "菜單分類已存在。"), //
-	CATEGORY_IS_USED(400, "菜單分類使用中。"), //
 	CATEGORY_IS_NOT_FOUND(400, "菜單分類ID找不到。"), //
 	
 	//工作台錯誤WORKSTATION
@@ -38,6 +37,7 @@ public enum ResCodeMessage {
 	
 	//餐點錯誤
 	PRODUCT_NAME_ERROR(400, "餐點名稱錯誤"), //
+	PRODUCT_NAME_IS_USED(400, "餐點名稱重複"), //
 	PRODUCT_ID_ERROR(400, "餐點ID錯誤"), //
 	PRODUCT_PRICE_ERROR(400, "餐點價格錯誤"), //
 	CREATE_PRODUCT_FAILED(400, "新增餐點失敗。"), //
@@ -49,11 +49,16 @@ public enum ResCodeMessage {
 	//客製化
 	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	OPTION_ID_ERROR(400, "客製化ID錯誤"), //
+	OPTION_NAME_IS_USED(400, "客製化名稱重複"), //
 	OPTION_DETAIL_ERROR(400, "客製化細節錯誤"), //
 	OPTION_NAME_ERROR(400, "客製化名稱錯誤"), //
 	OPTION_DETAIL_NAME_EMPTY(400, "客製化細節名稱為空"), //
 	OPTION_DETAIL_PRICE_INVALID(400, "客製化價格小於0"), //
-	OPTION_DETAIL_DUPLICATE(400, "客製化名稱重複"), //
+	OPTION_DETAIL_DUPLICATE(400, "客製化細節名稱重複"), //
+	OPTION_NOT_FOUND(400, "找不到客製化。"), //
+	OPTION_IS_USED(400, "客製化使用中。"), //
+	DELETE_OPTION_FAILED(400, "客製化刪除失敗。"), //
+	MAXSELECT_ERROR(400, "客製化最大選項數量失敗。"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
