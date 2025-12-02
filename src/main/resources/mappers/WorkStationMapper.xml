@@ -5,16 +5,40 @@
 
 <mapper namespace="com.example.GroupProject.dao.WorkStationDao">
 
+	<resultMap id="WorkStationMap"
+		type="com.example.GroupProject.dto.WorkStationDto">
+
+
+		<result property="workStationId" column="workstation_id" />
+		<result property="workStationName" column="workstation_name" />
+		
+
+	</resultMap>
+
 	<insert id="addWorkStation">
-		insert into workstation(workstation_name) values (#{workStationName})
+		insert into workstation(workstation_name) values
+		(#{workStationName})
 	</insert>
-	
+
 	<select id="getWorkStationList">
 		select * from workstation
 	</select>
-	
+
 	<delete id="deleteWorkStation">
-		delete from workstation where workstation_id = #{workStationId}
+		delete from workstation where workstation_id =
+		#{workStationId}
 	</delete>
-	
+
+	<select id="checkWorkstationExist" resultType="boolean">
+		select COUNT(1) > 0 from
+		workstation where workstation_id = #{workStationId}
+	</select>
+
+	<update id="updateWorkStationNameById" 
+	parameterType="com.example.GroupProject.dto.WorkStationDto">
+		update workstation set workstation_name =
+		#{workStationName}
+		where workstation_id = #{workStationId}
+	</update>
+
 </mapper>

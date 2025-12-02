@@ -16,4 +16,8 @@ public interface WorkStationDao {
 	
 	public int deleteWorkStation(@Param("workStationId") int workStationId);
 	
+	public boolean checkWorkstationExist(@Param("workStationId") int workdStationId);
+	
+	public void updateWorkStationNameById(WorkStationDto workStation);
+	
 }
