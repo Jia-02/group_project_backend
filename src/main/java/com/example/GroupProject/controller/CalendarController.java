@@ -45,8 +45,8 @@ public class CalendarController {
     
     		// ⭐ 查詢當天及後三天活動的 API ⭐
      @GetMapping(value = "calendar/selectDate")
-     public CalendarRes findActivitiesByDate(){
-    	 	return calendarService.findActivitiesByDate();
+     public CalendarRes findActByDateRange(){
+    	 	return calendarService.findActByDateRange();
      }
     
      @GetMapping(value = "calendar/all")

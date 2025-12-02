@@ -32,6 +32,7 @@
 		WHERE
 		calendar_start_date <![CDATA[ <= ]]> #{endDate}
 		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
+		AND calendar_status = TRUE
     </select>
 	
 
@@ -43,15 +44,6 @@
 		</foreach>
 	</select>
     
-    <select id="findActivitiesByDate"
-		resultType="com.example.GroupProject.dto.Calendar">
-		SELECT * FROM calendar
-		WHERE
-		calendar_start_date <![CDATA[ <= ]]>
-		#{checkDate}
-		AND calendar_end_date <![CDATA[ >= ]]>
-		#{checkDate}
-	</select>
 	
 	<delete id="deleteById">
 		delete from calendar where calendar_id =

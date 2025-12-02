@@ -87,7 +87,7 @@ public class CalendarService {
     
  // ⭐ 查詢當天及後三天活動的核心邏輯 ⭐
 	@Transactional(readOnly = true)
-    public CalendarRes findActivitiesByDate() {
+    public CalendarRes findActByDateRange() {
         // 1. 取得今天日期
         LocalDate today = LocalDate.now();
         

@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.Calendar;
-import com.example.GroupProject.response.BasicRes;
-import com.example.GroupProject.response.CalendarRes;
 
 public interface CalendarDao {
 
