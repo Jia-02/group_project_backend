@@ -51,28 +51,32 @@ public enum ResCodeMessage {
 	PRODUCT_AND_CATEGORY_NOT_MATCH(400, "餐點與分類不匹配。"), //
 	
 	//客製化
-	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	OPTION_ID_ERROR(400, "客製化ID錯誤"), //
 	OPTION_NAME_IS_USED(400, "客製化名稱重複"), //
 	OPTION_DETAIL_ERROR(400, "客製化細節錯誤"), //
 	OPTION_NAME_ERROR(400, "客製化名稱錯誤"), //
+	MAXSELECT_ERROR(400, "客製化最大選項數量錯誤。"), //
 	OPTION_DETAIL_NAME_EMPTY(400, "客製化細節名稱為空"), //
 	OPTION_DETAIL_PRICE_INVALID(400, "客製化價格小於0"), //
 	OPTION_DETAIL_DUPLICATE(400, "客製化細節名稱重複"), //
 	OPTION_NOT_FOUND(400, "找不到客製化。"), //
 	OPTION_IS_USED(400, "客製化使用中。"), //
+	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	DELETE_OPTION_FAILED(400, "客製化刪除失敗。"), //
-	MAXSELECT_ERROR(400, "客製化最大選項數量失敗。"), //
 	
 	//套餐
+	SETTING_ID_ERROR(400, "套餐ID錯誤。"), //
 	SETTING_NAME_ERROR(400, "套餐名字錯誤。"), //
 	SETTING_PRICE_ERROR(400, "套餐價格錯誤。"), //
 	SETTING_IMG_ERROR(400, "套餐圖片錯誤。"), //
 	SETTING_ACTIVE_ERROR(400, "套餐狀態錯誤。"), //
-	CREATE_SETTING_FAILED(400, "建立套餐失敗。"), //
 	SETTING_DETAIL_EMPTY(400, "套餐細節為空錯誤。"), //
 	DETAIL_PRODUCT_LIST_EMPTY(400, "套餐細節中的商品列表為空錯誤。"), //
 	SETTING_NAME_IS_USED(400, "套餐名稱重複。"), //
+	SETTING_NOT_FOUND(400, "找不到套餐。"), //
+	SETTING_IS_USED(400, "套餐開放使用中。"), //
+	CREATE_SETTING_FAILED(400, "建立套餐失敗。"), //
+	DELETE_SETTING_FAILED(400, "套餐刪除失敗。"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //

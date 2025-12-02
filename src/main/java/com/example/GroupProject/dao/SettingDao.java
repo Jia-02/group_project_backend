@@ -13,5 +13,14 @@ public interface SettingDao {
 	
 	//重覆套餐名稱
 	public boolean checkSettingName(@Param("settingName") String settingName);
+	
+	//刪除套餐
+	public int delSettingById(SettingDto settingDto);
+	
+	//確認該套餐存在
+	public int checkSettingExist(@Param("settingId") int settingId);
+	
+	//透過套餐id取得資料
+	public SettingDto getSettingById(@Param("settingId") int settingId);
 
 }

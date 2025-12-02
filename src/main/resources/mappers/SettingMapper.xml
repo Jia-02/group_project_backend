@@ -22,5 +22,24 @@
 		setting
 		WHERE setting_name = #{settingName}
 	</select>
+	
+	<!-- 刪除套餐-->
+	<delete id="delSettingById">
+		DELETE FROM setting
+		WHERE setting_id = #{settingId}
+	</delete>
+	
+	<!-- 套餐存在數量-->
+		<select id="checkSettingExist" resultType="int">
+		SELECT COUNT(1) FROM
+		setting WHERE setting_id = #{settingId}
+	</select>
+	
+		<!-- 查詢客製化列表(透過分類ID) -->
+	<select id="getSettingById"
+		resultType="com.example.GroupProject.dto.SettingDto">
+		SELECT * FROM setting
+		WHERE setting_id = #{settingId}
+	</select>
 
 </mapper>

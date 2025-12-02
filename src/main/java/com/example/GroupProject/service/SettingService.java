@@ -166,4 +166,44 @@ public class SettingService {
 		}
 	}
 
+	//刪除套餐
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes delSettingById(SettingDto dto) {
+		
+		// 確認套餐id是否 > 0
+		if (dto.getSettingId() <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.SETTING_ID_ERROR.getCode(), //
+					ResCodeMessage.SETTING_ID_ERROR.getMessage());
+		}
+
+		// 確認套餐存在與否
+		if (settingDao.checkSettingExist(dto.getSettingId()) == 0) {
+			return new BasicRes(//
+					ResCodeMessage.SETTING_NOT_FOUND.getCode(), //
+					ResCodeMessage.SETTING_NOT_FOUND.getMessage());
+		}
+		
+		SettingDto db = settingDao.getSettingById(dto.getSettingId());
+		//套餐啟用中無法刪除
+		if(db.isSettingActive()) {
+			return new BasicRes(//
+					ResCodeMessage.SETTING_IS_USED.getCode(), //
+					ResCodeMessage.SETTING_IS_USED.getMessage());
+		}
+		
+		// 成功通過判斷後刪除套餐
+		int result = settingDao.delSettingById(dto);
+		if (result > 0) {
+			return new BasicRes(//
+					ResCodeMessage.SUCCESS.getCode(), //
+					ResCodeMessage.SUCCESS.getMessage());
+		} else {
+			return new BasicRes(//
+					ResCodeMessage.DELETE_SETTING_FAILED.getCode(), //
+					ResCodeMessage.DELETE_SETTING_FAILED.getMessage());
+		}
+	}
+	
+	
 }
