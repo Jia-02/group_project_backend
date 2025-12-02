@@ -34,6 +34,7 @@ public enum ResCodeMessage {
 	//工作台錯誤WORKSTATION
 	WORKSTATION_ID_ERROR(400, "工作台ID不可小於0"), //
 	WORKSTATION_NOT_FOUND(400, "工作台不存在"), //
+	WORKSTATION_NAME_ERROR(400, "工作台名稱錯誤"), //
 	
 	//餐點錯誤
 	PRODUCT_NAME_ERROR(400, "餐點名稱錯誤"), //
