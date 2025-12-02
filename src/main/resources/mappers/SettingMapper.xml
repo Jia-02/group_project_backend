@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.SettingDao">
+
+	<!-- 新增套餐 -->
+	<insert id="addSetting">
+		INSERT INTO setting ( setting_name, setting_detail,
+		setting_price,
+		setting_img, setting_active, setting_note, category_id )
+		VALUES ( #{settingName}, #{settingDetail}, #{settingPrice},
+		#{settingImg}, #{settingActive}, #{settingNote}, #{categoryId} )
+	</insert>
+	
+	<!-- 套餐名稱重複 -->
+		<select id="checkSettingName" resultType="boolean">
+		SELECT
+		COUNT(*) > 0
+		FROM
+		setting
+		WHERE setting_name = #{settingName}
+	</select>
+
+</mapper>
