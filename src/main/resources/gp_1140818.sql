@@ -144,6 +144,31 @@ LOCK TABLES `meal_status` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `option`
+--
+
+DROP TABLE IF EXISTS `option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `option` (
+  `option_id` int NOT NULL,
+  `option_name` varchar(100) NOT NULL,
+  `option_detail` varchar(1000) NOT NULL,
+  `category_id` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`option_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `option`
+--
+
+LOCK TABLES `option` WRITE;
+/*!40000 ALTER TABLE `option` DISABLE KEYS */;
+/*!40000 ALTER TABLE `option` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `options`
 --
 
@@ -185,6 +210,7 @@ CREATE TABLE `order_details` (
   `inner_id` varchar(60) DEFAULT '0',
   `take_out_id` varchar(60) DEFAULT '0',
   `setting_id` int DEFAULT '0',
+  `order_status` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`order_details_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -429,4 +455,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-02  9:45:58
+-- Dump completed on 2025-12-02 12:54:07
