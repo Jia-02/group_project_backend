@@ -67,7 +67,7 @@ public class OptionService {
 		}
 
 		// 分類id存在與否
-		if (categoryDao.checkCategoryExist(req.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(req.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -200,7 +200,7 @@ public class OptionService {
 	public OptionListRes getOptionList(int categoryId) throws Exception {
 
 		// 分類id存在與否
-		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
 			return new OptionListRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());

@@ -11,8 +11,8 @@
 		VALUES (#{categoryType}, #{workstationId})
 	</insert>
 
-	<!-- 確認分類是否已存在 -->
-	<select id="checkCategoryExists" resultType="boolean">
+	<!-- 確認分類名稱是否已存在 -->
+	<select id="checkCategoryName" resultType="boolean">
 		SELECT
 		COUNT(*) > 0
 		FROM category
@@ -38,7 +38,7 @@
 	</select>
 
     <!-- 分類id存在與否 -->
-	<select id="checkCategoryExist" resultType="int">
+	<select id="checkCategoryExistById" resultType="int">
 		SELECT COUNT(*) FROM category WHERE category_id = #{categoryId}
 	</select>
 

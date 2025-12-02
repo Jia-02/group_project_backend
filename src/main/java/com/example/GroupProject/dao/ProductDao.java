@@ -35,4 +35,7 @@ public interface ProductDao {
 	//更新商品
 	public int updateProduct(ProductDto productDto);
 	
+	//透過產品id取得其他資訊
+	public ProductDto getDetailByProductId(@Param("productId") int productId);
+	
 }

@@ -13,6 +13,7 @@ import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
+import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.dto.SettingDetailDto;
 import com.example.GroupProject.dto.SettingDetailProductDto;
 import com.example.GroupProject.dto.SettingDto;
@@ -22,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SettingService {
-	
+
 	// json跟java物件的轉換
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -47,12 +48,12 @@ public class SettingService {
 		}
 
 		// 設定名稱重複檢查 (假設您有一個 checkSettingName 方法)
-        if (settingDao.checkSettingName(req.getSettingName())) {
-            return new BasicRes(ResCodeMessage.SETTING_NAME_IS_USED.getCode(), 
-                                ResCodeMessage.SETTING_NAME_IS_USED.getMessage());
-        }
+		if (settingDao.checkSettingName(req.getSettingName())) {
+			return new BasicRes(ResCodeMessage.SETTING_NAME_IS_USED.getCode(),
+					ResCodeMessage.SETTING_NAME_IS_USED.getMessage());
+		}
 
-		// 價格不可為空且不可為負 (假設價格為 Integer 或 int)
+		// 價格不可小於0
 		if (req.getSettingPrice() <= 0) {
 			return new BasicRes(ResCodeMessage.SETTING_PRICE_ERROR.getCode(),
 					ResCodeMessage.SETTING_PRICE_ERROR.getMessage());
@@ -64,8 +65,8 @@ public class SettingService {
 					ResCodeMessage.SETTING_IMG_ERROR.getMessage());
 		}
 
-		// 主分類ID存在與否 (req.categoryId)
-		if (categoryDao.checkCategoryExist(req.getCategoryId()) == 0) {
+		// 分類ID存在與否
+		if (categoryDao.checkCategoryExistById(req.getCategoryId()) == 0) {
 			return new BasicRes(ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(),
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
@@ -80,16 +81,16 @@ public class SettingService {
 
 		// 判斷列表內的細節資料
 		for (SettingDetailDto detailCategory : detailList) {
-			Integer detailCategoryId = detailCategory.getCategoryId();
-
+			int categoryId = detailCategory.getCategoryId();
+			
 			// 分類id不可小0，null
-			if (detailCategoryId == null || detailCategoryId <= 0) {
+			if (categoryId <= 0) {
 				return new BasicRes(ResCodeMessage.CATEGORY_ID_ERROR.getCode(), //
 						ResCodeMessage.CATEGORY_ID_ERROR.getMessage());
 			}
 
 			// 分類id存在與否
-			if (categoryDao.checkCategoryExist(req.getCategoryId()) == 0) {
+			if (categoryDao.checkCategoryExistById(categoryId) == 0) {
 				return new BasicRes(//
 						ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 						ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -97,7 +98,7 @@ public class SettingService {
 
 			// 套餐細節商品列表
 			List<SettingDetailProductDto> productList = detailCategory.getDetailList();
-			// ProductDto存在
+			// ProductDto是否存在
 			if (productList == null || productList.isEmpty()) {
 				return new BasicRes(ResCodeMessage.DETAIL_PRODUCT_LIST_EMPTY.getCode(),
 						ResCodeMessage.DETAIL_PRODUCT_LIST_EMPTY.getMessage());
@@ -107,35 +108,34 @@ public class SettingService {
 			Set<Integer> productIds = new HashSet<>();
 			// 遍歷內層 productList
 			for (SettingDetailProductDto product : productList) {
-				Integer productId = product.getProductId();
+				int productId = product.getProductId();
 
-				// 商品id不可 <= 0，null
-				if (productId == null || productId <= 0) {
+				// 商品id不可 <= 0
+				if (productId <= 0) {
 					return new BasicRes(ResCodeMessage.PRODUCT_ID_ERROR.getCode(),
 							ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
 				}
+
+				//透過商品id呼叫商品資訊
+				ProductDto productDto = productDao.getDetailByProductId(productId);
+
+				// 檢查商品是否存在
+				if (productDao.checkProductExist(productId) == 0) {
+					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
+							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
+				}
 				
-				//1. 根據 productId 取得該商品實際所屬的 categoryId
-//				Integer actualCategoryId = productDao.getCategoryIdByProductId(productId);
-//				
-//				// 2. 判斷商品是否存在且實際分類ID是否匹配
-//				if (actualCategoryId == null || !actualCategoryId.equals(detailCategoryId)) {
-//					// 該商品不存在，或者該商品不屬於外層的 detailCategoryId
-//					return new BasicRes(
-//							ResCodeMessage.PRODUCT_DUPLICATE.getCode(), 
-//							ResCodeMessage.PRODUCT_DUPLICATE.getMessage());
-//				}
+				// 商品細節的 categoryId 與外層 detailCategoryId 匹配
+				if (productDto.getCategoryId() != categoryId) {
+					return new BasicRes(//
+							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(),//
+							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getMessage());
+				}
 
 				// 檢查 product_id 是否重複
 				if (!productIds.add(productId)) {
 					return new BasicRes(ResCodeMessage.PRODUCT_DUPLICATE.getCode(),
 							ResCodeMessage.PRODUCT_DUPLICATE.getMessage());
-				}
-
-				// 檢查商品存在
-				if (productDao.checkProductExist(productId) == 0) {
-					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
-							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
 			}
 		}

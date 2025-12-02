@@ -48,6 +48,7 @@ public enum ResCodeMessage {
 	PRODUCT_IS_USED(400, "商品上架中。"), //
 	UPDATE_PRODUCT_FAILED(400, "餐點更新失敗。"), //
 	PRODUCT_DUPLICATE(400, "餐點重覆。"), //
+	PRODUCT_AND_CATEGORY_NOT_MATCH(400, "餐點與分類不匹配。"), //
 	
 	//客製化
 	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //

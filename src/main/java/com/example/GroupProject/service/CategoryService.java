@@ -53,8 +53,8 @@ public class CategoryService {
 			return validateRes;
 		}
 		
-		// 不可重複輸入同名稱之分類
-		if (categoryDao.checkCategoryExists(dto.getCategoryType())) {
+		// 重複名稱之分類
+		if (categoryDao.checkCategoryName(dto.getCategoryType())) {
 			return new BasicRes(ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(),
 					ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
 		}
@@ -77,7 +77,7 @@ public class CategoryService {
 	public BasicRes delCategoryById(CategoryDto dto) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -115,7 +115,7 @@ public class CategoryService {
 	public BasicRes updateCategory(CategoryDto dto) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
