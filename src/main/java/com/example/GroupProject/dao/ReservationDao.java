@@ -54,4 +54,6 @@ public interface ReservationDao {
 	public List<ReservationAndTableByTime> findTableStatusByTimeSlot(
 		    @Param("reservationDate") LocalDate reservationDate, 
 		    @Param("reservationTime") LocalTime reservationTime);
+	
+	
 }

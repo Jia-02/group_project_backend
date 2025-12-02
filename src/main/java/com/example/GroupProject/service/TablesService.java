@@ -20,20 +20,20 @@ public class TablesService {
 
 	@Autowired
 	private TablesDao tableDao;
-	
+
 	@Autowired
 	private TableDailyDao tableDailyDao;
 
 	// 新增桌位
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addTable(TablesDto table) {
-		
-		if(table.getTablePositionX() + table.getLengthX() > 500) {
+
+		if (table.getTablePositionX() + table.getLengthX() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
-		
-		if(table.getTablePositionY() + table.getLengthY() > 500) {
+
+		if (table.getTablePositionY() + table.getLengthY() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
@@ -46,24 +46,24 @@ public class TablesService {
 			}
 			// 迴圈檢查該位置是否已存在桌位
 			if (item.getTablePositionX() >= table.getTablePositionX() && //
-					item.getTablePositionX() <= table.getTablePositionX() + 20) {
+					item.getTablePositionX() <= table.getTablePositionX() + table.getLengthX()) {
 				if (item.getTablePositionY() >= table.getTablePositionY() && //
-						item.getTablePositionY() <= table.getTablePositionY() + 20) {
+						item.getTablePositionY() <= table.getTablePositionY() + table.getLengthY()) {
 					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
 							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
 				} else if (item.getTablePositionY() <= table.getTablePositionY() && //
-						item.getTablePositionY() + 20 >= table.getTablePositionY()) {
+						item.getTablePositionY() + item.getLengthY() >= table.getTablePositionY()) {
 					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
 							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
 				}
 			} else if (item.getTablePositionX() <= table.getTablePositionX() && //
-					item.getTablePositionX() + 20 >= table.getTablePositionX()) {
+					item.getTablePositionX() + item.getLengthX() >= table.getTablePositionX()) {
 				if (item.getTablePositionY() >= table.getTablePositionY() && //
-						item.getTablePositionY() <= table.getTablePositionY() + 20) {
+						item.getTablePositionY() <= table.getTablePositionY() + table.getLengthY()) {
 					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
 							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
 				} else if (item.getTablePositionY() <= table.getTablePositionY() && //
-						item.getTablePositionY() + 20 >= table.getTablePositionY()) {
+						item.getTablePositionY() + item.getLengthY() >= table.getTablePositionY()) {
 					return new BasicRes(ResCodeMessage.TABLE_POSITION_EXIST.getCode(),
 							ResCodeMessage.TABLE_POSITION_EXIST.getMessage());
 				}
@@ -76,7 +76,8 @@ public class TablesService {
 	}
 
 	// list查詢
-	@Transactional(readOnly = true)
+
+	@Transactional(rollbackFor = Exception.class)
 	public TableListRes getTableList() {
 
 		if (tableDao.getTableList().isEmpty()) {
@@ -100,14 +101,32 @@ public class TablesService {
 	// 更新桌位
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes updateTable(TablesDto table) {
-
-		
-		if(table.getTablePositionX() + table.getLengthX() > 500) {
+		if (table.getTablePositionX() < 0) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
-		
-		if(table.getTablePositionY() + table.getLengthY() > 500) {
+		if (table.getTablePositionY() < 0) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+		if (table.getLengthX() < 60) {
+			return new BasicRes(ResCodeMessage.TABLE_WIDTH_ERROR.getCode(),
+					ResCodeMessage.TABLE_WIDTH_ERROR.getMessage());
+		}
+		if (table.getLengthY() < 60) {
+			return new BasicRes(ResCodeMessage.TABLE_HEIGHT_ERROR.getCode(),
+					ResCodeMessage.TABLE_HEIGHT_ERROR.getMessage());
+		}
+		if (table.getTableCapacity() < 2) {
+			return new BasicRes(ResCodeMessage.TABLE_CAPACITY_ERROR.getCode(),
+					ResCodeMessage.TABLE_CAPACITY_ERROR.getMessage());
+		}
+		if (table.getTablePositionX() + table.getLengthX() > 500) {
+			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
+					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
+		}
+
+		if (table.getTablePositionY() + table.getLengthY() > 500) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
@@ -140,8 +159,8 @@ public class TablesService {
 				}
 			}
 		}
-		
-		tableDao.updateByTableId(table);
+
+		tableDao.updateByTable(table);
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
@@ -192,4 +211,5 @@ public class TablesService {
     		ResCodeMessage.SUCCESS.getCode(), //
     		ResCodeMessage.SUCCESS.getMessage());
     }
+
 }

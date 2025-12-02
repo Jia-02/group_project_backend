@@ -37,6 +37,11 @@ public class TableContoller {
 		return tableService.delTable(table);
 	}
 	
+	@PostMapping(value = "table/update")
+	public BasicRes updateTable(@RequestBody TablesDto table) {
+		return tableService.updateTable(table);
+	}
+	
 	//新增桌位狀態
 	@PostMapping(value = "table/status/add")
 	public BasicRes insertTableStatus(@RequestBody TableDailyDto table) {

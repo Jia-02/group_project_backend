@@ -22,10 +22,10 @@ public class TablesDto {
 	@Min(value = 0, message = ConstantsMessage.TABLE_POSITION_ERROR)
 	private int tablePositionY;
 
-	@Min(value = 1, message = ConstantsMessage.TABLE_LENGTH_X_ERROR)
+	@Min(value = 60, message = ConstantsMessage.TABLE_LENGTH_X_ERROR)
 	private int lengthX;
 
-	@Min(value = 1, message = ConstantsMessage.TABLE_LENGTH_Y_ERROR)
+	@Min(value = 60, message = ConstantsMessage.TABLE_LENGTH_Y_ERROR)
 	private int lengthY;
 
 	public String getTableId() {

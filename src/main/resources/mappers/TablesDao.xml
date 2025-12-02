@@ -12,7 +12,7 @@
 
 		<result property="tableId" column="table_id" />    
 		<result property="tableStatus" column="table_status" />   
-		<result property="capacity" column="capacity" />      
+		<result property="tableCapacity" column="capacity" />      
 		<result property="tablePositionX" column="position_x" />      
 		<result property="tablePositionY" column="position_y" />    
 		<result property="lengthX" column="length_x" />    
@@ -35,6 +35,7 @@
 		select * from tables
 	</select>
 	
+	
 	<!-- 透過id查詢桌位是否仍存在 -->
 	<select id="existsById" resultType="boolean">
 		SELECT COUNT(1) > 0 from tables
@@ -54,11 +55,16 @@
 	</delete>
 	
 	<!-- 更新桌位 -->
-	<update id="updateByTableId"
+	<update id="updateByTable"
 			parameterType="com.example.GroupProject.dto.TablesDto">
 		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,
 			position_x = #{tablePositionX}, position_y = #{tablePositionY} ,
 			length_x = #{lengthX} , length_y = #{lengthY} where table_id = #{tableId}
+
+	</update>
+	
+	<update id="updateStatusByTableId">
+		update tables set table_status = #{tableStatus} where table_id = #{tableId}
 	</update>
 
 </mapper>
