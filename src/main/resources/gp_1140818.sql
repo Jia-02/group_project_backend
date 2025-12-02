@@ -207,10 +207,10 @@ CREATE TABLE `order_details` (
   `options_note` varchar(1000) DEFAULT NULL,
   `setting_detail` varchar(1000) DEFAULT NULL,
   `order_details_price` int NOT NULL DEFAULT '0',
+  `order_status` varchar(45) NOT NULL,
   `inner_id` varchar(60) DEFAULT '0',
   `take_out_id` varchar(60) DEFAULT '0',
   `setting_id` int DEFAULT '0',
-  `order_status` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`order_details_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -455,4 +455,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-02 12:54:07
+-- Dump completed on 2025-12-02 13:29:31
