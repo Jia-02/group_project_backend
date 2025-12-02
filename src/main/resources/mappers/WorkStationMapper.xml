@@ -9,4 +9,12 @@
 		insert into workstation(workstation_name) values (#{workStationName})
 	</insert>
 	
+	<select id="getWorkStationList">
+		select * from workstation
+	</select>
+	
+	<delete id="deleteWorkStation">
+		delete from workstation where workstation_id = #{workStationId}
+	</delete>
+	
 </mapper>

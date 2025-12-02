@@ -6,13 +6,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.WorkStationDao;
+import com.example.GroupProject.dto.WorkStationDto;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.workStationListRes;
 
 @Service
 public class WorkStationService {
 
 	@Autowired
-	private WorkStationDao workStation;
+	private WorkStationDao workStationDao;
 
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addWorkStation(String workStationName) {
@@ -22,8 +24,32 @@ public class WorkStationService {
 					ResCodeMessage.WORKSTATION_NAME_ERROR.getMessage());
 		}
 
-		workStation.addWorkStation(workStationName);
+		for (WorkStationDto workstation : workStationDao.getWorkStationList()) {
+			if (workstation.getWorkStationName().equalsIgnoreCase(workStationName)) {
+				return new BasicRes(ResCodeMessage.WORKSTATION_NAME_ERROR.getCode(), //
+						ResCodeMessage.WORKSTATION_NAME_ERROR.getMessage());
+			}
+		}
+
+		workStationDao.addWorkStation(workStationName);
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
+	}
+
+	public workStationListRes getWorkStationList() {
+		return new workStationListRes(ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), workStationDao.getWorkStationList());
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes deleteWorkStation(int workStationId) {
+		
+		if(workStationDao.deleteWorkStation(workStationId) < 1) {
+			return new BasicRes(ResCodeMessage.WORKSTATION_NOT_FOUND.getCode(), //
+					ResCodeMessage.WORKSTATION_NOT_FOUND.getMessage());
+		}
+		
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
 	}
 
 }
