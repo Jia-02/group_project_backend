@@ -114,6 +114,17 @@ public class SettingService {
 					return new BasicRes(ResCodeMessage.PRODUCT_ID_ERROR.getCode(),
 							ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
 				}
+				
+				//1. 根據 productId 取得該商品實際所屬的 categoryId
+//				Integer actualCategoryId = productDao.getCategoryIdByProductId(productId);
+//				
+//				// 2. 判斷商品是否存在且實際分類ID是否匹配
+//				if (actualCategoryId == null || !actualCategoryId.equals(detailCategoryId)) {
+//					// 該商品不存在，或者該商品不屬於外層的 detailCategoryId
+//					return new BasicRes(
+//							ResCodeMessage.PRODUCT_DUPLICATE.getCode(), 
+//							ResCodeMessage.PRODUCT_DUPLICATE.getMessage());
+//				}
 
 				// 檢查 product_id 是否重複
 				if (!productIds.add(productId)) {
