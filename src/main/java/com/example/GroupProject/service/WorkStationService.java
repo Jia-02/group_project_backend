@@ -51,5 +51,29 @@ public class WorkStationService {
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage());
 	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes updateWorkStation(WorkStationDto workStation) {
+		
+		if(!workStationDao.checkWorkstationExist(workStation.getWorkStationId())) {
+			return new BasicRes(ResCodeMessage.WORKSTATION_NOT_FOUND.getCode(), //
+					ResCodeMessage.WORKSTATION_NOT_FOUND.getMessage());
+		}
+		
+		if (workStation.getWorkStationName().isBlank()) {
+			return new BasicRes(ResCodeMessage.WORKSTATION_NAME_ERROR.getCode(), //
+					ResCodeMessage.WORKSTATION_NAME_ERROR.getMessage());
+		}
+		
+		for (WorkStationDto workstation : workStationDao.getWorkStationList()) {
+			if (workstation.getWorkStationName().equalsIgnoreCase(workStation.getWorkStationName())) {
+				return new BasicRes(ResCodeMessage.WORKSTATION_NAME_ERROR.getCode(), //
+						ResCodeMessage.WORKSTATION_NAME_ERROR.getMessage());
+			}
+		}
+		
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 
 }
