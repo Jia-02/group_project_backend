@@ -91,4 +91,10 @@
 		product_id = #{productId}
 	</update>
 
+	<!-- 透過商品id取得商品所有資料 -->
+	<select id="getDetailByProductId"
+		resultType="com.example.GroupProject.dto.ProductDto">
+		SELECT * FROM product WHERE product_id = #{productId}
+	</select>
+
 </mapper>

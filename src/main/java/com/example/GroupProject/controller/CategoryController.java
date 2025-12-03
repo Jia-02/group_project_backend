@@ -37,7 +37,7 @@ public class CategoryController {
 		return categoryService.updateCategory(categoryDto);
 	}
 	
-	//查詢分類列表測試
+	//查詢分類列表
 	@GetMapping(value = "category/list")
 	public CategoryListRes getTableList() {
 		return categoryService.getCategoryList();

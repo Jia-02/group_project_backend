@@ -36,7 +36,7 @@ public class ProductService {
 		}
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -82,7 +82,7 @@ public class ProductService {
 	public ProductRes getProductList(int categoryId) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
 			return new ProductRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -101,7 +101,7 @@ public class ProductService {
 	public ProductRes getUserProductList(int categoryId) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
 			return new ProductRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -171,7 +171,7 @@ public class ProductService {
 		}
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
