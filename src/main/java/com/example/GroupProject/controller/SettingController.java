@@ -39,6 +39,9 @@ public class SettingController {
 		return settingService.updateSetting(req);
 	}
 	
+	//查詢單筆套餐資訊
+	
+	
 	//透過分類Id，查詢套餐
 	@GetMapping(value = "setting/list")
 	public SettingListRes getSettingListById(@RequestParam("categoryId") int categoryId) throws Exception{

@@ -24,6 +24,7 @@ public enum ResCodeMessage {
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	TABLE_WIDTH_ERROR(400,"桌位寬度錯誤"),//
 	TABLE_HEIGHT_ERROR(400,"桌位長度錯誤"),//
+	TABLE_STATUS_IS_NOT_FOUND(400,"查無桌位狀態"),//
 	
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
