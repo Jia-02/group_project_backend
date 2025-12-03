@@ -1,5 +1,6 @@
 package com.example.GroupProject.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,15 +14,15 @@ import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
-import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.dto.SettingDetailDto;
 import com.example.GroupProject.dto.SettingDetailProductDto;
 import com.example.GroupProject.dto.SettingDto;
 import com.example.GroupProject.request.SettingBasicReq;
 import com.example.GroupProject.response.BasicRes;
-import com.example.GroupProject.response.OptionListRes;
 import com.example.GroupProject.response.SettingListRes;
+import com.example.GroupProject.vo.SettingVo;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -259,8 +260,33 @@ public class SettingService {
 		}
 
 		// 從資料庫拿 DTO 全部資料
-//		List<SettingDto> dtoList = settingDao.getSettingListById(categoryId);
+		List<SettingDto> dtoList = settingDao.getSettingListById(categoryId);
+		List<SettingVo> voList = new ArrayList<>();
 
-		return null;
+		for (SettingDto dto : dtoList) {
+			SettingVo vo = new SettingVo();
+			// 存入基本屬性
+			vo.setSettingId(dto.getSettingId());
+			vo.setSettingName(dto.getSettingName());
+			vo.setSettingPrice(dto.getSettingPrice());
+			vo.setSettingImg(dto.getSettingImg());
+			vo.setSettingActive(dto.isSettingActive());
+			vo.setSettingNote(dto.getSettingNote());
+
+			// JSON 轉 List<SettingDetailDto>
+			if (dto.getSettingDetail() != null && !dto.getSettingDetail().isEmpty()) {
+				List<SettingDetailDto> detailList = mapper.readValue( //
+						dto.getSettingDetail(),
+						new TypeReference<List<SettingDetailDto>>(){});
+				vo.setSettingDetail(detailList);
+			}
+			voList.add(vo);
+		}
+
+		return new SettingListRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				categoryId, 
+				voList);
 	}
 }

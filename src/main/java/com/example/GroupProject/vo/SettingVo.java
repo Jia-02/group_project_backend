@@ -10,8 +10,6 @@ public class SettingVo {
 
 	private String settingName;
 
-	List<SettingDetailDto> settingDetail;
-
 	private int settingPrice;
 
 	private String settingImg;
@@ -19,21 +17,24 @@ public class SettingVo {
 	private boolean settingActive;
 
 	private String settingNote;
+	
+	List<SettingDetailDto> settingDetail;
 
 	public SettingVo() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public SettingVo(int settingId, String settingName, List<SettingDetailDto> settingDetail, int settingPrice,
-			String settingImg, boolean settingActive, String settingNote) {
+	public SettingVo(int settingId, String settingName, int settingPrice, String settingImg, boolean settingActive,
+			String settingNote, List<SettingDetailDto> settingDetail) {
 		super();
 		this.settingId = settingId;
 		this.settingName = settingName;
-		this.settingDetail = settingDetail;
 		this.settingPrice = settingPrice;
 		this.settingImg = settingImg;
 		this.settingActive = settingActive;
 		this.settingNote = settingNote;
+		this.settingDetail = settingDetail;
 	}
 
 	public int getSettingId() {
@@ -50,14 +51,6 @@ public class SettingVo {
 
 	public void setSettingName(String settingName) {
 		this.settingName = settingName;
-	}
-
-	public List<SettingDetailDto> getSettingDetail() {
-		return settingDetail;
-	}
-
-	public void setSettingDetail(List<SettingDetailDto> settingDetail) {
-		this.settingDetail = settingDetail;
 	}
 
 	public int getSettingPrice() {
@@ -92,4 +85,11 @@ public class SettingVo {
 		this.settingNote = settingNote;
 	}
 
+	public List<SettingDetailDto> getSettingDetail() {
+		return settingDetail;
+	}
+
+	public void setSettingDetail(List<SettingDetailDto> settingDetail) {
+		this.settingDetail = settingDetail;
+	}
 }

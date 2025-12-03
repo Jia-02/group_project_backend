@@ -1,5 +1,7 @@
 package com.example.GroupProject.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,6 +26,6 @@ public interface SettingDao {
 	public SettingDto getSettingById(@Param("settingId") int settingId);
 
 	//透過分類id取得套餐
-	public SettingDto getSettingListById(@Param("categoryId") int categoryId);
+	public List<SettingDto> getSettingListById(@Param("categoryId") int categoryId);
 	
 }
