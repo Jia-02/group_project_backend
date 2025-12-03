@@ -13,26 +13,41 @@
 		VALUES ( #{settingName}, #{settingDetail}, #{settingPrice},
 		#{settingImg}, #{settingActive}, #{settingNote}, #{categoryId} )
 	</insert>
-	
+
 	<!-- 套餐名稱重複 -->
-		<select id="checkSettingName" resultType="boolean">
+	<select id="checkSettingName" resultType="boolean">
 		SELECT
 		COUNT(*) > 0
 		FROM
 		setting
 		WHERE setting_name = #{settingName}
 	</select>
-	
-	<!-- 刪除套餐-->
+
+	<!-- 刪除套餐 -->
 	<delete id="delSettingById">
 		DELETE FROM setting
 		WHERE setting_id = #{settingId}
 	</delete>
-	
-	<!-- 套餐存在數量-->
-		<select id="checkSettingExist" resultType="int">
+
+	<!-- 套餐存在數量 -->
+	<select id="checkSettingExist" resultType="int">
 		SELECT COUNT(1) FROM
 		setting WHERE setting_id = #{settingId}
+	</select>
+
+	<!-- 查詢套餐(透過分類ID) (管理者) -->
+	<select id="getSettingListById"
+		resultType="com.example.GroupProject.dto.SettingDto">
+		SELECT * FROM setting
+		WHERE category_id = #{categoryId}
+	</select>
+	
+		<!-- 查詢套餐(透過分類ID) (使用者) -->
+	<select id="getUserSettingListById"
+		resultType="com.example.GroupProject.dto.SettingDto">
+		SELECT * FROM setting
+		WHERE category_id = #{categoryId}
+		AND setting_active = 1
 	</select>
 	
 		<!-- 查詢套餐(透過套餐ID) -->
@@ -41,12 +56,6 @@
 		SELECT * FROM setting
 		WHERE setting_id = #{settingId}
 	</select>
-	
-	<!-- 查詢套餐列表(透過分類ID) -->
-		<select id="getSettingListById"
-		resultType="com.example.GroupProject.dto.SettingDto">
-		SELECT * FROM setting
-		WHERE category_id = #{categoryId}
-	</select>
+
 
 </mapper>

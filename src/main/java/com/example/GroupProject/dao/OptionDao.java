@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.GroupProject.dto.OptionDto;
+import com.example.GroupProject.vo.OptionVo;
 
 @Mapper
 public interface OptionDao {
@@ -24,4 +25,7 @@ public interface OptionDao {
 	
 	//查詢客製化列表(透過分類ID)
 	public List<OptionDto> getOptionList(@Param("categoryId") int categoryId);
+
+	//查詢客製化列表(透過分類ID) OptionVo型態
+	public List <OptionVo> getOptionListByCategoryId(@Param("categoryId") int categoryId);
 }

@@ -22,10 +22,14 @@ public interface SettingDao {
 	//確認該套餐存在
 	public int checkSettingExist(@Param("settingId") int settingId);
 	
-	//透過套餐id取得單筆套餐資料
+	//透過分類id取得套餐(管理者)
+	public List<SettingDto> getSettingListById(@Param("categoryId") int categoryId);
+	
+	//透過分類id取得套餐(使用者)
+	public List<SettingDto> getUserSettingListById(@Param("categoryId") int categoryId);
+	
+	//透過套餐id取得單筆套餐資料(管理者)
 	public SettingDto getSettingById(@Param("settingId") int settingId);
 
-	//透過分類id取得套餐
-	public List<SettingDto> getSettingListById(@Param("categoryId") int categoryId);
 	
 }

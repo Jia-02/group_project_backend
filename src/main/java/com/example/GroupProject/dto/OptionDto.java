@@ -6,6 +6,7 @@ public class OptionDto {
     private String optionDetail;
     private int maxSelect;
     private int categoryId;
+    
 	public int getOptionId() {
 		return optionId;
 	}

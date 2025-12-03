@@ -35,7 +35,10 @@ public interface ProductDao {
 	//更新商品
 	public int updateProduct(ProductDto productDto);
 	
-	//透過產品id取得其他資訊
+	//透過產品id取得所有資訊 (管理者add套餐用)
 	public ProductDto getDetailByProductId(@Param("productId") int productId);
+	
+	//透過產品id取得所有資訊 (使用者查詢套餐用 vo型態)
+	public ProductVo getUserDetailByProductId(@Param("productId") int productId);
 	
 }
