@@ -30,5 +30,13 @@ public class SettingController {
 		return settingService.delSettingById(dto);
 	}
 	
+	//更新套餐
+	@PostMapping(value = "setting/update")
+	public BasicRes updateSetting(@RequestBody SettingBasicReq req) throws Exception{
+		return settingService.updateSetting(req);
+	}
+	
+	//透過分類Id，查詢套餐
+	
 
 }

@@ -35,11 +35,18 @@
 		setting WHERE setting_id = #{settingId}
 	</select>
 	
-		<!-- 查詢客製化列表(透過分類ID) -->
+		<!-- 查詢套餐(透過套餐ID) -->
 	<select id="getSettingById"
 		resultType="com.example.GroupProject.dto.SettingDto">
 		SELECT * FROM setting
 		WHERE setting_id = #{settingId}
+	</select>
+	
+	<!-- 查詢套餐列表(透過分類ID) -->
+		<select id="getSettingListById"
+		resultType="com.example.GroupProject.dto.SettingDto">
+		SELECT * FROM setting
+		WHERE category_id = #{categoryId}
 	</select>
 
 </mapper>

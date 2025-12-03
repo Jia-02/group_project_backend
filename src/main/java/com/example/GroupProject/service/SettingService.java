@@ -13,12 +13,15 @@ import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
+import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.dto.SettingDetailDto;
 import com.example.GroupProject.dto.SettingDetailProductDto;
 import com.example.GroupProject.dto.SettingDto;
 import com.example.GroupProject.request.SettingBasicReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.OptionListRes;
+import com.example.GroupProject.response.SettingListRes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -82,7 +85,7 @@ public class SettingService {
 		// 判斷列表內的細節資料
 		for (SettingDetailDto detailCategory : detailList) {
 			int categoryId = detailCategory.getCategoryId();
-			
+
 			// 分類id不可小0，null
 			if (categoryId <= 0) {
 				return new BasicRes(ResCodeMessage.CATEGORY_ID_ERROR.getCode(), //
@@ -116,7 +119,7 @@ public class SettingService {
 							ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
 				}
 
-				//透過商品id呼叫商品資訊
+				// 透過商品id呼叫商品資訊
 				ProductDto productDto = productDao.getDetailByProductId(productId);
 
 				// 檢查商品是否存在
@@ -124,11 +127,11 @@ public class SettingService {
 					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
-				
+
 				// 商品細節的 categoryId 與外層 detailCategoryId 匹配
 				if (productDto.getCategoryId() != categoryId) {
 					return new BasicRes(//
-							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(),//
+							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(), //
 							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getMessage());
 				}
 
@@ -166,10 +169,10 @@ public class SettingService {
 		}
 	}
 
-	//刪除套餐
+	// 刪除套餐
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes delSettingById(SettingDto dto) {
-		
+
 		// 確認套餐id是否 > 0
 		if (dto.getSettingId() <= 0) {
 			return new BasicRes(//
@@ -183,15 +186,15 @@ public class SettingService {
 					ResCodeMessage.SETTING_NOT_FOUND.getCode(), //
 					ResCodeMessage.SETTING_NOT_FOUND.getMessage());
 		}
-		
+
 		SettingDto db = settingDao.getSettingById(dto.getSettingId());
-		//套餐啟用中無法刪除
-		if(db.isSettingActive()) {
+		// 套餐啟用中無法刪除
+		if (db.isSettingActive()) {
 			return new BasicRes(//
 					ResCodeMessage.SETTING_IS_USED.getCode(), //
 					ResCodeMessage.SETTING_IS_USED.getMessage());
 		}
-		
+
 		// 成功通過判斷後刪除套餐
 		int result = settingDao.delSettingById(dto);
 		if (result > 0) {
@@ -204,6 +207,60 @@ public class SettingService {
 					ResCodeMessage.DELETE_SETTING_FAILED.getMessage());
 		}
 	}
-	
-	
+
+	// 更新套餐
+	@Transactional(rollbackFor = Exception.class)
+	public BasicRes updateSetting(SettingBasicReq req) throws Exception {
+
+		int settingId = req.getSettingId();
+
+		// 套餐id不可以 < 0
+		if (settingId <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.SETTING_ID_ERROR.getCode(), //
+					ResCodeMessage.SETTING_ID_ERROR.getMessage());
+		}
+
+		// 確認套餐存在與否
+		if (settingDao.checkSettingExist(settingId) == 0) {
+			return new BasicRes(//
+					ResCodeMessage.SETTING_NOT_FOUND.getCode(), //
+					ResCodeMessage.SETTING_NOT_FOUND.getMessage());
+		}
+
+		// 刪除舊的套餐
+		SettingDto delDto = new SettingDto();
+		delDto.setSettingId(settingId);
+		;
+		int delResult = settingDao.delSettingById(delDto);
+		if (delResult <= 0) {
+			return new BasicRes(//
+					ResCodeMessage.DELETE_SETTING_FAILED.getCode(), //
+					ResCodeMessage.DELETE_SETTING_FAILED.getMessage());
+		}
+
+		// 驗證新的套餐
+		BasicRes addRes = this.addSetting(req);
+		if (addRes.getCode() != ResCodeMessage.SUCCESS.getCode()) {
+			throw new RuntimeException(addRes.getCode() + addRes.getMessage());
+		}
+		return addRes;
+	}
+
+	// 透過分類Id，查詢套餐
+	@Transactional(readOnly = true)
+	public SettingListRes getSettingListById(int categoryId) throws Exception {
+
+		// 分類id存在與否
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
+			return new SettingListRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		// 從資料庫拿 DTO 全部資料
+//		List<SettingDto> dtoList = settingDao.getSettingListById(categoryId);
+
+		return null;
+	}
 }

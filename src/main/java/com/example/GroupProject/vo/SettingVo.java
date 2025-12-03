@@ -1,35 +1,31 @@
-package com.example.GroupProject.request;
+package com.example.GroupProject.vo;
 
 import java.util.List;
 
 import com.example.GroupProject.dto.SettingDetailDto;
 
-public class SettingBasicReq {
-	
-    private int settingId;
+public class SettingVo {
 
-    private String settingName;
+	private int settingId;
 
-    private List<SettingDetailDto> settingDetail;
+	private String settingName;
 
-    private int settingPrice;
+	List<SettingDetailDto> settingDetail;
 
-    private String settingImg;
+	private int settingPrice;
 
-    private boolean settingActive; 
+	private String settingImg;
 
-    private String settingNote;
+	private boolean settingActive;
 
-    private int categoryId;
-    
-    
+	private String settingNote;
 
-	public SettingBasicReq() {
+	public SettingVo() {
 		super();
 	}
 
-	public SettingBasicReq(int settingId, String settingName, List<SettingDetailDto> settingDetail, int settingPrice,
-			String settingImg, boolean settingActive, String settingNote, int categoryId) {
+	public SettingVo(int settingId, String settingName, List<SettingDetailDto> settingDetail, int settingPrice,
+			String settingImg, boolean settingActive, String settingNote) {
 		super();
 		this.settingId = settingId;
 		this.settingName = settingName;
@@ -38,7 +34,6 @@ public class SettingBasicReq {
 		this.settingImg = settingImg;
 		this.settingActive = settingActive;
 		this.settingNote = settingNote;
-		this.categoryId = categoryId;
 	}
 
 	public int getSettingId() {
@@ -95,14 +90,6 @@ public class SettingBasicReq {
 
 	public void setSettingNote(String settingNote) {
 		this.settingNote = settingNote;
-	}
-
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
 	}
 
 }
