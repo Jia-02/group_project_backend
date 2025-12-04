@@ -31,7 +31,7 @@ CREATE TABLE `calendar` (
   `calendar_status` tinyint NOT NULL DEFAULT '1',
   `calendar_photo` varchar(500) NOT NULL,
   PRIMARY KEY (`calendar_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +40,7 @@ CREATE TABLE `calendar` (
 
 LOCK TABLES `calendar` WRITE;
 /*!40000 ALTER TABLE `calendar` DISABLE KEYS */;
+INSERT INTO `calendar` VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','2025-12-03','2025-12-05',1,'7e2e80856b6e1f83f7cbe6ab881c029c_w48_h48.png'),(2,'ddddd','ddd','2025-12-02','2025-12-03',0,'favicon.ico'),(3,'餓狠狠','餐卷一本特價1650元','2025-11-05','2025-11-15',0,'https://emos.plurk.com/7e2e80856b6e1f83f7cbe6ab881c029c_w48_h48.png');
 /*!40000 ALTER TABLE `calendar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +65,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'套餐',2),(4,'漢堡',2),(5,'飲料',1);
+INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'燉飯',2),(4,'漢堡',2),(5,'飲料',1);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +104,7 @@ DROP TABLE IF EXISTS `inner_order`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inner_order` (
   `inner_id` varchar(60) NOT NULL,
-  `payment_time` date NOT NULL,
+  `payment_time` datetime NOT NULL,
   `table_id` varchar(45) NOT NULL,
   PRIMARY KEY (`inner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -169,33 +170,6 @@ LOCK TABLES `option` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `options`
---
-
-DROP TABLE IF EXISTS `options`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `options` (
-  `option_id` int NOT NULL,
-  `option_name` varchar(100) NOT NULL,
-  `option_detail` varchar(1000) NOT NULL,
-  `category_id` int NOT NULL DEFAULT '0',
-  `max_select` int NOT NULL DEFAULT '1',
-  PRIMARY KEY (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `options`
---
-
-LOCK TABLES `options` WRITE;
-/*!40000 ALTER TABLE `options` DISABLE KEYS */;
-INSERT INTO `options` VALUES (1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',4,1),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5,1),(3,'加肉','[{\"option\":\"加一層肉\",\"addPrice\":20},{\"option\":\"兩層肉\",\"addPrice\":40},{\"option\":\"不加肉\",\"addPrice\":0}]',4,1),(4,'甜度','[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"微糖\",\"addPrice\":0},{\"option\":\"少糖\",\"addPrice\":0}]',5,1);
-/*!40000 ALTER TABLE `options` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `order_details`
 --
 
@@ -203,8 +177,9 @@ DROP TABLE IF EXISTS `order_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_details` (
-  `order_details_id` int NOT NULL,
-  `options_details` varchar(1000) NOT NULL,
+  `order_details_id` int NOT NULL AUTO_INCREMENT,
+  `options_note` varchar(1000) DEFAULT NULL,
+  `setting_detail` varchar(1000) DEFAULT NULL,
   `order_details_price` int NOT NULL DEFAULT '0',
   `inner_id` varchar(60) DEFAULT '0',
   `take_out_id` varchar(60) DEFAULT '0',
@@ -248,7 +223,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4),(5,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(6,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5);
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,12 +298,11 @@ CREATE TABLE `setting` (
   `setting_name` varchar(100) NOT NULL,
   `setting_detail` varchar(1000) NOT NULL,
   `setting_price` int NOT NULL DEFAULT '0',
-  `setting_img` varchar(500) NOT NULL,
-  `setting_active` tinyint NOT NULL DEFAULT '1',
   `setting_note` varchar(300) DEFAULT NULL,
+  `setting_active` tinyint NOT NULL DEFAULT '1',
   `category_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`setting_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,7 +311,6 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (1,'VIP客戶專屬優惠組合','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',999,'/images/settings/vip_package.jpg',1,'期間限定',3),(2,'聖誕節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -454,4 +427,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-02 17:48:06
+-- Dump completed on 2025-12-04 16:54:07
