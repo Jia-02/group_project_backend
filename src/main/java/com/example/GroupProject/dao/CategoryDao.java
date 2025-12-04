@@ -14,8 +14,8 @@ public interface CategoryDao {
 	//新增分類
 	public int addCategory(CategoryDto categoryDto);
 	
-	//確認分類是否已存在
-	public boolean checkCategoryExists(@Param("categoryType") String categoryType);
+	//分類名稱是否重覆
+	public boolean checkCategoryName(@Param("categoryType") String categoryType);
 	
 	//刪除分類
 	public int delCategoryById(CategoryDto categoryDto);
@@ -27,12 +27,15 @@ public interface CategoryDao {
 	public int checkOptionCategoryUsed(@Param("categoryId") int categoryId);
 	
 	//分類ID是否存在
-	public int checkCategoryExist(@Param("categoryId") int categoryId);
+	public int checkCategoryExistById(@Param("categoryId") int categoryId);
 	
 	//更新分類
 	public int updateCategory(CategoryDto categoryDto);
 	
 	//查詢分類列表
 	public List<CategoryDto> getCategoryList();
+	
+	//查詢單一分類
+	public CategoryDto getCategoryById(@Param("categoryId") int categoryId);
 
 }

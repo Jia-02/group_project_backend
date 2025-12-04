@@ -56,7 +56,7 @@ CREATE TABLE `category` (
   `category_type` varchar(300) NOT NULL,
   `workstation_id` int NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,6 +92,7 @@ CREATE TABLE `check_out` (
 
 LOCK TABLES `check_out` WRITE;
 /*!40000 ALTER TABLE `check_out` DISABLE KEYS */;
+INSERT INTO `check_out` VALUES ('2512251200A01',350,'現金','2025-12-25 00:00:00',0);
 /*!40000 ALTER TABLE `check_out` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,6 +117,7 @@ CREATE TABLE `inner_order` (
 
 LOCK TABLES `inner_order` WRITE;
 /*!40000 ALTER TABLE `inner_order` DISABLE KEYS */;
+INSERT INTO `inner_order` VALUES ('2512251200A01','2025-12-25','A01');
 /*!40000 ALTER TABLE `inner_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,6 +147,7 @@ LOCK TABLES `meal_status` WRITE;
 UNLOCK TABLES;
 
 --
+<<<<<<< HEAD
 -- Table structure for table `option`
 --
 
@@ -152,21 +155,45 @@ DROP TABLE IF EXISTS `option`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `option` (
+=======
+-- Table structure for table `options`
+--
+
+DROP TABLE IF EXISTS `options`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `options` (
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
   `option_id` int NOT NULL,
   `option_name` varchar(100) NOT NULL,
   `option_detail` varchar(1000) NOT NULL,
   `category_id` int NOT NULL DEFAULT '0',
+<<<<<<< HEAD
   PRIMARY KEY (`option_id`)
+=======
+  `max_select` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`option_id`,`category_id`)
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+<<<<<<< HEAD
 -- Dumping data for table `option`
 --
 
 LOCK TABLES `option` WRITE;
 /*!40000 ALTER TABLE `option` DISABLE KEYS */;
 /*!40000 ALTER TABLE `option` ENABLE KEYS */;
+=======
+-- Dumping data for table `options`
+--
+
+LOCK TABLES `options` WRITE;
+/*!40000 ALTER TABLE `options` DISABLE KEYS */;
+INSERT INTO `options` VALUES (1,'尺寸','[{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"飯少\",\"addPrice\":0},{\"option\":\"超級加倍\",\"addPrice\":20}]',2,1),(1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',3,1),(1,'加肉','[{\"option\":\"加一層肉\",\"addPrice\":20},{\"option\":\"兩層肉\",\"addPrice\":40},{\"option\":\"不加肉\",\"addPrice\":0}]',4,1),(1,'甜度','[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"微糖\",\"addPrice\":0},{\"option\":\"少糖\",\"addPrice\":0}]',5,1),(2,'尺寸','[{\"option\":\"原樣\",\"addPrice\":0},{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"超級加倍\",\"addPrice\":20}]',3,2),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5,1);
+/*!40000 ALTER TABLE `options` ENABLE KEYS */;
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 UNLOCK TABLES;
 
 --
@@ -194,6 +221,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
+INSERT INTO `order_details` VALUES (1,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]}]',150,'2512251200A01','0',0),(2,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]},{\"workstation_id\":5,\"product_id\":2,\"product_name\":\"氣泡水\",\"product_price\":50,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',200,'2512251200A01','0',3);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +241,7 @@ CREATE TABLE `product` (
   `image_url` varchar(300) NOT NULL,
   `product_note` varchar(300) DEFAULT NULL,
   `category_id` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`product_id`)
+  PRIMARY KEY (`product_id`,`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -223,7 +251,15 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
+<<<<<<< HEAD
 INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
+=======
+<<<<<<< HEAD
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4),(5,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(6,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5);
+=======
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(1,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(2,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
+>>>>>>> product
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,7 +338,15 @@ CREATE TABLE `setting` (
   `setting_active` tinyint NOT NULL DEFAULT '1',
   `category_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`setting_id`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+=======
+<<<<<<< HEAD
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+=======
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+>>>>>>> product
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -311,6 +355,14 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+INSERT INTO `setting` VALUES (1,'VIP客戶專屬優惠組合','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',999,'/images/settings/vip_package.jpg',1,'期間限定',3),(2,'聖誕節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
+=======
+INSERT INTO `setting` VALUES (3,'爸爸套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',250,'/images/settings/vip_package.jpg',1,'期間限定',3),(4,'母親節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
+>>>>>>> product
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -406,7 +458,7 @@ CREATE TABLE `workstation` (
   `workstation_id` int NOT NULL AUTO_INCREMENT,
   `workstation_name` varchar(45) NOT NULL,
   PRIMARY KEY (`workstation_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,6 +467,7 @@ CREATE TABLE `workstation` (
 
 LOCK TABLES `workstation` WRITE;
 /*!40000 ALTER TABLE `workstation` DISABLE KEYS */;
+INSERT INTO `workstation` VALUES (1,'熱食'),(2,'飲料'),(3,'黑暗料理');
 /*!40000 ALTER TABLE `workstation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -427,4 +480,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2025-12-04 16:54:07
+=======
+<<<<<<< HEAD
+-- Dump completed on 2025-12-02 17:48:06
+=======
+-- Dump completed on 2025-12-04 15:51:09
+>>>>>>> product
+>>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105

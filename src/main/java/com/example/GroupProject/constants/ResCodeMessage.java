@@ -24,16 +24,19 @@ public enum ResCodeMessage {
 	TABLE_POSITION_ERROR(400,"桌位超出範圍"),//
 	TABLE_WIDTH_ERROR(400,"桌位寬度錯誤"),//
 	TABLE_HEIGHT_ERROR(400,"桌位長度錯誤"),//
+	TABLE_STATUS_IS_NOT_FOUND(400,"查無桌位狀態"),//
 	
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
-	CATEGORY_TYPE_ERROR(400, "菜單分類不可空白。"), //
+	CATEGORY_TYPE_ERROR(400, "菜單分類名稱錯誤。"), //
 	CATEGORY_ALREADY_EXISTS(400, "菜單分類已存在。"), //
 	CATEGORY_IS_NOT_FOUND(400, "菜單分類ID找不到。"), //
+	CATEGORY_ID_ERROR(400, "菜單ID錯誤。"), //
 	
 	//工作台錯誤WORKSTATION
 	WORKSTATION_ID_ERROR(400, "工作台ID不可小於0"), //
 	WORKSTATION_NOT_FOUND(400, "工作台不存在"), //
+	WORKSTATION_NAME_ERROR(400, "工作台名稱錯誤"), //
 	
 	//餐點錯誤
 	PRODUCT_NAME_ERROR(400, "餐點名稱錯誤"), //
@@ -45,20 +48,36 @@ public enum ResCodeMessage {
 	PRODUCT_NOT_FOUND(400, "找不到餐點。"), //
 	PRODUCT_IS_USED(400, "商品上架中。"), //
 	UPDATE_PRODUCT_FAILED(400, "餐點更新失敗。"), //
+	PRODUCT_DUPLICATE(400, "餐點重覆。"), //
+	PRODUCT_AND_CATEGORY_NOT_MATCH(400, "餐點與分類不匹配。"), //
 	
 	//客製化
-	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	OPTION_ID_ERROR(400, "客製化ID錯誤"), //
 	OPTION_NAME_IS_USED(400, "客製化名稱重複"), //
 	OPTION_DETAIL_ERROR(400, "客製化細節錯誤"), //
 	OPTION_NAME_ERROR(400, "客製化名稱錯誤"), //
+	MAXSELECT_ERROR(400, "客製化最大選項數量錯誤。"), //
 	OPTION_DETAIL_NAME_EMPTY(400, "客製化細節名稱為空"), //
 	OPTION_DETAIL_PRICE_INVALID(400, "客製化價格小於0"), //
 	OPTION_DETAIL_DUPLICATE(400, "客製化細節名稱重複"), //
 	OPTION_NOT_FOUND(400, "找不到客製化。"), //
 	OPTION_IS_USED(400, "客製化使用中。"), //
+	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	DELETE_OPTION_FAILED(400, "客製化刪除失敗。"), //
-	MAXSELECT_ERROR(400, "客製化最大選項數量失敗。"), //
+	
+	//套餐
+	SETTING_ID_ERROR(400, "套餐ID錯誤。"), //
+	SETTING_NAME_ERROR(400, "套餐名字錯誤。"), //
+	SETTING_PRICE_ERROR(400, "套餐價格錯誤。"), //
+	SETTING_IMG_ERROR(400, "套餐圖片錯誤。"), //
+	SETTING_ACTIVE_ERROR(400, "套餐狀態錯誤。"), //
+	SETTING_DETAIL_EMPTY(400, "套餐細節為空錯誤。"), //
+	DETAIL_PRODUCT_LIST_EMPTY(400, "套餐細節中的商品列表為空錯誤。"), //
+	SETTING_NAME_IS_USED(400, "套餐名稱重複。"), //
+	SETTING_NOT_FOUND(400, "找不到套餐。"), //
+	SETTING_IS_USED(400, "套餐開放使用中。"), //
+	CREATE_SETTING_FAILED(400, "建立套餐失敗。"), //
+	DELETE_SETTING_FAILED(400, "套餐刪除失敗。"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
@@ -67,10 +86,8 @@ public enum ResCodeMessage {
 	PARAM_PASSWORD_ERROR(400, "Param password error!!"), //
 	PASSWORD_MISMATCH(400, "Password mismatch!!"), //
 	PARAM_ACCOUNT_EXIST(400, "Account already exist!!"),//
-	LOGIN_FAILED(400, "Login failed!!"),//
-	QUESTION_TYPE_ERROR(400,ConstantsMessage.QUESTION_TYPE_ERROR),//
-	QUESTION_TYPE_OPTIONS_MISMATCH(400, "Question type and options mismatch!!"),//
-	QUIZ_DATE_ERROR(400,"Quiz date error!!");
+	LOGIN_FAILED(400, "Login failed!!");//
+
 
 	private int code;
 
