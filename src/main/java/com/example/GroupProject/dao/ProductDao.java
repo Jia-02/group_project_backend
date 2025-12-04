@@ -24,18 +24,29 @@ public interface ProductDao {
 	public int delProductById(ProductDto dto);
 	
 	//確認商品存在數量
-	public int checkProductExist(@Param("productId") int productId);
+	public int checkProductExist( //
+			@Param("categoryId")int categoryId,//
+			@Param("productId") int productId);
 	
 	//商品名稱是否重複
 	public boolean checkProductName(@Param("productName") String productName);
 	
 	//確認商品是否上架中
-	public boolean getProductActive(@Param("productId") int productId);
+	public boolean getProductActive( //
+			@Param("categoryId")int categoryId,//
+			@Param("productId") int productId);
 
 	//更新商品
 	public int updateProduct(ProductDto productDto);
 	
-	//透過產品id取得其他資訊
-	public ProductDto getDetailByProductId(@Param("productId") int productId);
+	//透過產品跟分類id取得所有資訊 (管理者add套餐用)
+	public ProductDto getDetailByProductId( //
+			@Param("categoryId")int categoryId,//
+			@Param("productId") int productId);
+	
+	//透過產品跟分類id取得所有資訊 (使用者查詢套餐用 vo型態)
+	public ProductVo getUserDetailByProductId( //
+			@Param("categoryId")int categoryId,//
+			@Param("productId") int productId);
 	
 }

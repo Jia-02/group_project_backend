@@ -9,20 +9,24 @@
 	<insert id="addOption">
 		INSERT INTO options(option_id, option_name,
 		option_detail, max_select, category_id)
-		VALUES (#{optionId}, #{optionName},
+		VALUES (#{optionId},
+		#{optionName},
 		#{optionDetail}, #{maxSelect}, #{categoryId})
 	</insert>
 
 	<!-- 刪除客製化 -->
 	<delete id="delOptionById">
 		DELETE FROM options
-		WHERE option_id = #{optionId}
+		WHERE category_id = #{categoryId}
+		AND option_id = #{optionId}
 	</delete>
 
 	<!-- 確認客製化存在數量 -->
 	<select id="checkOptionExist" resultType="int">
 		SELECT COUNT(1) FROM
-		options WHERE option_id = #{optionId}
+		options 		
+		WHERE category_id = #{categoryId}
+		AND option_id = #{optionId}
 	</select>
 
 	<!-- 客製化名稱重複 -->
@@ -31,13 +35,27 @@
 		COUNT(*) > 0
 		FROM
 		options
-		WHERE option_name = #{optionName}
+		WHERE category_id = #{categoryId}
+		AND option_name = #{optionName}
 	</select>
 
 	<!-- 查詢客製化列表(透過分類ID) -->
 	<select id="getOptionList"
 		resultType="com.example.GroupProject.dto.OptionDto">
 		SELECT * FROM options
+		WHERE category_id = #{categoryId}
+	</select>
+
+	
+	<!-- 查詢客製化資料(透過分類ID) OptionVo格式 -->
+	<select id="getOptionListByCategoryId"
+		resultType="com.example.GroupProject.vo.OptionVo">
+		SELECT         
+		option_id AS optionId,
+        option_name AS optionName,
+        max_select AS maxSelect,
+        option_detail AS optionDetailJson  <!-- 映射到 String 欄位 --> 
+        FROM options
 		WHERE category_id = #{categoryId}
 	</select>
 

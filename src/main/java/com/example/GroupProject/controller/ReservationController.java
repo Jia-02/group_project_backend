@@ -35,7 +35,7 @@ public class ReservationController {
     
     //顯示所有訂位
 	@GetMapping(value = "reservation/list")
-	public ReservationListRes getTableList() {
+	public ReservationListRes getReservationList() {
 		return reservationService.getReservationList();
 	}
 	

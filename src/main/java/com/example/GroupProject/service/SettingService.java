@@ -12,15 +12,22 @@ import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
+import com.example.GroupProject.dao.OptionDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
+import com.example.GroupProject.dto.CategoryDto;
+import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.ProductDto;
+import com.example.GroupProject.dto.SettingCategoryDetailDto;
 import com.example.GroupProject.dto.SettingDetailDto;
 import com.example.GroupProject.dto.SettingDetailProductDto;
 import com.example.GroupProject.dto.SettingDto;
 import com.example.GroupProject.request.SettingBasicReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.SettingAllDetailRes;
 import com.example.GroupProject.response.SettingListRes;
+import com.example.GroupProject.vo.OptionVo;
+import com.example.GroupProject.vo.ProductVo;
 import com.example.GroupProject.vo.SettingVo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +46,9 @@ public class SettingService {
 
 	@Autowired
 	private ProductDao productDao;
+
+	@Autowired
+	private OptionDao optionDao;
 
 	// 新增套餐
 	@Transactional(rollbackFor = Exception.class)
@@ -121,10 +131,10 @@ public class SettingService {
 				}
 
 				// 透過商品id呼叫商品資訊
-				ProductDto productDto = productDao.getDetailByProductId(productId);
+				ProductDto productDto = productDao.getDetailByProductId(categoryId, productId);
 
 				// 檢查商品是否存在
-				if (productDao.checkProductExist(productId) == 0) {
+				if (productDao.checkProductExist(categoryId, productId) == 0) {
 					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
@@ -248,7 +258,7 @@ public class SettingService {
 		return addRes;
 	}
 
-	// 透過分類Id，查詢套餐
+	// 透過分類Id，查詢套餐列表(管理者)
 	@Transactional(readOnly = true)
 	public SettingListRes getSettingListById(int categoryId) throws Exception {
 
@@ -276,8 +286,8 @@ public class SettingService {
 			// JSON 轉 List<SettingDetailDto>
 			if (dto.getSettingDetail() != null && !dto.getSettingDetail().isEmpty()) {
 				List<SettingDetailDto> detailList = mapper.readValue( //
-						dto.getSettingDetail(),
-						new TypeReference<List<SettingDetailDto>>(){});
+						dto.getSettingDetail(), new TypeReference<List<SettingDetailDto>>() {
+						});
 				vo.setSettingDetail(detailList);
 			}
 			voList.add(vo);
@@ -286,7 +296,140 @@ public class SettingService {
 		return new SettingListRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				categoryId, 
-				voList);
+				categoryId, voList);
 	}
+	
+	//透過分類id取得套餐(使用者)
+	@Transactional(readOnly = true)
+	public SettingListRes getUserSettingListById(int categoryId) throws Exception {
+
+		// 分類id存在與否
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
+			return new SettingListRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		// 從資料庫拿 DTO 全部資料
+		List<SettingDto> dtoList = settingDao.getUserSettingListById(categoryId);
+		List<SettingVo> voList = new ArrayList<>();
+
+		for (SettingDto dto : dtoList) {
+			SettingVo vo = new SettingVo();
+			// 存入基本屬性
+			vo.setSettingId(dto.getSettingId());
+			vo.setSettingName(dto.getSettingName());
+			vo.setSettingPrice(dto.getSettingPrice());
+			vo.setSettingImg(dto.getSettingImg());
+			vo.setSettingActive(dto.isSettingActive());
+			vo.setSettingNote(dto.getSettingNote());
+
+			// JSON 轉 List<SettingDetailDto>
+			if (dto.getSettingDetail() != null && !dto.getSettingDetail().isEmpty()) {
+				List<SettingDetailDto> detailList = mapper.readValue( //
+						dto.getSettingDetail(), new TypeReference<List<SettingDetailDto>>() {
+						});
+				vo.setSettingDetail(detailList);
+			}
+			voList.add(vo);
+		}
+
+		return new SettingListRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				categoryId, voList);
+	}
+
+	// 透過settingId查詢單筆套餐所有資訊(productId取得商品內容、categoryId取得客製化內容)
+	// 使用者點餐用
+	@Transactional(readOnly = true)
+	public SettingAllDetailRes getSettingAllDetailById(int settingId) throws Exception {
+
+		// 透過settingId取得整筆訂單基本資料
+		SettingDto dto = settingDao.getSettingById(settingId);
+		// 排除套餐不存在
+		if (dto == null) {
+			return new SettingAllDetailRes(ResCodeMessage.SETTING_NOT_FOUND.getCode(),
+					ResCodeMessage.SETTING_NOT_FOUND.getMessage());
+		}
+
+		// 套餐分類id存在與否
+		int categoryId = dto.getCategoryId();
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
+			return new SettingAllDetailRes(//
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+
+		// 取得setting_detail字串
+		String settingDetailJson = dto.getSettingDetail();
+		// 字串轉json
+		List<SettingDetailDto> settingDetailList = mapper.readValue(settingDetailJson,
+				new TypeReference<List<SettingDetailDto>>() {});
+
+		// 建立列表晚點填充所有需要的資料
+		List<SettingCategoryDetailDto> finalList = new ArrayList<>();
+
+		//對setting_detail跑回圈
+		for (SettingDetailDto detail : settingDetailList) {
+			
+			//建立單筆settingDetail存放迴圈內的細節資訊
+			SettingCategoryDetailDto settingDetail = new SettingCategoryDetailDto();
+
+			//取得分類基本資料並填入
+			CategoryDto category = categoryDao.getCategoryById(detail.getCategoryId());
+			if (category != null) {
+				settingDetail.setCategoryId(category.getCategoryId());
+				settingDetail.setCategoryType(category.getCategoryType());
+				settingDetail.setWorkstationId(category.getWorkstationId());
+			}
+
+			//建立products存放商品內容
+			List<ProductVo> products = new ArrayList<>();
+			//對detailList做迴圈取得商品資訊並填入
+			for (SettingDetailProductDto detailList : detail.getDetailList()) {
+				ProductVo product = productDao.getUserDetailByProductId(detail.getCategoryId() ,detailList.getProductId());
+				if (product != null) {
+					products.add(product);
+				}
+			}
+			settingDetail.setDetailList(products);
+
+			// 取得分類ID的客製化資料
+			List<OptionVo> voList = optionDao.getOptionListByCategoryId(category.getCategoryId());
+			// 建立optionList存放客製化內容
+			List<OptionVo> optionList = new ArrayList<>();
+			//對voList跑回圈放入客製化內容
+			for (OptionVo optionDto : voList) {
+				//建立vo存放客製化選項內容
+				OptionVo vo = new OptionVo();
+				// 基本資料加入
+				vo.setOptionId(optionDto.getOptionId());
+				vo.setOptionName(optionDto.getOptionName());
+				vo.setMaxSelect(optionDto.getMaxSelect());
+
+				//取得 OptionDetailDto 字串內容
+				String jsonDetail = optionDto.getOptionDetailJson();
+				if (StringUtils.hasText(jsonDetail)) {
+					// 將 String 轉成 JSON 物件
+					List<OptionDetailDto> detailList = mapper.readValue(jsonDetail,
+							new TypeReference<List<OptionDetailDto>>() {});
+					vo.setOptionDetail(detailList);
+				}
+				//將客製化單個選項加入客製化列表
+				optionList.add(vo);
+			}
+			// 把 客製化 傳回 settingDetail 的 optionList
+			settingDetail.setOptionList(optionList);
+			// 把settingDetail放回finalList中做回傳
+			finalList.add(settingDetail);
+		}
+
+		return new SettingAllDetailRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				categoryId, dto.getSettingId(), dto.getSettingName(), dto.getSettingPrice(), //
+				dto.getSettingImg(), dto.isSettingActive(), dto.getSettingNote(), finalList);
+	}
+
 }

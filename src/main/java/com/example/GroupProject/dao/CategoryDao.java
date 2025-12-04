@@ -34,5 +34,8 @@ public interface CategoryDao {
 	
 	//查詢分類列表
 	public List<CategoryDto> getCategoryList();
+	
+	//查詢單一分類
+	public CategoryDto getCategoryById(@Param("categoryId") int categoryId);
 
 }

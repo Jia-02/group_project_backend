@@ -56,10 +56,15 @@
 		WHERE category_id = #{categoryId}
 	</update>
 	
-		<!-- 查詢分類列表 -->
+	<!-- 查詢分類列表 -->
 	<select id="getCategoryList" resultType="com.example.GroupProject.dto.CategoryDto">
 		SELECT * FROM category
 	</select>
-
+	
+	<!-- 查詢單一分類 -->
+   	<select id="getCategoryById" resultType="com.example.GroupProject.dto.CategoryDto">
+		SELECT * FROM category
+		WHERE category_id = #{categoryId}
+	</select>
 
 </mapper>

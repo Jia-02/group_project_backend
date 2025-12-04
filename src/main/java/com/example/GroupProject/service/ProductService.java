@@ -1,5 +1,6 @@
 package com.example.GroupProject.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,20 +10,33 @@ import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
+import com.example.GroupProject.dao.OptionDao;
 import com.example.GroupProject.dao.ProductDao;
+import com.example.GroupProject.dto.CategoryDto;
+import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.ProductAllDetailRes;
 import com.example.GroupProject.response.ProductRes;
+import com.example.GroupProject.vo.OptionVo;
 import com.example.GroupProject.vo.ProductVo;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ProductService {
 
+	// json跟java物件的轉換
+	private ObjectMapper mapper = new ObjectMapper();
+	
 	@Autowired
 	private ProductDao productDao;
 
 	@Autowired
 	private CategoryDao categoryDao;
+	
+	@Autowired
+	private OptionDao optionDao;
 
 	// 新增商品
 	@Transactional(rollbackFor = Exception.class)
@@ -77,7 +91,7 @@ public class ProductService {
 		}
 	}
 
-	// 查看商品 (管理者)
+	// 透過分類查看商品 (管理者)
 	@Transactional(readOnly = true)
 	public ProductRes getProductList(int categoryId) {
 
@@ -96,7 +110,7 @@ public class ProductService {
 				productList);
 	}
 
-	// 查看商品(點餐時)-不顯示active=0
+	// 查看商品列表(點餐時)-不顯示active=0
 	@Transactional(readOnly = true)
 	public ProductRes getUserProductList(int categoryId) {
 
@@ -128,13 +142,13 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
 
 		// 如果商品上架中，不可刪除
-		if (productDao.getProductActive(dto.getProductId())) {
+		if (productDao.getProductActive(dto.getCategoryId(),dto.getProductId())) {
 			return new BasicRes( //
 					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
 					ResCodeMessage.PRODUCT_IS_USED.getMessage());
@@ -165,7 +179,7 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
@@ -204,5 +218,76 @@ public class ProductService {
 					ResCodeMessage.UPDATE_PRODUCT_FAILED.getMessage());
 		}
 	}
+	
+	//查詢單樣商品，使用者點餐(顯示商品+客製化)
+	@Transactional(readOnly = true)
+	public ProductAllDetailRes getProductById(int categoryId, int productId) throws Exception  {
 
+		ProductDto dto = productDao.getDetailByProductId(categoryId, productId);
+		
+		// 商品不存在
+		if (dto == null) {
+			return new ProductAllDetailRes(
+					ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
+					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
+		}
+		
+		//判斷本身與傳輸之分類id是否相等
+		if (dto.getCategoryId() != categoryId) {
+			return new ProductAllDetailRes(//
+					ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(), //
+					ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getMessage());
+		}
+
+		// 分類不存在
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
+			return new ProductAllDetailRes(
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(),
+					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+		}
+		
+		// 3. 查分類基本資料
+		CategoryDto category = categoryDao.getCategoryById(categoryId);
+
+		// 4. 查分類底下所有客製化
+		List<OptionVo> voList = optionDao.getOptionListByCategoryId(categoryId);
+		List<OptionVo> optionList = new ArrayList<>();
+
+		for (OptionVo optionDto : voList) {
+
+			OptionVo vo = new OptionVo();
+			vo.setOptionId(optionDto.getOptionId());
+			vo.setOptionName(optionDto.getOptionName());
+			vo.setMaxSelect(optionDto.getMaxSelect());
+
+			// 解析 JSON → List<OptionDetailDto>
+			String jsonDetail = optionDto.getOptionDetailJson();
+			if (StringUtils.hasText(jsonDetail)) {
+
+				List<OptionDetailDto> detailList = mapper.readValue(
+						jsonDetail, new TypeReference<List<OptionDetailDto>>() {});
+				vo.setOptionDetail(detailList);
+			}
+			optionList.add(vo);
+		}
+
+		// 5. 回傳結果
+		return new ProductAllDetailRes(
+				ResCodeMessage.SUCCESS.getCode(),
+				ResCodeMessage.SUCCESS.getMessage(),
+				categoryId,
+				dto.getProductId(),
+				dto.getProductName(),
+				dto.getProductPrice(),
+				dto.isProductActive(),
+				dto.getProductDescription(),
+				dto.getImageUrl(),
+				dto.getProductNote(),
+				category.getCategoryType(),
+				category.getWorkstationId(),
+				optionList
+		);
+	}
+	
+	
 }

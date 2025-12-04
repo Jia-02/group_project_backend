@@ -3,6 +3,7 @@ package com.example.GroupProject.vo;
 import java.util.List;
 
 import com.example.GroupProject.dto.OptionDetailDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class OptionVo {
 	
@@ -10,6 +11,9 @@ public class OptionVo {
     private String optionName;
     private int maxSelect;
     private List<OptionDetailDto> optionDetail;
+    
+    @JsonIgnore
+    private String optionDetailJson; // 暫存 JSON 字串
     
 	public int getOptionId() {
 		return optionId;
@@ -35,6 +39,12 @@ public class OptionVo {
 	}
 	public void setMaxSelect(int maxSelect) {
 		this.maxSelect = maxSelect;
+	}
+	public String getOptionDetailJson() {
+		return optionDetailJson;
+	}
+	public void setOptionDetailJson(String optionDetailJson) {
+		this.optionDetailJson = optionDetailJson;
 	}
 
 }
