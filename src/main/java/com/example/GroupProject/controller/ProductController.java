@@ -52,7 +52,9 @@ public class ProductController {
 	
 	//查詢商品，使用者點餐(顯示商品+客製化)
 	@GetMapping(value = "product/detail")
-	public ProductAllDetailRes getProductById(@RequestParam("productId") int productId) throws Exception  {
-		return productService.getProductById(productId);
+	public ProductAllDetailRes getProductById( //
+			@RequestParam("categoryId") int categoryId, //
+			@RequestParam("productId") int productId ) throws Exception  {
+		return productService.getProductById(categoryId, productId);
 	}
 }

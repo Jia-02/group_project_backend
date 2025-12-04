@@ -131,10 +131,10 @@ public class SettingService {
 				}
 
 				// 透過商品id呼叫商品資訊
-				ProductDto productDto = productDao.getDetailByProductId(productId);
+				ProductDto productDto = productDao.getDetailByProductId(categoryId, productId);
 
 				// 檢查商品是否存在
-				if (productDao.checkProductExist(productId) == 0) {
+				if (productDao.checkProductExist(categoryId, productId) == 0) {
 					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
@@ -388,7 +388,7 @@ public class SettingService {
 			List<ProductVo> products = new ArrayList<>();
 			//對detailList做迴圈取得商品資訊並填入
 			for (SettingDetailProductDto detailList : detail.getDetailList()) {
-				ProductVo product = productDao.getUserDetailByProductId(detailList.getProductId());
+				ProductVo product = productDao.getUserDetailByProductId(detail.getCategoryId() ,detailList.getProductId());
 				if (product != null) {
 					products.add(product);
 				}

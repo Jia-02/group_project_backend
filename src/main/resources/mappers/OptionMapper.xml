@@ -17,13 +17,16 @@
 	<!-- 刪除客製化 -->
 	<delete id="delOptionById">
 		DELETE FROM options
-		WHERE option_id = #{optionId}
+		WHERE category_id = #{categoryId}
+		AND option_id = #{optionId}
 	</delete>
 
 	<!-- 確認客製化存在數量 -->
 	<select id="checkOptionExist" resultType="int">
 		SELECT COUNT(1) FROM
-		options WHERE option_id = #{optionId}
+		options 		
+		WHERE category_id = #{categoryId}
+		AND option_id = #{optionId}
 	</select>
 
 	<!-- 客製化名稱重複 -->
@@ -32,7 +35,8 @@
 		COUNT(*) > 0
 		FROM
 		options
-		WHERE option_name = #{optionName}
+		WHERE category_id = #{categoryId}
+		AND option_name = #{optionName}
 	</select>
 
 	<!-- 查詢客製化列表(透過分類ID) -->

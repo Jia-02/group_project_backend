@@ -91,6 +91,7 @@ CREATE TABLE `check_out` (
 
 LOCK TABLES `check_out` WRITE;
 /*!40000 ALTER TABLE `check_out` DISABLE KEYS */;
+INSERT INTO `check_out` VALUES ('2512251200A01',350,'現金','2025-12-25 00:00:00',0);
 /*!40000 ALTER TABLE `check_out` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,6 +116,7 @@ CREATE TABLE `inner_order` (
 
 LOCK TABLES `inner_order` WRITE;
 /*!40000 ALTER TABLE `inner_order` DISABLE KEYS */;
+INSERT INTO `inner_order` VALUES ('2512251200A01','2025-12-25','A01');
 /*!40000 ALTER TABLE `inner_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +158,7 @@ CREATE TABLE `options` (
   `option_detail` varchar(1000) NOT NULL,
   `category_id` int NOT NULL DEFAULT '0',
   `max_select` int NOT NULL DEFAULT '1',
-  PRIMARY KEY (`option_id`)
+  PRIMARY KEY (`option_id`,`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -166,7 +168,7 @@ CREATE TABLE `options` (
 
 LOCK TABLES `options` WRITE;
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
-INSERT INTO `options` VALUES (1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',3,1),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5,1),(3,'加肉','[{\"option\":\"加一層肉\",\"addPrice\":20},{\"option\":\"兩層肉\",\"addPrice\":40},{\"option\":\"不加肉\",\"addPrice\":0}]',4,1),(4,'甜度','[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"微糖\",\"addPrice\":0},{\"option\":\"少糖\",\"addPrice\":0}]',5,1);
+INSERT INTO `options` VALUES (1,'尺寸','[{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"飯少\",\"addPrice\":0},{\"option\":\"超級加倍\",\"addPrice\":20}]',2,1),(1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',3,1),(1,'加肉','[{\"option\":\"加一層肉\",\"addPrice\":20},{\"option\":\"兩層肉\",\"addPrice\":40},{\"option\":\"不加肉\",\"addPrice\":0}]',4,1),(1,'甜度','[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"微糖\",\"addPrice\":0},{\"option\":\"少糖\",\"addPrice\":0}]',5,1),(2,'尺寸','[{\"option\":\"原樣\",\"addPrice\":0},{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"超級加倍\",\"addPrice\":20}]',3,2),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5,1);
 /*!40000 ALTER TABLE `options` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,6 +196,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
+INSERT INTO `order_details` VALUES (1,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]}]',150,'2512251200A01','0',0),(2,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]},{\"workstation_id\":5,\"product_id\":2,\"product_name\":\"氣泡水\",\"product_price\":50,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',200,'2512251200A01','0',3);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +216,7 @@ CREATE TABLE `product` (
   `image_url` varchar(300) NOT NULL,
   `product_note` varchar(300) DEFAULT NULL,
   `category_id` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`product_id`)
+  PRIMARY KEY (`product_id`,`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -223,7 +226,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4),(5,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(6,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5);
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(1,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(2,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +306,7 @@ CREATE TABLE `setting` (
   `setting_note` varchar(300) DEFAULT NULL,
   `category_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`setting_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +315,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (5,'情人套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',100,'/images/settings/vip_package.jpg',1,'期間限定',3),(6,'母親節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
+INSERT INTO `setting` VALUES (3,'爸爸套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',250,'/images/settings/vip_package.jpg',1,'期間限定',3),(4,'母親節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,4 +433,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-03 17:34:38
+-- Dump completed on 2025-12-04 15:51:09

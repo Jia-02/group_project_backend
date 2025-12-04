@@ -91,7 +91,7 @@ public class ProductService {
 		}
 	}
 
-	// 查看商品 (管理者)
+	// 透過分類查看商品 (管理者)
 	@Transactional(readOnly = true)
 	public ProductRes getProductList(int categoryId) {
 
@@ -142,13 +142,13 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
 
 		// 如果商品上架中，不可刪除
-		if (productDao.getProductActive(dto.getProductId())) {
+		if (productDao.getProductActive(dto.getCategoryId(),dto.getProductId())) {
 			return new BasicRes( //
 					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
 					ResCodeMessage.PRODUCT_IS_USED.getMessage());
@@ -179,7 +179,7 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
@@ -221,9 +221,9 @@ public class ProductService {
 	
 	//查詢單樣商品，使用者點餐(顯示商品+客製化)
 	@Transactional(readOnly = true)
-	public ProductAllDetailRes getProductById(int productId) throws Exception  {
+	public ProductAllDetailRes getProductById(int categoryId, int productId) throws Exception  {
 
-		ProductDto dto = productDao.getDetailByProductId(productId);
+		ProductDto dto = productDao.getDetailByProductId(categoryId, productId);
 		
 		// 商品不存在
 		if (dto == null) {
@@ -232,8 +232,12 @@ public class ProductService {
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
 		
-		// 2. 取得分類 ID
-		int categoryId = dto.getCategoryId();
+		//判斷本身與傳輸之分類id是否相等
+		if (dto.getCategoryId() != categoryId) {
+			return new ProductAllDetailRes(//
+					ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(), //
+					ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getMessage());
+		}
 
 		// 分類不存在
 		if (categoryDao.checkCategoryExistById(categoryId) == 0) {

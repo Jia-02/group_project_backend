@@ -18,10 +18,14 @@ public interface OptionDao {
 	public int delOptionById(OptionDto optionDto);
 	
 	//確認該客製化存在
-	public int checkOptionExist(@Param("optionId") int optionId);
+	public int checkOptionExist(
+			@Param("categoryId")int categoryId,//
+			@Param("optionId") int optionId);
 	
 	//客製化名稱重複
-	public boolean checkOptionName(@Param("optionName") String optionName);
+	public boolean checkOptionName(
+			@Param("categoryId")int categoryId,//
+			@Param("optionName") String optionName);
 	
 	//查詢客製化列表(透過分類ID)
 	public List<OptionDto> getOptionList(@Param("categoryId") int categoryId);
