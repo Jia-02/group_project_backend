@@ -45,8 +45,8 @@ public class OptionService {
 					ResCodeMessage.OPTION_NAME_ERROR.getMessage());
 		}
 
-		// 客製化名稱重複
-		if (optionDao.checkOptionName(req.getOptionName())) {
+		// 客製化名稱重複(不同分類)
+		if (optionDao.checkOptionName(req.getCategoryId(), req.getOptionName())) {
 			return new BasicRes( //
 					ResCodeMessage.OPTION_NAME_IS_USED.getCode(), //
 					ResCodeMessage.OPTION_NAME_IS_USED.getMessage());
@@ -67,7 +67,7 @@ public class OptionService {
 		}
 
 		// 分類id存在與否
-		if (categoryDao.checkCategoryExist(req.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(req.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -135,7 +135,7 @@ public class OptionService {
 		}
 
 		// 確認客製化存在與否
-		if (optionDao.checkOptionExist(dto.getOptionId()) == 0) {
+		if (optionDao.checkOptionExist(dto.getCategoryId(), dto.getOptionId()) == 0) {
 			return new BasicRes(ResCodeMessage.OPTION_NOT_FOUND.getCode(), //
 					ResCodeMessage.OPTION_NOT_FOUND.getMessage());
 		}
@@ -172,7 +172,7 @@ public class OptionService {
 		}
 
 		// 確認客製化存在與否
-		if (optionDao.checkOptionExist(req.getOptionId()) == 0) {
+		if (optionDao.checkOptionExist(req.getCategoryId(), req.getOptionId()) == 0) {
 			return new BasicRes(ResCodeMessage.OPTION_NOT_FOUND.getCode(), //
 					ResCodeMessage.OPTION_NOT_FOUND.getMessage());
 		}
@@ -180,6 +180,7 @@ public class OptionService {
 		// 刪除舊的客製化
 		OptionDto delDto = new OptionDto();
 		delDto.setOptionId(req.getOptionId());
+		delDto.setCategoryId(req.getCategoryId());
 		int delResult = optionDao.delOptionById(delDto);
 		if (delResult <= 0) {
 			return new BasicRes(//
@@ -200,7 +201,7 @@ public class OptionService {
 	public OptionListRes getOptionList(int categoryId) throws Exception {
 
 		// 分類id存在與否
-		if (categoryDao.checkCategoryExist(categoryId) == 0) {
+		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
 			return new OptionListRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());

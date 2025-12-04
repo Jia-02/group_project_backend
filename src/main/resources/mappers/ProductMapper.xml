@@ -19,6 +19,14 @@
 		#{productNote}, #{categoryId})
 	</insert>
 
+	<!-- 查商品列表，顯示包含categoryId -->
+	<select id="getProductListByCategoryId" parameterType="int"
+		resultType="com.example.GroupProject.dto.ProductDto">
+		SELECT * FROM product
+		WHERE category_id = #{categoryId} AND
+		product_active = 1
+	</select>
+
 	<!-- 透過分類ID查詢商品(管理者) -->
 	<select id="getProductList"
 		resultType="com.example.GroupProject.vo.ProductVo">
@@ -53,12 +61,14 @@
 	<delete id="delProductById">
 		DELETE FROM product
 		WHERE product_id = #{productId}
+		AND category_id = #{categoryId}
 	</delete>
 
 	<!-- 確認商品存在數量 -->
 	<select id="checkProductExist" resultType="int">
 		SELECT COUNT(1) FROM
 		product WHERE product_id = #{productId}
+		AND category_id = #{categoryId}
 	</select>
 
 	<!-- 商品名稱重複 -->
@@ -73,7 +83,9 @@
 	<!-- 確認商品上架中 -->
 	<select id="getProductActive" resultType="boolean">
 		SELECT product_active
-		FROM product WHERE product_id = #{productId}
+		FROM product 
+		WHERE product_id = #{productId}
+		AND category_id = #{categoryId}
 	</select>
 
 	<!-- 更新商品 -->
@@ -85,10 +97,26 @@
 		product_active = #{productActive},
 		product_description = #{productDescription},
 		image_url = #{imageUrl},
-		product_note = #{productNote},
-		category_id = #{categoryId}
+		product_note = #{productNote}
 		WHERE
 		product_id = #{productId}
+		AND category_id = #{categoryId}
 	</update>
+
+	<!-- 透過商品跟分類id取得商品所有資料 (管理者add套餐用) -->
+	<select id="getDetailByProductId"
+		resultType="com.example.GroupProject.dto.ProductDto">
+		SELECT * FROM product 
+		WHERE product_id = #{productId}
+		AND category_id = #{categoryId}
+	</select>
+
+	<!-- 透過商品跟分類id取得商品所有資料 (使用者查詢套餐用)-->
+	<select id="getUserDetailByProductId"
+		resultType="com.example.GroupProject.vo.ProductVo">
+		SELECT * FROM product 
+		WHERE product_id = #{productId}
+		AND category_id = #{categoryId}
+	</select>
 
 </mapper>
