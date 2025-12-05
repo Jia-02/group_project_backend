@@ -130,7 +130,7 @@ DROP TABLE IF EXISTS `order_details`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_details` (
   `order_details_id` int NOT NULL,
-  `options_details` varchar(1000) NOT NULL,
+  `order_details` varchar(1000) NOT NULL,
   `order_details_price` int NOT NULL DEFAULT '0',
   `orders_id` int NOT NULL DEFAULT '0',
   `setting_id` int DEFAULT '0',
@@ -223,7 +223,7 @@ CREATE TABLE `qr` (
   `qr_active` tinyint NOT NULL DEFAULT '1',
   `table_id` varchar(50) NOT NULL,
   PRIMARY KEY (`qr_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,6 +232,7 @@ CREATE TABLE `qr` (
 
 LOCK TABLES `qr` WRITE;
 /*!40000 ALTER TABLE `qr` DISABLE KEYS */;
+INSERT INTO `qr` VALUES (1,'123456',1,'a01'),(2,'4466',0,'a02');
 /*!40000 ALTER TABLE `qr` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,7 +265,7 @@ CREATE TABLE `reservation` (
 
 LOCK TABLES `reservation` WRITE;
 /*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
-INSERT INTO `reservation` VALUES ('2025-11-30','0912345678','18:30:00','珈',1,3,4,0,'靠窗座位',1,'A01');
+INSERT INTO `reservation` VALUES ('2025-12-05','0912345678','18:30:00','珈',1,3,4,0,'靠窗座位',1,'A01');
 /*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +320,7 @@ CREATE TABLE `table_daily` (
 
 LOCK TABLES `table_daily` WRITE;
 /*!40000 ALTER TABLE `table_daily` DISABLE KEYS */;
-INSERT INTO `table_daily` VALUES ('2025-11-26',0,'A04'),('2025-11-30',0,'A04');
+INSERT INTO `table_daily` VALUES ('2025-11-26',1,'A04'),('2025-11-30',0,'A04');
 /*!40000 ALTER TABLE `table_daily` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -385,4 +386,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-05 14:12:28
+-- Dump completed on 2025-12-05 17:19:45
