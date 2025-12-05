@@ -67,10 +67,10 @@ public class CalendarService {
 					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
 		}
         //驗證：結束時間相等於開始時間
-        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
-			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
-					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
-		}
+//        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
+//			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+//					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+//		}
     	
     	// 執行資料庫操作 (回傳 int)
         // 注意：DAO 呼叫中的參數 (calendar) 會自動使用 DTO 的新 Getter 來取值
@@ -158,10 +158,10 @@ public class CalendarService {
 					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
 		}
         //驗證：結束時間相等於開始時間
-        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
-			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
-					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
-		}
+//        if(calendar.getCalendarEndDate().isEqual(calendar.getCalendarStartDate())) {
+//			return new BasicRes(ResCodeMessage.CALENDAR_DATE_ERROR.getCode(),
+//					ResCodeMessage.CALENDAR_DATE_ERROR.getMessage());
+//		}
         
         int res= calendarDao.updateDataById(calendar);
         if(res == 0) {
