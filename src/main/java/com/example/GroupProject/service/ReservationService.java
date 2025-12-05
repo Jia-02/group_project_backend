@@ -189,7 +189,7 @@ public class ReservationService {
 			LocalTime.of(14, 0, 0), LocalTime.of(16, 0, 0), LocalTime.of(18, 0, 0), LocalTime.of(20, 0, 0));
 
 	/** 查詢當下最接近的預約資訊 */
-	@Transactional(readOnly = true)
+	@Transactional(rollbackFor = Exception.class)
 	public ReservationAndTableByTimeRes findTableStatusByNow() {
 
 		// 現在時間
