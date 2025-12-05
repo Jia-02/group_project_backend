@@ -48,6 +48,7 @@ public class ReservationService {
 		String phone = reservationDto.getReservationPhone();
 		int repeatCount = reservationDao.countByDateAndPhone(date, phone);
 		int childSeat = reservationDto.getChildSeat();
+		int childCount = reservationDto.getReservationChildCount();
 
 		// 客人是否當日重複預約
 		if (repeatCount > 0) {
@@ -56,6 +57,22 @@ public class ReservationService {
 					ResCodeMessage.PHONE_IS_RESERVATION_IN_DATE.getMessage());
 		}
 
+		// 檢查總人數、大人至少1個，大人+小孩=總人數
+		if (reservationDto.getReservationCount() <= 0 //
+				|| reservationDto.getReservationAdultCount() <= 0 //
+				|| reservationDto.getReservationAdultCount() + childCount != reservationDto.getReservationCount()) {
+			return new BasicRes(// 人數輸入錯誤
+					ResCodeMessage.PEOPLE_COUNT_FAILED.getCode(), //
+					ResCodeMessage.PEOPLE_COUNT_FAILED.getMessage());
+		}
+		
+		//先有小孩才有兒童座椅
+		if (childSeat > 0 && childCount == 0) {
+			return new BasicRes(
+					ResCodeMessage.NO_CHILD.getCode(), //
+					ResCodeMessage.NO_CHILD.getMessage());
+		}
+		
 		// 檢查兒童座椅數量
 		final int maxChildSeat = 5; // 店家總庫存數
 		if (childSeat > 0) {
@@ -64,16 +81,6 @@ public class ReservationService {
 				return new BasicRes(ResCodeMessage.CHILD_SEAT_INSUFFICIENT.getCode(), //
 						ResCodeMessage.CHILD_SEAT_INSUFFICIENT.getMessage());
 			}
-		}
-
-		// 檢查總人數、大人至少1個，大人+小孩=總人數
-		if (reservationDto.getReservationCount() <= 0 //
-				|| reservationDto.getReservationAdultCount() <= 0 //
-				|| reservationDto.getReservationAdultCount()
-						+ reservationDto.getReservationChildCount() != reservationDto.getReservationCount()) {
-			return new BasicRes(// 人數輸入錯誤
-					ResCodeMessage.PEOPLE_COUNT_FAILED.getCode(), //
-					ResCodeMessage.PEOPLE_COUNT_FAILED.getMessage());
 		}
 
 		// 檢查桌位是否存在
