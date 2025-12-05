@@ -28,6 +28,7 @@ public interface TablesDao {
 	/** 更新桌位 */
 	public void updateByTable(TablesDto table);
 
+	//更新桌位狀態
 	public void updateStatusByTableId(@Param("tableId") String tableId, //
 			@Param("tableStatus") String tableStatus);
 
