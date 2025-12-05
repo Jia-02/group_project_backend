@@ -31,7 +31,7 @@ CREATE TABLE `calendar` (
   `calendar_status` tinyint NOT NULL DEFAULT '1',
   `calendar_photo` varchar(500) NOT NULL,
   PRIMARY KEY (`calendar_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,6 @@ CREATE TABLE `calendar` (
 
 LOCK TABLES `calendar` WRITE;
 /*!40000 ALTER TABLE `calendar` DISABLE KEYS */;
-INSERT INTO `calendar` VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','2025-12-03','2025-12-05',1,'7e2e80856b6e1f83f7cbe6ab881c029c_w48_h48.png'),(2,'ddddd','ddd','2025-12-02','2025-12-03',0,'favicon.ico'),(3,'餓狠狠','餐卷一本特價1650元','2025-11-05','2025-11-15',0,'https://emos.plurk.com/7e2e80856b6e1f83f7cbe6ab881c029c_w48_h48.png');
 /*!40000 ALTER TABLE `calendar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,60 +64,8 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'燉飯',2),(4,'漢堡',2),(5,'飲料',1);
+INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'套餐',2),(4,'漢堡',2),(5,'飲料',1);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `check_out`
---
-
-DROP TABLE IF EXISTS `check_out`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `check_out` (
-  `order_id` varchar(60) NOT NULL,
-  `total_price` int NOT NULL DEFAULT '0',
-  `payment_type` varchar(60) NOT NULL,
-  `payment_time` datetime NOT NULL,
-  `paid` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `check_out`
---
-
-LOCK TABLES `check_out` WRITE;
-/*!40000 ALTER TABLE `check_out` DISABLE KEYS */;
-INSERT INTO `check_out` VALUES ('2512251200A01',350,'現金','2025-12-25 00:00:00',0);
-/*!40000 ALTER TABLE `check_out` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `inner_order`
---
-
-DROP TABLE IF EXISTS `inner_order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `inner_order` (
-  `inner_id` varchar(60) NOT NULL,
-  `payment_time` datetime NOT NULL,
-  `table_id` varchar(45) NOT NULL,
-  PRIMARY KEY (`inner_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `inner_order`
---
-
-LOCK TABLES `inner_order` WRITE;
-/*!40000 ALTER TABLE `inner_order` DISABLE KEYS */;
-INSERT INTO `inner_order` VALUES ('2512251200A01','2025-12-25','A01');
-/*!40000 ALTER TABLE `inner_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -129,10 +76,11 @@ DROP TABLE IF EXISTS `meal_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `meal_status` (
-  `meal_status_id` int NOT NULL,
+  `meal_status_id` int NOT NULL AUTO_INCREMENT,
   `meal_status` varchar(60) NOT NULL,
   `estimated_time` int NOT NULL,
-  `finish_time` datetime DEFAULT NULL,
+  `finish_time` time DEFAULT NULL,
+  `orders_id` int NOT NULL,
   PRIMARY KEY (`meal_status_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -147,15 +95,6 @@ LOCK TABLES `meal_status` WRITE;
 UNLOCK TABLES;
 
 --
-<<<<<<< HEAD
--- Table structure for table `option`
---
-
-DROP TABLE IF EXISTS `option`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `option` (
-=======
 -- Table structure for table `options`
 --
 
@@ -163,29 +102,16 @@ DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `options` (
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
   `option_id` int NOT NULL,
   `option_name` varchar(100) NOT NULL,
   `option_detail` varchar(1000) NOT NULL,
   `category_id` int NOT NULL DEFAULT '0',
-<<<<<<< HEAD
-  PRIMARY KEY (`option_id`)
-=======
   `max_select` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`option_id`,`category_id`)
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
-<<<<<<< HEAD
--- Dumping data for table `option`
---
-
-LOCK TABLES `option` WRITE;
-/*!40000 ALTER TABLE `option` DISABLE KEYS */;
-/*!40000 ALTER TABLE `option` ENABLE KEYS */;
-=======
 -- Dumping data for table `options`
 --
 
@@ -193,7 +119,6 @@ LOCK TABLES `options` WRITE;
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
 INSERT INTO `options` VALUES (1,'尺寸','[{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"飯少\",\"addPrice\":0},{\"option\":\"超級加倍\",\"addPrice\":20}]',2,1),(1,'加蛋','[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"起司蛋\",\"addPrice\":10}]',3,1),(1,'加肉','[{\"option\":\"加一層肉\",\"addPrice\":20},{\"option\":\"兩層肉\",\"addPrice\":40},{\"option\":\"不加肉\",\"addPrice\":0}]',4,1),(1,'甜度','[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"微糖\",\"addPrice\":0},{\"option\":\"少糖\",\"addPrice\":0}]',5,1),(2,'尺寸','[{\"option\":\"原樣\",\"addPrice\":0},{\"option\":\"加大\",\"addPrice\":10},{\"option\":\"超級加倍\",\"addPrice\":20}]',3,2),(2,'冰塊','[{\"option\":\"去冰\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]',5,1);
 /*!40000 ALTER TABLE `options` ENABLE KEYS */;
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 UNLOCK TABLES;
 
 --
@@ -204,14 +129,12 @@ DROP TABLE IF EXISTS `order_details`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_details` (
-  `order_details_id` int NOT NULL AUTO_INCREMENT,
-  `options_note` varchar(1000) DEFAULT NULL,
-  `setting_detail` varchar(1000) DEFAULT NULL,
+  `order_details_id` int NOT NULL,
+  `options_details` varchar(1000) NOT NULL,
   `order_details_price` int NOT NULL DEFAULT '0',
-  `inner_id` varchar(60) DEFAULT '0',
-  `take_out_id` varchar(60) DEFAULT '0',
+  `orders_id` int NOT NULL DEFAULT '0',
   `setting_id` int DEFAULT '0',
-  PRIMARY KEY (`order_details_id`)
+  PRIMARY KEY (`order_details_id`,`orders_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -221,8 +144,40 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-INSERT INTO `order_details` VALUES (1,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]}]',150,'2512251200A01','0',0),(2,'[{\"workstation_id\":3,\"product_id\":1,\"product_name\":\"起司牛肉漢堡\",\"product_price\":170,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"加蛋\",\"addPrice\":10},{\"option\":\"加肉\",\"addPrice\":20}]},{\"workstation_id\":5,\"product_id\":2,\"product_name\":\"氣泡水\",\"product_price\":50,\"meal_status\":\"製作中\",\"detail_list\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',200,'2512251200A01','0',3);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `orders_id` int NOT NULL AUTO_INCREMENT,
+  `orders_type` varchar(60) NOT NULL,
+  `orders_date` date NOT NULL,
+  `orders_time` time NOT NULL,
+  `total_price` int NOT NULL DEFAULT '0',
+  `payment_type` varchar(60) NOT NULL,
+  `paid` tinyint NOT NULL,
+  `orders_code` varchar(60) DEFAULT NULL,
+  `customer_name` varchar(45) DEFAULT NULL,
+  `customer_phone` varchar(45) DEFAULT NULL,
+  `customer_address` varchar(100) DEFAULT NULL,
+  `table_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`orders_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -251,15 +206,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-<<<<<<< HEAD
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
-=======
-<<<<<<< HEAD
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4),(5,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(6,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5);
-=======
 INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(1,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(2,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
->>>>>>> product
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,8 +221,7 @@ CREATE TABLE `qr` (
   `qr_id` int NOT NULL AUTO_INCREMENT,
   `code` varchar(200) NOT NULL,
   `qr_active` tinyint NOT NULL DEFAULT '1',
-  `qr_type` varchar(50) DEFAULT NULL,
-  `table_id` varchar(50) DEFAULT NULL,
+  `table_id` varchar(50) NOT NULL,
   PRIMARY KEY (`qr_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -334,19 +280,12 @@ CREATE TABLE `setting` (
   `setting_name` varchar(100) NOT NULL,
   `setting_detail` varchar(1000) NOT NULL,
   `setting_price` int NOT NULL DEFAULT '0',
-  `setting_note` varchar(300) DEFAULT NULL,
+  `setting_img` varchar(500) NOT NULL,
   `setting_active` tinyint NOT NULL DEFAULT '1',
+  `setting_note` varchar(300) DEFAULT NULL,
   `category_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`setting_id`)
-<<<<<<< HEAD
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-=======
-<<<<<<< HEAD
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-=======
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
->>>>>>> product
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,14 +294,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-INSERT INTO `setting` VALUES (1,'VIP客戶專屬優惠組合','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',999,'/images/settings/vip_package.jpg',1,'期間限定',3),(2,'聖誕節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":5},{\"productId\":6}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
-=======
 INSERT INTO `setting` VALUES (3,'爸爸套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',250,'/images/settings/vip_package.jpg',1,'期間限定',3),(4,'母親節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
->>>>>>> product
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,33 +353,6 @@ INSERT INTO `tables` VALUES ('A01','可預約',8,10,50,40,40),('A02','可預約'
 UNLOCK TABLES;
 
 --
--- Table structure for table `take_out`
---
-
-DROP TABLE IF EXISTS `take_out`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `take_out` (
-  `take_out_id` varchar(60) NOT NULL,
-  `take_out_type` varchar(60) NOT NULL,
-  `customer_name` varchar(60) NOT NULL,
-  `customer_phone` varchar(60) NOT NULL,
-  `customer_address` varchar(100) DEFAULT NULL,
-  `payment_time` datetime NOT NULL,
-  PRIMARY KEY (`take_out_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `take_out`
---
-
-LOCK TABLES `take_out` WRITE;
-/*!40000 ALTER TABLE `take_out` DISABLE KEYS */;
-/*!40000 ALTER TABLE `take_out` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `workstation`
 --
 
@@ -480,12 +385,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-<<<<<<< HEAD
--- Dump completed on 2025-12-04 16:54:07
-=======
-<<<<<<< HEAD
--- Dump completed on 2025-12-02 17:48:06
-=======
--- Dump completed on 2025-12-04 15:51:09
->>>>>>> product
->>>>>>> 302066fbeaeb33d8550a83ee4075512beab66105
+-- Dump completed on 2025-12-05 14:12:28
