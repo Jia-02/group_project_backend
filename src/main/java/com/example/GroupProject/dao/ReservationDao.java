@@ -55,5 +55,10 @@ public interface ReservationDao {
 		    @Param("reservationDate") LocalDate reservationDate, 
 		    @Param("reservationTime") LocalTime reservationTime);
 	
+	//查詢某日某桌是否有訂位資料，如果有，不可刪除桌位狀態
+	public int reservationByDateAndTable(
+		    @Param("reservationDate") LocalDate reservationDate, 
+		    @Param("tableId") String tableId);
+	
 	
 }

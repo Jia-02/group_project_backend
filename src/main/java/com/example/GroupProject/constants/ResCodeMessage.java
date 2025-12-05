@@ -12,6 +12,8 @@ public enum ResCodeMessage {
 	DELETE_RESERVATION_FAILED(400, "預約刪除失敗。"), //
 	UPDATE_RESERVATION_FAILED(400, "預約更新失敗。"), //
 	CHILD_SEAT_INSUFFICIENT(400, "兒童座椅數量不足。"), //
+	NO_CHILD(400, "沒有兒童不可以有座椅。"), //
+	RESERVATION_EXIST(400,"訂位存在。"),//
 	
 	//桌位錯誤
 	TABLE_NOT_FOUND(400, "無法找到桌位。"), //
