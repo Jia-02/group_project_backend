@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.OrdersDao">
+
+	<!-- 新增訂單 -->
+	<insert id="addOrder" useGeneratedKeys="true" keyProperty="ordersId">
+		INSERT INTO orders(
+		orders_type, orders_date, orders_time, total_price, payment_type, paid,
+		orders_code, customer_name, customer_phone, customer_address, table_id
+		) VALUES (
+		#{ordersType}, #{ordersDate}, #{ordersTime}, #{totalPrice}, #{paymentType},
+		#{paid}, #{ordersCode}, #{customerName}, #{customerPhone},
+		#{customerAddress}, #{tableId} )
+	</insert>
+
+	<!-- 新增訂單明細 -->
+	<insert id="addOrderDetail">
+		INSERT INTO order_details (
+		order_details_id, order_details, order_details_price,
+		orders_id, setting_id )
+		VALUES (
+		#{orderDetailsId}, #{orderDetails}, #{orderDetailsPrice},
+		#{ordersId}, #{settingId} )
+	</insert>
+
+    <!-- 生成訂單編號 -->
+	<update id="updateOrdersCode">
+		UPDATE orders
+		SET orders_code = #{ordersCode}
+		WHERE orders_id = #{ordersId}
+	</update>
+
+</mapper>

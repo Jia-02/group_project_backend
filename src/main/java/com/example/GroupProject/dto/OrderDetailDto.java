@@ -1,11 +1,11 @@
 package com.example.GroupProject.dto;
 
-public class OrdersDetailDto {
+public class OrderDetailDto {
 	
     private int orderDetailsId;      // 前端生成，與 orders 成雙 PK
-    private String ordersDetails; // 商品 & 客製化內容
+    private String orderDetails; // 商品 & 客製化內容
     private int orderDetailsPrice;   // 商品價格 + 客製化
-    private int orderId;      // 訂單id
+    private int ordersId;      // 訂單id
     private int settingId;           // 套餐 ID，單點可為 0 或 -1
     
 	public int getOrderDetailsId() {
@@ -14,11 +14,11 @@ public class OrdersDetailDto {
 	public void setOrderDetailsId(int orderDetailsId) {
 		this.orderDetailsId = orderDetailsId;
 	}
-	public String getOrdersDetails() {
-		return ordersDetails;
+	public String getOrderDetails() {
+		return orderDetails;
 	}
-	public void setOrdersDetails(String ordersDetails) {
-		this.ordersDetails = ordersDetails;
+	public void setOrderDetails(String orderDetails) {
+		this.orderDetails = orderDetails;
 	}
 	public int getOrderDetailsPrice() {
 		return orderDetailsPrice;
@@ -26,11 +26,11 @@ public class OrdersDetailDto {
 	public void setOrderDetailsPrice(int orderDetailsPrice) {
 		this.orderDetailsPrice = orderDetailsPrice;
 	}
-	public int getOrderId() {
-		return orderId;
+	public int getOrdersId() {
+		return ordersId;
 	}
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setOrdersId(int ordersId) {
+		this.ordersId = ordersId;
 	}
 	public int getSettingId() {
 		return settingId;
@@ -38,5 +38,7 @@ public class OrdersDetailDto {
 	public void setSettingId(int settingId) {
 		this.settingId = settingId;
 	}
+    
+
 
 }
