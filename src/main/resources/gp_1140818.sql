@@ -211,32 +211,6 @@ INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生�
 UNLOCK TABLES;
 
 --
--- Table structure for table `qr`
---
-
-DROP TABLE IF EXISTS `qr`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `qr` (
-  `qr_id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(200) NOT NULL,
-  `qr_active` tinyint NOT NULL DEFAULT '1',
-  `table_id` varchar(50) NOT NULL,
-  PRIMARY KEY (`qr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `qr`
---
-
-LOCK TABLES `qr` WRITE;
-/*!40000 ALTER TABLE `qr` DISABLE KEYS */;
-INSERT INTO `qr` VALUES (1,'123456',1,'a01'),(2,'4466',0,'a02');
-/*!40000 ALTER TABLE `qr` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `reservation`
 --
 
@@ -337,8 +311,9 @@ CREATE TABLE `tables` (
   `capacity` int NOT NULL DEFAULT '2',
   `position_x` int NOT NULL DEFAULT '0',
   `position_y` int NOT NULL DEFAULT '0',
-  `length_x` int DEFAULT '40',
-  `length_y` int DEFAULT '40',
+  `length_x` int NOT NULL DEFAULT '40',
+  `length_y` int NOT NULL DEFAULT '40',
+  `qr_url` varchar(100) NOT NULL,
   PRIMARY KEY (`table_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -349,7 +324,6 @@ CREATE TABLE `tables` (
 
 LOCK TABLES `tables` WRITE;
 /*!40000 ALTER TABLE `tables` DISABLE KEYS */;
-INSERT INTO `tables` VALUES ('A01','可預約',8,10,50,40,40),('A02','可預約',5,10,30,40,40),('A03','可預約',4,10,80,40,40),('A04','可預約',6,10,100,40,40);
 /*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -386,4 +360,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-05 17:19:45
+-- Dump completed on 2025-12-07 16:05:37
