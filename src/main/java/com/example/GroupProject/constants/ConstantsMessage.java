@@ -40,6 +40,8 @@ public class ConstantsMessage {
 	
 	public static final String TABLE_LENGTH_Y_ERROR = "桌位長度錯誤";
 	
+	public static final String TABLE_QR_URL_ERROR = "QR的URL錯誤";
+	
 	
 	
 }

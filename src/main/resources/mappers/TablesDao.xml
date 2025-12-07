@@ -16,7 +16,8 @@
 		<result property="tablePositionX" column="position_x" />      
 		<result property="tablePositionY" column="position_y" />    
 		<result property="lengthX" column="length_x" />    
-		<result property="lengthY" column="length_y" />    
+		<result property="lengthY" column="length_y" />
+		<result property="qrUrl" column="qr_url" />     
 
 
 	</resultMap>
@@ -24,9 +25,9 @@
 	<!-- 新增桌位 -->
 	<insert id="addTable"
 			parameterType="com.example.GroupProject.dto.TablesDto">
-			INSERT INTO tables (table_id,table_status,capacity,position_x,position_y,length_x,length_y)
+			INSERT INTO tables (table_id,table_status,capacity,position_x,position_y,length_x,length_y,qr_url)
 			VALUES (#{tableId} , #{tableStatus}, #{tableCapacity},
-			 #{tablePositionX}, #{tablePositionY}, #{lengthX}, #{lengthY})
+			 #{tablePositionX}, #{tablePositionY}, #{lengthX}, #{lengthY},#{qrUrl})
 
 	</insert>
 
@@ -58,7 +59,7 @@
 	<update id="updateByTable"
 			parameterType="com.example.GroupProject.dto.TablesDto">
 		update tables set table_status = #{tableStatus}, capacity = #{tableCapacity} ,
-			position_x = #{tablePositionX}, position_y = #{tablePositionY} ,
+			position_x = #{tablePositionX}, position_y = #{tablePositionY} , qr_url = #{qrUrl},
 			length_x = #{lengthX} , length_y = #{lengthY} where table_id = #{tableId}
 
 	</update>
