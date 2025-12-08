@@ -17,6 +17,7 @@ import com.example.GroupProject.dao.OrdersDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
+import com.example.GroupProject.dto.CategoryDto;
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OrderDetailDto;
 import com.example.GroupProject.dto.OrdersDto;
@@ -29,6 +30,9 @@ import com.example.GroupProject.request.OrderUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.OrdersAllDetailRes;
 import com.example.GroupProject.response.OrdersListRes;
+import com.example.GroupProject.response.OrdersMealRes;
+import com.example.GroupProject.vo.OrderMealDetailVo;
+import com.example.GroupProject.vo.OrdersMealVo;
 import com.example.GroupProject.vo.OrdersVo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -549,6 +553,94 @@ public class OrdersService {
 	    );
 	}
 	   
+	//透過ordersId查詢單筆訂單資訊與細節，餐點狀態、工作台用
+	@Transactional(readOnly = true)
+	public OrdersMealRes getOrdersMealById(int ordersId) throws Exception {
+	    
+		   // 1. 查詢訂單基本資料
+	    OrdersDto dto = ordersDao.getOrdersById(ordersId);
+	    if (dto == null) {
+	        return new OrdersMealRes(
+	            ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+	            ResCodeMessage.ORDERS_NOT_FOUND.getMessage()
+	        );
+	    }
+
+	    // 2. 查詢訂單明細列表
+	    List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
+
+	    if (dbDetailList == null || dbDetailList.isEmpty()) {
+	        return new OrdersMealRes(
+	            ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
+	            ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage()
+	        );
+	    }
+
+	    // ★ 最後要放的明細
+	    List<OrdersMealVo> finalList = new ArrayList<>();
+
+	    // 3. 逐筆處理 OrderDetail
+	    for (OrderDetailDto detail : dbDetailList) {
+
+	        OrdersMealVo mealVo = new OrdersMealVo();
+	        mealVo.setOrderDetailsId(detail.getOrderDetailsId());
+	        mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+	        mealVo.setSettingId(detail.getSettingId());
+
+	        // 解析 OrderDetails (JSON → List<OrderMealDetailVo>)
+	        String jsonString = detail.getOrderDetails();
+	        List<OrderMealDetailVo> productList = new ArrayList<>();
+
+	        if (StringUtils.hasText(jsonString)) {
+	            // 轉成 ProductReq（含客製化 detailList）
+	            List<OrderProductReq> tempList = mapper.readValue(
+	                    jsonString, new TypeReference<List<OrderProductReq>>() {}
+	            );
+
+	            // ★ 再轉成 OrderMealDetailVo（加入 workStationId）
+	            for (OrderProductReq p : tempList) {
+
+	                OrderMealDetailVo mealDetail = new OrderMealDetailVo();
+	                mealDetail.setCategoryId(p.getCategoryId());
+	                mealDetail.setProductId(p.getProductId());
+	                mealDetail.setProductName(p.getProductName());
+	                mealDetail.setProductPrice(p.getProductPrice());
+	                mealDetail.setMealStatus(p.getMealStatus());
+	                mealDetail.setDetailList(p.getDetailList()); // 客製化直接帶入
+
+	                // ★ 加入 workstationId（查 category）
+	                CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
+	                if (cat != null) {
+	                    mealDetail.setWorkStationId(cat.getWorkstationId());
+	                }
+
+	                productList.add(mealDetail);
+	            }
+	        }
+
+	        mealVo.setOrderDetails(productList); // 設定商品資料
+	        finalList.add(mealVo);
+	    }
+
+	    // 4. 組合回傳資料
+	    return new OrdersMealRes(
+	        ResCodeMessage.SUCCESS.getCode(),
+	        ResCodeMessage.SUCCESS.getMessage(),
+	        dto.getOrdersId(),
+	        dto.getOrdersType(),
+	        dto.getOrdersDate(),
+	        dto.getOrdersTime(),
+	        dto.getTotalPrice(),
+	        dto.getPaymentType(),
+	        dto.isPaid(),
+	        dto.getOrdersCode(),
+	        dto.getCustomerName(),
+	        dto.getCustomerPhone(),
+	        dto.getCustomerAddress(),
+	        dto.getTableId(),
+	        finalList
+	    );
+	}
 	
 	
 }

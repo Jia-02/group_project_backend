@@ -1,12 +1,13 @@
-package com.example.GroupProject.request;
+package com.example.GroupProject.vo;
 
 import java.util.List;
 
 import com.example.GroupProject.dto.OptionDetailDto;
 
-public class OrderProductReq {
-
+public class OrderMealDetailVo {
+	
     private int categoryId;
+    private int workStationId;
     private int productId;
     private String productName;
     private int productPrice;
@@ -14,14 +15,15 @@ public class OrderProductReq {
 
     private List<OptionDetailDto> detailList;  // 客製化
 
-	public OrderProductReq() {
+	public OrderMealDetailVo() {
 		super();
 	}
 
-	public OrderProductReq(int categoryId, int productId, String productName, int productPrice, String mealStatus,
-			List<OptionDetailDto> detailList) {
+	public OrderMealDetailVo(int categoryId, int workStationId, int productId, String productName, int productPrice,
+			String mealStatus, List<OptionDetailDto> detailList) {
 		super();
 		this.categoryId = categoryId;
+		this.workStationId = workStationId;
 		this.productId = productId;
 		this.productName = productName;
 		this.productPrice = productPrice;
@@ -35,6 +37,14 @@ public class OrderProductReq {
 
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public int getWorkStationId() {
+		return workStationId;
+	}
+
+	public void setWorkStationId(int workStationId) {
+		this.workStationId = workStationId;
 	}
 
 	public int getProductId() {
