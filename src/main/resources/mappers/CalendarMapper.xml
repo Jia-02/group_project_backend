@@ -7,7 +7,8 @@
 <mapper namespace="com.example.GroupProject.dao.CalendarDao">
 	<insert id="create">
 		insert into calendar (calendar_id, calendar_title,
-		calendar_description, calendar_start_date, calendar_end_date,calendar_status,calendar_photo)
+		calendar_description, calendar_start_date,
+		calendar_end_date,calendar_status,calendar_photo)
 		values
 		(#{calendarId}, #{calendarTitle}, #{calendarDescription},
 		#{calendarStartDate},
@@ -19,43 +20,55 @@
 		update calendar set
 		calendar_title = #{calendarTitle},
 		calendar_description = #{calendarDescription},
-		calendar_start_date = #{calendarStartDate},
+		calendar_start_date =
+		#{calendarStartDate},
 		calendar_end_date = #{calendarEndDate},
 		calendar_status = #{calendarStatus},
-		calendar_photo = #{calendarPhoto}		
+		calendar_photo = #{calendarPhoto}
 		where calendar_id = #{calendarId}
 	</update>
-	
-    <select id="findActByDateRange"
+
+	<select id="findActByDateRange"
 		resultType="com.example.GroupProject.dto.Calendar">
 		SELECT * FROM calendar
 		WHERE
-		calendar_start_date <![CDATA[ <= ]]> #{endDate}
-		AND calendar_end_date <![CDATA[ >= ]]> #{startDate}
+		calendar_start_date <![CDATA[ <= ]]>
+		#{endDate}
+		AND calendar_end_date <![CDATA[ >= ]]>
+		#{startDate}
 		AND calendar_status = TRUE
-    </select>
-	
+	</select>
+
 
 	<select id="selectByIdList">
-		select * from calendar where calendar_id = #{calendarId} 
+		select * from calendar where calendar_id = #{calendarId}
 		<foreach item="idItem" collection="idList" open="and id in ("
 			separator="," close=")">
 			#{idItem}
 		</foreach>
 	</select>
-    
-	
+
+
 	<delete id="deleteById">
 		delete from calendar where calendar_id =
-		#{calendarId} 
+		#{calendarId}
 	</delete>
-	
+
 	<select id="selectAll"
-        resultType="com.example.GroupProject.dto.Calendar">
+		resultType="com.example.GroupProject.dto.Calendar">
+		SELECT * FROM calendar
+		ORDER BY calendar_id ASC
+	</select>
+
+	<select id="selectDay"
+		resultType="com.example.GroupProject.dto.Calendar">
+        <![CDATA[
         SELECT * FROM calendar
-        ORDER BY calendar_id ASC
-    </select>
-
-
+        WHERE
+            calendar_start_date <= #{selectDate}
+            AND DATE_ADD(calendar_end_date, INTERVAL 1 DAY) >= #{selectDate} 
+        ORDER BY calendar_id
+    ]]>
+	</select>
 </mapper>
 

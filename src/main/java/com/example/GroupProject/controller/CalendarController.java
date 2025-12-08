@@ -1,5 +1,7 @@
 package com.example.GroupProject.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +63,9 @@ public class CalendarController {
 //        return calendarService.getCalendarById(calendarId); 
 //    }
 
-    
+     @GetMapping(value = "calendar/selectDay")
+     public CalendarRes selectDay(@RequestParam(name = "selectDate", required = false) LocalDate selectDate) {
+    	 return calendarService.selectDay(selectDate);
+     }
     
 }

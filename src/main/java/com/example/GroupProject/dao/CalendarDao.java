@@ -1,6 +1,7 @@
 package com.example.GroupProject.dao;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,5 +29,7 @@ public interface CalendarDao {
 	    );
 	
 	public List<Calendar> selectAll();
+	
+	public List<Calendar> selectDay(@Param("selectDate") LocalDate selectDate);
 	
 }
