@@ -13,12 +13,14 @@ import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
+import com.example.GroupProject.dao.OptionDao;
 import com.example.GroupProject.dao.OrdersDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.CategoryDto;
 import com.example.GroupProject.dto.OptionDetailDto;
+import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.OrderDetailDto;
 import com.example.GroupProject.dto.OrdersDto;
 import com.example.GroupProject.dto.ProductDto;
@@ -45,6 +47,9 @@ public class OrdersService {
 
 	@Autowired
 	private OrdersDao ordersDao;
+
+	@Autowired
+	private OptionDao optionDao;
 
 	@Autowired
 	private TablesDao tableDao;
@@ -104,11 +109,10 @@ public class OrdersService {
 		}
 
 		// 如果付款方式不是現金或取消，已結帳
-		if (!"現金".equals(req.getPaymentType()) && !req.isPaid() 
-			    && !"取消".equals(req.getPaymentType())) {
-			    return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
-			            ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
-			}
+		if (!"現金".equals(req.getPaymentType()) && !req.isPaid() && !"取消".equals(req.getPaymentType())) {
+			return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
+					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
+		}
 		// 內用需要桌號
 		if ("A".equals(req.getOrdersType())) {
 			// 桌號不可為空
@@ -261,23 +265,60 @@ public class OrdersService {
 					return new BasicRes(ResCodeMessage.OPTION_EMPTY.getCode(),
 							ResCodeMessage.OPTION_EMPTY.getMessage());
 				}
-
+				// 檢查客製化
 				for (OptionDetailDto option : options) {
-					// 客製化選項名稱不可為空
-					if (!StringUtils.hasText(option.getOption())) {
+					String userOptionName = option.getOption();
+					int userAddPrice = option.getAddPrice();
+					// OptionName不可為空
+					if (!StringUtils.hasText(userOptionName)) {
 						return new BasicRes(ResCodeMessage.OPTION_DETAIL_NAME_EMPTY.getCode(),
 								ResCodeMessage.OPTION_DETAIL_NAME_EMPTY.getMessage());
 					}
-					// 客製化選項價格不可 < 0
-					if (option.getAddPrice() < 0) {
-						return new BasicRes(ResCodeMessage.OPTION_DETAIL_PRICE_INVALID.getCode(),
-								ResCodeMessage.OPTION_DETAIL_PRICE_INVALID.getMessage());
+					// 稍晚判斷客製化是否存在
+					boolean matched = false;
+					// category 有多個 option
+					List<OptionDto> optionListFromDb = optionDao.getOptionList(categoryId);
+                    //迴圈檢查客製化
+					for (OptionDto dbOption : optionListFromDb) {
+						//字串成 list
+						List<OptionDetailDto> optionDetailList = new ArrayList<>();
+						try {
+							ObjectMapper mapper = new ObjectMapper();
+							optionDetailList = mapper.readValue(dbOption.getOptionDetail(),
+									new TypeReference<List<OptionDetailDto>>() {
+									});
+						} catch (Exception e) {
+							return new BasicRes(ResCodeMessage.OPTION_DETAIL_EMPTY.getCode(),
+									ResCodeMessage.OPTION_DETAIL_EMPTY.getMessage());
+						}
+
+						for (OptionDetailDto dbDetail : optionDetailList) {
+
+							// 使用者提供名稱 是否與 分類中客製化名稱匹配
+							if (dbDetail.getOption().equals(userOptionName)) {
+								matched = true;
+								// 價格匹配
+								if (dbDetail.getAddPrice() != userAddPrice) {
+									return new BasicRes(ResCodeMessage.OPTION_DETAIL_PRICE_ERROR.getCode(),
+											ResCodeMessage.OPTION_DETAIL_PRICE_ERROR.getMessage());
+								}
+								break;
+							}
+						}
+						if (matched)
+							break;
+					}
+
+					// 全部 option 都沒找到 → 非法的客製化選項
+					if (!matched) {
+						return new BasicRes(ResCodeMessage.OPTION_NOT_FOUND.getCode(),
+								ResCodeMessage.OPTION_NOT_FOUND.getMessage());
 					}
 					detailPrice += option.getAddPrice();
 				}
 			}
-			//算出來的價格不等於前端輸入
-			if(detailPrice != detail.getOrderDetailsPrice()) {
+			// 算出來的價格不等於前端輸入
+			if (detailPrice != detail.getOrderDetailsPrice()) {
 				return new BasicRes(ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getCode(),
 						ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getMessage());
 			}
@@ -303,11 +344,11 @@ public class OrdersService {
 		if (checkInfoRes != null) {
 			return checkInfoRes;
 		}
-		
-		//如果付款方式是取消，不可新增
+
+		// 如果付款方式是取消，不可新增
 		if ("取消".equals(req.getPaymentType())) {
-			    return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
-			            ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
+			return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
+					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
 		}
 
 		// ================= 判斷完畢，開始建立訂單資料（OrdersDto） =================
@@ -448,199 +489,160 @@ public class OrdersService {
 	public BasicRes updateOrderIsPaid(OrderUpdateReq req) throws Exception {
 		int ordersId = req.getOrdersId();
 
-	    if (ordersId <= 0 || ordersDao.checkOrdersExist(ordersId) == 0) {
-	        return new BasicRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
-	                            ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
-	    }
+		if (ordersId <= 0 || ordersDao.checkOrdersExist(ordersId) == 0) {
+			return new BasicRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+					ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
+		}
 
-	    OrdersDto oldOrder = ordersDao.getOrdersById(ordersId);
-	    if (oldOrder == null || !oldOrder.isPaid()) {
-	        return new BasicRes(ResCodeMessage.IS_NOT_PAID.getCode(),
-	                            ResCodeMessage.IS_NOT_PAID.getMessage());
-	    }
-        
-	    // 只更新餐點細節
-	    for (OrderDetailReq detailReq : req.getOrderDetails()) {
-	        String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
-	        ordersDao.updateOrderIsPaid(
-	        		ordersId,
-	        		detailReq.getOrderDetailsId(), 
-	        		jsonString);
-	    }
+		OrdersDto oldOrder = ordersDao.getOrdersById(ordersId);
+		if (oldOrder == null || !oldOrder.isPaid()) {
+			return new BasicRes(ResCodeMessage.IS_NOT_PAID.getCode(), ResCodeMessage.IS_NOT_PAID.getMessage());
+		}
 
-	    return new BasicRes(ResCodeMessage.SUCCESS.getCode(),
-	                        ResCodeMessage.SUCCESS.getMessage());
+		// 只更新餐點細節
+		for (OrderDetailReq detailReq : req.getOrderDetails()) {
+			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
+			ordersDao.updateOrderIsPaid(ordersId, detailReq.getOrderDetailsId(), jsonString);
+		}
+
+		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
-	
-	//查詢訂單列表(訂單管理者用)
+
+	// 查詢訂單列表(訂單管理者用)
 	@Transactional(readOnly = true)
 	public OrdersListRes getOrdersList() {
-	    //查詢所有訂單（不含明細）
-	    List<OrdersVo> ordersList = ordersDao.getOrdersList();
-	    
-	    return new OrdersListRes(//
-	    		ResCodeMessage.SUCCESS.getCode(),
-                ResCodeMessage.SUCCESS.getMessage(),//
-                ordersList);
+		// 查詢所有訂單（不含明細）
+		List<OrdersVo> ordersList = ordersDao.getOrdersList();
+
+		return new OrdersListRes(//
+				ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(), //
+				ordersList);
 	}
-	
-	//透過ordersId查詢單筆訂單資訊與細節
+
+	// 透過ordersId查詢單筆訂單資訊與細節
 	@Transactional(readOnly = true)
 	public OrdersAllDetailRes getOrdersAllDetailById(int ordersId) throws Exception {
-	    
-		//取得資訊
-	    OrdersDto dto = ordersDao.getOrdersById(ordersId);
-	    if (dto == null) {
-	        return new OrdersAllDetailRes(
-	            ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
-	            ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
-	    }
-	    
-	    // 取得明細列表
-	    List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
-	  
-	    //不可為null
-	    if (dbDetailList == null || dbDetailList.isEmpty()) {
-	        return new OrdersAllDetailRes(
-	                ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
-	                ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage());
-	    }
-	  
-	    //晚點存入所有訂單細節
-	    List<OrderDetailReq> finalList = new ArrayList<>();
-	    
-	    //處理每一筆 order_details ---
-	    for (OrderDetailDto detail : dbDetailList) {
 
-	    	//建立單一細節做存放
-	        OrderDetailReq detailReq = new OrderDetailReq();
-	        detailReq.setOrderDetailsId(detail.getOrderDetailsId());
-	        detailReq.setOrderDetailsPrice(detail.getOrderDetailsPrice());
-	        detailReq.setSettingId(detail.getSettingId());
+		// 取得資訊
+		OrdersDto dto = ordersDao.getOrdersById(ordersId);
+		if (dto == null) {
+			return new OrdersAllDetailRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+					ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
+		}
 
-	        // order_details (字串 → List<OrderProductReq>)
-	        //存放OrderProductReq列表
-	        String jsonString = detail.getOrderDetails();
-	        List<OrderProductReq> productList = new ArrayList<>();
-	        if (StringUtils.hasText(jsonString)) {
-	            productList = mapper.readValue(
-	                    jsonString, new TypeReference<List<OrderProductReq>>() {} );
-	        }
+		// 取得明細列表
+		List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
 
-	        detailReq.setOrderDetails(productList);
+		// 不可為null
+		if (dbDetailList == null || dbDetailList.isEmpty()) {
+			return new OrdersAllDetailRes(ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
+					ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage());
+		}
 
-	        // 加入最終列表
-	        finalList.add(detailReq);
-	    }
-	    
-	    // 5. 組合 final Res
-	    return new OrdersAllDetailRes(
-	            ResCodeMessage.SUCCESS.getCode(),
-	            ResCodeMessage.SUCCESS.getMessage(),
-	            dto.getOrdersId(),
-	            dto.getOrdersType(),
-	            dto.getOrdersDate(),
-	            dto.getOrdersTime(),
-	            dto.getTotalPrice(),
-	            dto.getPaymentType(),
-	            dto.isPaid(),
-	            dto.getOrdersCode(),
-	            dto.getCustomerName(),
-	            dto.getCustomerPhone(),
-	            dto.getCustomerAddress(),
-	            dto.getTableId(),
-	            finalList
-	    );
+		// 晚點存入所有訂單細節
+		List<OrderDetailReq> finalList = new ArrayList<>();
+
+		// 處理每一筆 order_details ---
+		for (OrderDetailDto detail : dbDetailList) {
+
+			// 建立單一細節做存放
+			OrderDetailReq detailReq = new OrderDetailReq();
+			detailReq.setOrderDetailsId(detail.getOrderDetailsId());
+			detailReq.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+			detailReq.setSettingId(detail.getSettingId());
+
+			// order_details (字串 → List<OrderProductReq>)
+			// 存放OrderProductReq列表
+			String jsonString = detail.getOrderDetails();
+			List<OrderProductReq> productList = new ArrayList<>();
+			if (StringUtils.hasText(jsonString)) {
+				productList = mapper.readValue(jsonString, new TypeReference<List<OrderProductReq>>() {
+				});
+			}
+
+			detailReq.setOrderDetails(productList);
+
+			// 加入最終列表
+			finalList.add(detailReq);
+		}
+
+		// 5. 組合 final Res
+		return new OrdersAllDetailRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				dto.getOrdersId(), dto.getOrdersType(), dto.getOrdersDate(), dto.getOrdersTime(), dto.getTotalPrice(),
+				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
+				dto.getCustomerAddress(), dto.getTableId(), finalList);
 	}
-	   
-	//透過ordersId查詢單筆訂單資訊與細節，餐點狀態、工作台用
+
+	// 透過ordersId查詢單筆訂單資訊與細節，餐點狀態、工作台用
 	@Transactional(readOnly = true)
 	public OrdersMealRes getOrdersMealById(int ordersId) throws Exception {
-	    
-		   // 1. 查詢訂單基本資料
-	    OrdersDto dto = ordersDao.getOrdersById(ordersId);
-	    if (dto == null) {
-	        return new OrdersMealRes(
-	            ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
-	            ResCodeMessage.ORDERS_NOT_FOUND.getMessage()
-	        );
-	    }
 
-	    // 2. 查詢訂單明細列表
-	    List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
+		// 1. 查詢訂單基本資料
+		OrdersDto dto = ordersDao.getOrdersById(ordersId);
+		if (dto == null) {
+			return new OrdersMealRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+					ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
+		}
 
-	    if (dbDetailList == null || dbDetailList.isEmpty()) {
-	        return new OrdersMealRes(
-	            ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
-	            ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage()
-	        );
-	    }
+		// 2. 查詢訂單明細列表
+		List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
 
-	    // ★ 最後要放的明細
-	    List<OrdersMealVo> finalList = new ArrayList<>();
+		if (dbDetailList == null || dbDetailList.isEmpty()) {
+			return new OrdersMealRes(ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
+					ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage());
+		}
 
-	    // 3. 逐筆處理 OrderDetail
-	    for (OrderDetailDto detail : dbDetailList) {
+		// ★ 最後要放的明細
+		List<OrdersMealVo> finalList = new ArrayList<>();
 
-	        OrdersMealVo mealVo = new OrdersMealVo();
-	        mealVo.setOrderDetailsId(detail.getOrderDetailsId());
-	        mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
-	        mealVo.setSettingId(detail.getSettingId());
+		// 3. 逐筆處理 OrderDetail
+		for (OrderDetailDto detail : dbDetailList) {
 
-	        // 解析 OrderDetails (JSON → List<OrderMealDetailVo>)
-	        String jsonString = detail.getOrderDetails();
-	        List<OrderMealDetailVo> productList = new ArrayList<>();
+			OrdersMealVo mealVo = new OrdersMealVo();
+			mealVo.setOrderDetailsId(detail.getOrderDetailsId());
+			mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+			mealVo.setSettingId(detail.getSettingId());
 
-	        if (StringUtils.hasText(jsonString)) {
-	            // 轉成 ProductReq（含客製化 detailList）
-	            List<OrderProductReq> tempList = mapper.readValue(
-	                    jsonString, new TypeReference<List<OrderProductReq>>() {}
-	            );
+			// 解析 OrderDetails (JSON → List<OrderMealDetailVo>)
+			String jsonString = detail.getOrderDetails();
+			List<OrderMealDetailVo> productList = new ArrayList<>();
 
-	            // ★ 再轉成 OrderMealDetailVo（加入 workStationId）
-	            for (OrderProductReq p : tempList) {
+			if (StringUtils.hasText(jsonString)) {
+				// 轉成 ProductReq（含客製化 detailList）
+				List<OrderProductReq> tempList = mapper.readValue(jsonString,
+						new TypeReference<List<OrderProductReq>>() {
+						});
 
-	                OrderMealDetailVo mealDetail = new OrderMealDetailVo();
-	                mealDetail.setCategoryId(p.getCategoryId());
-	                mealDetail.setProductId(p.getProductId());
-	                mealDetail.setProductName(p.getProductName());
-	                mealDetail.setProductPrice(p.getProductPrice());
-	                mealDetail.setMealStatus(p.getMealStatus());
-	                mealDetail.setDetailList(p.getDetailList()); // 客製化直接帶入
+				// ★ 再轉成 OrderMealDetailVo（加入 workStationId）
+				for (OrderProductReq p : tempList) {
 
-	                // ★ 加入 workstationId（查 category）
-	                CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
-	                if (cat != null) {
-	                    mealDetail.setWorkStationId(cat.getWorkstationId());
-	                }
+					OrderMealDetailVo mealDetail = new OrderMealDetailVo();
+					mealDetail.setCategoryId(p.getCategoryId());
+					mealDetail.setProductId(p.getProductId());
+					mealDetail.setProductName(p.getProductName());
+					mealDetail.setProductPrice(p.getProductPrice());
+					mealDetail.setMealStatus(p.getMealStatus());
+					mealDetail.setDetailList(p.getDetailList()); // 客製化直接帶入
 
-	                productList.add(mealDetail);
-	            }
-	        }
+					// ★ 加入 workstationId（查 category）
+					CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
+					if (cat != null) {
+						mealDetail.setWorkStationId(cat.getWorkstationId());
+					}
 
-	        mealVo.setOrderDetails(productList); // 設定商品資料
-	        finalList.add(mealVo);
-	    }
+					productList.add(mealDetail);
+				}
+			}
 
-	    // 4. 組合回傳資料
-	    return new OrdersMealRes(
-	        ResCodeMessage.SUCCESS.getCode(),
-	        ResCodeMessage.SUCCESS.getMessage(),
-	        dto.getOrdersId(),
-	        dto.getOrdersType(),
-	        dto.getOrdersDate(),
-	        dto.getOrdersTime(),
-	        dto.getTotalPrice(),
-	        dto.getPaymentType(),
-	        dto.isPaid(),
-	        dto.getOrdersCode(),
-	        dto.getCustomerName(),
-	        dto.getCustomerPhone(),
-	        dto.getCustomerAddress(),
-	        dto.getTableId(),
-	        finalList
-	    );
+			mealVo.setOrderDetails(productList); // 設定商品資料
+			finalList.add(mealVo);
+		}
+
+		// 4. 組合回傳資料
+		return new OrdersMealRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				dto.getOrdersId(), dto.getOrdersType(), dto.getOrdersDate(), dto.getOrdersTime(), dto.getTotalPrice(),
+				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
+				dto.getCustomerAddress(), dto.getTableId(), finalList);
 	}
-	
-	
+
 }

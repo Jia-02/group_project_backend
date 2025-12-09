@@ -49,6 +49,7 @@ public enum ResCodeMessage {
 	DELETE_PRODUCT_FAILED(400, "刪除餐點失敗。"), //
 	PRODUCT_NOT_FOUND(400, "找不到餐點。"), //
 	PRODUCT_IS_USED(400, "商品上架中。"), //
+	PRODUCT_IS_NO_USED(400, "商品下架中。"), //
 	UPDATE_PRODUCT_FAILED(400, "餐點更新失敗。"), //
 	PRODUCT_DUPLICATE(400, "餐點重覆。"), //
 	PRODUCT_AND_CATEGORY_NOT_MATCH(400, "餐點與分類不匹配。"), //
@@ -61,6 +62,7 @@ public enum ResCodeMessage {
 	MAXSELECT_ERROR(400, "客製化最大選項數量錯誤。"), //
 	OPTION_DETAIL_NAME_EMPTY(400, "客製化細節名稱為空"), //
 	OPTION_DETAIL_PRICE_INVALID(400, "客製化價格小於0"), //
+	OPTION_DETAIL_PRICE_ERROR(400, "客製化價格錯誤"), //
 	OPTION_DETAIL_DUPLICATE(400, "客製化細節名稱重複"), //
 	OPTION_NOT_FOUND(400, "找不到客製化。"), //
 	OPTION_IS_USED(400, "客製化使用中。"), //
