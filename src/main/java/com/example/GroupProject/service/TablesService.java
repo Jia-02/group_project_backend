@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
+import com.example.GroupProject.dao.ReservationDao;
 import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.TableDailyDto;
@@ -23,6 +24,9 @@ public class TablesService {
 
 	@Autowired
 	private TableDailyDao tableDailyDao;
+	
+	@Autowired
+	private ReservationDao reservationDao;
 
 	// 新增桌位
 	@Transactional(rollbackFor = Exception.class)
@@ -180,7 +184,15 @@ public class TablesService {
 					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getMessage());
 		}
-
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
+	    
 		int updateStatusCount = tableDailyDao.updateTableStatus(dto);
 		if (updateStatusCount < 0) {
 			return new BasicRes( //
@@ -195,6 +207,15 @@ public class TablesService {
 	// 新增桌位狀態
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes insertTableStatus(TableDailyDto dto) {
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
+		
 		int insertStatusCount = tableDailyDao.insertTableStatus(dto);
 		if (insertStatusCount < 0) {
 			return new BasicRes( //
@@ -215,6 +236,14 @@ public class TablesService {
 					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getMessage());
 		}
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
 
 		int delTableStatusCount = tableDailyDao.delTableStatus(dto);
 		if (delTableStatusCount < 0) {

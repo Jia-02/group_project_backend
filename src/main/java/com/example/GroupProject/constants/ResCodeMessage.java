@@ -12,6 +12,8 @@ public enum ResCodeMessage {
 	DELETE_RESERVATION_FAILED(400, "預約刪除失敗。"), //
 	UPDATE_RESERVATION_FAILED(400, "預約更新失敗。"), //
 	CHILD_SEAT_INSUFFICIENT(400, "兒童座椅數量不足。"), //
+	NO_CHILD(400, "沒有兒童不可以有座椅。"), //
+	RESERVATION_EXIST(400,"訂位存在。"),//
 	
 	//桌位錯誤
 	TABLE_NOT_FOUND(400, "無法找到桌位。"), //
@@ -64,6 +66,8 @@ public enum ResCodeMessage {
 	OPTION_IS_USED(400, "客製化使用中。"), //
 	CREATE_OPTION_FAILED(400, "新增客製化失敗。"), //
 	DELETE_OPTION_FAILED(400, "客製化刪除失敗。"), //
+	OPTION_EMPTY(400, "客製化為空錯誤。"), //
+	OPTION_DETAIL_EMPTY(400, "客製化細節為空錯誤。"), //
 	
 	//套餐
 	SETTING_ID_ERROR(400, "套餐ID錯誤。"), //
@@ -78,6 +82,35 @@ public enum ResCodeMessage {
 	SETTING_IS_USED(400, "套餐開放使用中。"), //
 	CREATE_SETTING_FAILED(400, "建立套餐失敗。"), //
 	DELETE_SETTING_FAILED(400, "套餐刪除失敗。"), //
+	
+	//訂單
+	ORDERS_ID_ERROR(400, "訂單id錯誤。"), //
+	ORDERS_TYPE_ERROR(400, "訂單類型錯誤。"), //
+	ORDERS_DATE_ERROR(400, "訂單日期錯誤。"), //
+	ORDERS_TIME_ERROR(400, "訂單時間錯誤。"), //
+	ORDERS_TOTAL_PRICE_ERROR(400, "訂單總金額錯誤。"), //
+	CUSTOMER_INFO_ERROR(400, "客人資訊錯誤。"), //
+	PAYMENT_TYPE_ERROR(400, "付款方式錯誤"), //
+	NOT_CASH_CANT_NO_PAID(400, "不是現金不可未付款"), //
+	NOT_CASH_CANT_UPDATE(400, "不是現金不可更新"), //
+	IS_PAID(400, "已經付款不可更新"), //
+	IS_NOT_PAID(400, "尚未付款不可更新"), //
+	ORDERS_NOT_FOUND(400, "找不到訂單。"), //
+	DELETE_ORDERS_FAILED(400, "刪除訂單失敗。"), //
+	BASIC_INFO_CANT_UPDATE(400, "基礎資訊不可修改。"), //
+	
+	
+	
+	
+	//訂單細節
+	ORDER_DETAIL_EMPTY(400, "訂單細節為空"), //
+	ORDER_DETAIL_ID_ERROR(400, "訂單細節ID小於0或是重複"), //
+	ORDER_DETAIL_PRICE_ERROR(400, "訂單細節金額錯誤"), //
+	ORDER_DETAIL_PRODUCT_EMPTY(400, "找不到訂單細節中客人選擇商品內容"), //
+	TOTAL_PRICE_MISMATCH(400, "總金額與細節總額金額不合"), //
+	
+	//餐點狀態
+	MEAL_STATUS_EMPTY(400, "餐點狀態為空"), //
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
