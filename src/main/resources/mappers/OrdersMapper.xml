@@ -54,14 +54,14 @@
 		SELECT * FROM orders
 		WHERE orders_id = #{ordersId}
 	</select>
-	
+
 	<!-- ID取得訂單細節 -->
 	<select id="getOrderDetailById"
 		resultType="com.example.GroupProject.dto.OrderDetailDto">
 		SELECT * FROM order_details
 		WHERE orders_id = #{ordersId}
 	</select>
-	
+
 	<!-- 取得訂單列表 -->
 	<select id="getOrdersList"
 		resultType="com.example.GroupProject.vo.OrdersVo">
@@ -73,7 +73,8 @@
 		UPDATE orders
 		SET
 		payment_type = #{paymentType},
-		paid = #{paid},
+		paid =
+		#{paid},
 		total_price = #{totalPrice}
 		WHERE
 		orders_id = #{ordersId}
@@ -82,15 +83,25 @@
 	<!-- 刪除該訂單底下所有明細 -->
 	<delete id="delOrderDetailById">
 		DELETE FROM order_details
-		WHERE orders_id = #{ordersId}
+		WHERE orders_id =
+		#{ordersId}
 	</delete>
-	
-	 <!-- 更新單筆訂單明細的餐點狀態 -->
-    <update id="updateOrderIsPaid">
-        UPDATE order_details
-        SET order_details = #{orderDetails}
-        WHERE order_details_id = #{orderDetailsId}
-        AND orders_id = #{ordersId}
-    </update>
+
+	<!-- 更新單筆訂單明細的餐點狀態 -->
+	<update id="updateOrderIsPaid">
+		UPDATE order_details
+		SET order_details = #{orderDetails}
+		WHERE order_details_id = #{orderDetailsId}
+		AND orders_id = #{ordersId}
+	</update>
+
+
+	<select id="getOrdersByDate"
+		resultType="com.example.GroupProject.dto.OrdersDto">
+		SELECT *
+		FROM orders
+		WHERE orders_date = #{ordersDate}
+		ORDER BY orders_time ASC
+	</select>
 
 </mapper>

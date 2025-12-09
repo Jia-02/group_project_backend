@@ -1,5 +1,6 @@
 package com.example.GroupProject.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -37,6 +38,9 @@ public interface OrdersDao {
 	
 	//查詢訂單列表
 	public List<OrdersVo> getOrdersList();
+	
+	//日期查詢當日訂單列表+細節
+	public List<OrdersDto> getOrdersByDate(@Param("ordersDate") LocalDate ordersDate);
 
 	// 更新訂單(未付款前最後編輯，可改為已付款)
 	public int updateOrder(OrdersDto ordersDto);

@@ -1,5 +1,6 @@
 package com.example.GroupProject.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,8 +33,10 @@ import com.example.GroupProject.request.OrderUpdateReq;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.OrdersAllDetailRes;
 import com.example.GroupProject.response.OrdersListRes;
+import com.example.GroupProject.response.OrdersMealListRes;
 import com.example.GroupProject.response.OrdersMealRes;
 import com.example.GroupProject.vo.OrderMealDetailVo;
+import com.example.GroupProject.vo.OrdersMealListVo;
 import com.example.GroupProject.vo.OrdersMealVo;
 import com.example.GroupProject.vo.OrdersVo;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -644,5 +647,97 @@ public class OrdersService {
 				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
 				dto.getCustomerAddress(), dto.getTableId(), finalList);
 	}
+	
+	//日期查詢當日訂單列表+細節
+	@Transactional(readOnly = true)
+	public OrdersMealListRes getOrdersMealByDate(LocalDate ordersDate) throws Exception {
+
+		// 1. 查詢當日所有訂單
+	    List<OrdersDto> ordersList = ordersDao.getOrdersByDate(ordersDate);
+
+	    if (ordersList == null || ordersList.isEmpty()) {
+	        return new OrdersMealListRes(
+	                ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+	                ResCodeMessage.ORDERS_NOT_FOUND.getMessage(),
+	                null
+	        );
+	    }
+	    List<OrdersMealListVo> finalOrders = new ArrayList<>();
+
+	    // 2. 逐筆處理每張訂單
+	    for (OrdersDto dto : ordersList) {
+
+	        int ordersId = dto.getOrdersId();
+	        // 查詢訂單明細
+	        List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
+	        List<OrdersMealVo> finalDetailList = new ArrayList<>();
+
+	        // 3. 處理每筆明細
+	        for (OrderDetailDto detail : dbDetailList) {
+
+	            OrdersMealVo mealVo = new OrdersMealVo();
+	            mealVo.setOrderDetailsId(detail.getOrderDetailsId());
+	            mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+	            mealVo.setSettingId(detail.getSettingId());
+
+	            // 解析 JSON → 商品列表
+	            String jsonString = detail.getOrderDetails();
+	            List<OrderMealDetailVo> productList = new ArrayList<>();
+	            if (StringUtils.hasText(jsonString)) {
+
+	                // 先轉成 OrderProductReq
+	                List<OrderProductReq> tempList = mapper.readValue(
+	                        jsonString, new TypeReference<List<OrderProductReq>>() {}
+	                );
+
+	                // 再轉成 OrderMealDetailVo
+	                for (OrderProductReq p : tempList) {
+	                    OrderMealDetailVo mealDetail = new OrderMealDetailVo();
+	                    mealDetail.setCategoryId(p.getCategoryId());
+	                    mealDetail.setProductId(p.getProductId());
+	                    mealDetail.setProductName(p.getProductName());
+	                    mealDetail.setProductPrice(p.getProductPrice());
+	                    mealDetail.setMealStatus(p.getMealStatus());
+	                    mealDetail.setDetailList(p.getDetailList()); // 客製化
+
+	                    // workstationId
+	                    CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
+	                    if (cat != null) {
+	                        mealDetail.setWorkStationId(cat.getWorkstationId());
+	                    }
+	                    productList.add(mealDetail);
+	                }
+	            }
+
+	            mealVo.setOrderDetails(productList);
+	            finalDetailList.add(mealVo);
+	        }
+
+	        //使用 OrdersMealListVo
+	        OrdersMealListVo listVo = new OrdersMealListVo();
+	        listVo.setOrdersId(dto.getOrdersId());
+	        listVo.setOrdersType(dto.getOrdersType());
+	        listVo.setOrdersDate(dto.getOrdersDate());
+	        listVo.setOrdersTime(dto.getOrdersTime());
+	        listVo.setTotalPrice(dto.getTotalPrice());
+	        listVo.setPaymentType(dto.getPaymentType());
+	        listVo.setPaid(dto.isPaid());
+	        listVo.setOrdersCode(dto.getOrdersCode());
+	        listVo.setCustomerName(dto.getCustomerName());
+	        listVo.setCustomerPhone(dto.getCustomerPhone());
+	        listVo.setCustomerAddress(dto.getCustomerAddress());
+	        listVo.setTableId(dto.getTableId());
+	        listVo.setOrderDetailsList(finalDetailList);
+	        finalOrders.add(listVo);
+	    }
+
+	    // 4. 回傳結果
+	    return new OrdersMealListRes(
+	            ResCodeMessage.SUCCESS.getCode(),
+	            ResCodeMessage.SUCCESS.getMessage(),
+	            finalOrders
+	    );
+	}
+
 
 }
