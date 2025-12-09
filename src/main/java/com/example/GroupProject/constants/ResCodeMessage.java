@@ -6,6 +6,7 @@ public enum ResCodeMessage {
 	
 	//訂位錯誤相關
 	RESERVATION_NOT_FOUND(400, "找不到訂位。"), //
+	RESERVATION_CANT_CHECK(400, "訂位不可報到，笨蛋。"), //
 	CREATE_RESERVATION_FAILED(400, "訂位失敗。"), //
 	PEOPLE_COUNT_FAILED(400, "人數輸入錯誤。"), //
 	PHONE_IS_RESERVATION_IN_DATE(400, "已於今日預約過。"), //
