@@ -55,7 +55,7 @@ CREATE TABLE `category` (
   `category_type` varchar(300) NOT NULL,
   `workstation_id` int NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +64,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (2,'義大利麵',2),(3,'套餐',2),(4,'漢堡',2),(5,'飲料',1);
+INSERT INTO `category` VALUES (1,'漢堡',1),(2,'飲料',2),(3,'套餐',1);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,6 +144,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
+INSERT INTO `order_details` VALUES (1,'[{\"categoryId\":1,\"productId\":1,\"productName\":\"牛肉漢堡\",\"productPrice\":180,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',210,1,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',180,2,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"不加肉\",\"addPrice\":0}]}]',165,3,0),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',230,1,1),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":2,\"productName\":\"可樂\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]}]',230,2,1),(2,'[{\"categoryId\":1,\"productId\":4,\"productName\":\"起司漢堡\",\"productPrice\":120,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',150,3,0);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +169,7 @@ CREATE TABLE `orders` (
   `customer_address` varchar(100) DEFAULT NULL,
   `table_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`orders_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -177,6 +178,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,'A','2025-12-06','12:00:00',440,'現金',0,'2512061200A01',NULL,NULL,NULL,'A01'),(2,'D','2025-12-06','12:00:00',410,'信用卡',1,'2512061200D02','kelly','0912345678','高雄市左營區',NULL),(3,'T','2025-12-06','12:00:00',315,'電子支付',1,'2512061200T03','77','0912345677','高雄市前鎮區',NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +208,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',4),(1,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',5),(2,'豬肉漢堡',150,0,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(2,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',5),(3,'雞肉漢堡',100,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',4),(4,'起司漢堡',100,0,'雙層起司漢堡','https://example.com/images/burger.jpg','',4);
+INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含牛肉、蛋',1),(1,'氣泡水',50,1,'很好喝的氣泡水','https://example.com/images/drink.jpg','',2),(2,'豬肉漢堡',150,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',1),(2,'可樂',50,1,'0卡可樂','https://example.com/images/burger.jpg','',2),(3,'雞肉漢堡',150,1,'手打豬肉、蛋、生菜、蕃茄、起司、漢堡包','https://example.com/images/burger.jpg','含豬肉、蛋',1),(4,'起司漢堡',120,1,'雙層起司漢堡','https://example.com/images/burger.jpg','',1);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +262,7 @@ CREATE TABLE `setting` (
   `setting_note` varchar(300) DEFAULT NULL,
   `category_id` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`setting_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,7 +271,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (3,'爸爸套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',250,'/images/settings/vip_package.jpg',1,'期間限定',3),(4,'母親節套餐','[{\"categoryId\":4,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":5,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',200,'/images/settings/vip_package.jpg',1,'期間限定',3);
+INSERT INTO `setting` VALUES (1,'聖誕節套餐','[{\"categoryId\":1,\"detailList\":[{\"productId\":1},{\"productId\":2}]},{\"categoryId\":2,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',200,'/images/settings/vip_package.jpg',0,'期間限定',3),(2,'過年套餐','[{\"categoryId\":1,\"detailList\":[{\"productId\":3},{\"productId\":4}]},{\"categoryId\":2,\"detailList\":[{\"productId\":1},{\"productId\":2}]}]',180,'/images/settings/vip_package.jpg',0,'',3);
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,6 +326,7 @@ CREATE TABLE `tables` (
 
 LOCK TABLES `tables` WRITE;
 /*!40000 ALTER TABLE `tables` DISABLE KEYS */;
+INSERT INTO `tables` VALUES ('A01','開放中',4,0,20,20,20,'123');
 /*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,4 +363,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-07 16:05:37
+-- Dump completed on 2025-12-09 10:35:19
