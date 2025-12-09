@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
+import com.example.GroupProject.dao.WorkStationDao;
 import com.example.GroupProject.dto.CategoryDto;
 import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.CategoryListRes;
@@ -17,6 +18,8 @@ public class CategoryService {
 	@Autowired
 	private CategoryDao categoryDao;
 
+	@Autowired
+	private WorkStationDao workStationDao;
 
 	/** 私有共同判斷輸入值 */
 	private BasicRes validateCategory(CategoryDto dto) {
@@ -31,16 +34,12 @@ public class CategoryService {
 			return new BasicRes(ResCodeMessage.WORKSTATION_ID_ERROR.getCode(),
 					ResCodeMessage.WORKSTATION_ID_ERROR.getMessage());
 		}
-		//判斷工作台是否存在 - 等待創完工作台解鎖
-//		if (dto.getWorkstationId() != null) {
-//		    int exist = workstationDao.checkWorkstationExist(dto.getWorkstationId());
-//		    if (exist == 0) {
-//		        return new BasicRes(
-//		            ResCodeMessage.WORKSTATION_NOT_FOUND.getCode(),
-//		            ResCodeMessage.WORKSTATION_NOT_FOUND.getMessage()
-//		        );
-//		    }
-//		}
+		// 判斷工作台是否存在
+		boolean isExist = workStationDao.checkWorkstationExist(dto.getWorkstationId());
+		if (!isExist) { //(isExist 為 false 代表不存在)
+			return new BasicRes(ResCodeMessage.WORKSTATION_NOT_FOUND.getCode(),
+					ResCodeMessage.WORKSTATION_NOT_FOUND.getMessage());
+		}
 		return null;
 	}
 
@@ -52,9 +51,9 @@ public class CategoryService {
 		if (validateRes != null) {
 			return validateRes;
 		}
-		
-		// 不可重複輸入同名稱之分類
-		if (categoryDao.checkCategoryExists(dto.getCategoryType())) {
+
+		// 重複名稱之分類
+		if (categoryDao.checkCategoryName(dto.getCategoryType())) {
 			return new BasicRes(ResCodeMessage.CATEGORY_ALREADY_EXISTS.getCode(),
 					ResCodeMessage.CATEGORY_ALREADY_EXISTS.getMessage());
 		}
@@ -77,7 +76,7 @@ public class CategoryService {
 	public BasicRes delCategoryById(CategoryDto dto) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -89,14 +88,14 @@ public class CategoryService {
 					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
 					ResCodeMessage.PRODUCT_IS_USED.getMessage());
 		}
-		
-		//客製化使用中的分類不可刪除
+
+		// 客製化使用中的分類不可刪除
 		if (categoryDao.checkOptionCategoryUsed(dto.getCategoryId()) > 0) {
 			return new BasicRes(//
 					ResCodeMessage.OPTION_IS_USED.getCode(), //
 					ResCodeMessage.OPTION_IS_USED.getMessage());
 		}
-		
+
 		// 成功通過判斷後刪除
 		int result = categoryDao.delCategoryById(dto);
 		if (result > 0) {
@@ -115,7 +114,7 @@ public class CategoryService {
 	public BasicRes updateCategory(CategoryDto dto) {
 
 		// 分類ID不存在
-		if (categoryDao.checkCategoryExist(dto.getCategoryId()) == 0) {
+		if (categoryDao.checkCategoryExistById(dto.getCategoryId()) == 0) {
 			return new BasicRes(//
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
@@ -137,7 +136,7 @@ public class CategoryService {
 					ResCodeMessage.CREATE_CATEGORY_FAILED.getMessage());
 		}
 	}
-	
+
 	/** 查看分類列表 */
 	@Transactional(readOnly = true)
 	public CategoryListRes getCategoryList() {

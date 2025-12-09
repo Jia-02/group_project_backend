@@ -7,8 +7,8 @@
 <mapper namespace="com.example.GroupProject.dao.ReservationDao">
 
 
-	<resultMap id="ReservationVoResultMap" 
-	   type="com.example.GroupProject.vo.ReservationVo">
+	<resultMap id="ReservationVoResultMap"
+		type="com.example.GroupProject.vo.ReservationVo">
 		<result property="reservationPhone" column="reservation_phone" />
 		<result property="reservationTime" column="reservation_time" />
 		<result property="reservationName" column="reservation_name" />
@@ -56,7 +56,8 @@
 	<select id="getReservationList"
 		resultType="com.example.GroupProject.dto.ReservationDto">
 		SELECT * FROM reservation
-		ORDER BY reservation_date ASC, reservation_time ASC;
+		ORDER BY reservation_date ASC,
+		reservation_time ASC;
 	</select>
 
 	<!-- 查詢一筆訂位資料 -->
@@ -95,12 +96,12 @@
 
 	<!-- 查詢該時段之該桌號是否已預定 -->
 	<select id="isTableReservedAtSameTime" resultType="boolean">
-    SELECT COUNT(1) > 0
-    FROM reservation
-    WHERE table_id = #{tableId}
-      AND reservation_date = #{reservationDate}
-      AND reservation_time = #{reservationTime}
-      AND reservation_status = 0  -- 未報到或有效預約
+		SELECT COUNT(1) > 0
+		FROM reservation
+		WHERE table_id = #{tableId}
+		AND reservation_date = #{reservationDate}
+		AND reservation_time = #{reservationTime}
+		AND reservation_status = 0 -- 未報到或有效預約
 	</select>
 
 	<!-- 刪除訂位 -->
@@ -110,7 +111,7 @@
 		#{reservationDate}
 		AND reservation_phone = #{reservationPhone}
 	</delete>
-	
+
 
 	<!-- 查詢某一天之資訊桌位、預約資訊 -->
 	<select id="findReservationsByDate"
@@ -118,7 +119,8 @@
 		SELECT
 		t.table_id,
 		t.capacity,
-		COALESCE(d.table_daily_status, 1) AS table_daily_status,
+		COALESCE(d.table_daily_status,
+		1) AS table_daily_status,
 		r.reservation_time,
 		r.reservation_phone,
 		r.reservation_name,
@@ -132,10 +134,13 @@
 		FROM tables t
 
 		LEFT JOIN table_daily d
-		ON t.table_id = d.table_id AND d.table_daily_date = #{reservationDate}
+		ON t.table_id =
+		d.table_id AND d.table_daily_date = #{reservationDate}
 
-		LEFT JOIN reservation r
-		ON t.table_id = r.table_id AND r.reservation_date = #{reservationDate}
+		LEFT JOIN
+		reservation r
+		ON t.table_id = r.table_id AND r.reservation_date =
+		#{reservationDate}
 
 		ORDER BY t.table_id, r.reservation_time
 	</select>
@@ -189,6 +194,13 @@
 		#{reservationTime}
 		ORDER BY
 		t.table_id;
+	</select>
+
+	<select id="reservationByDateAndTable" resultType="int">
+		SELECT COUNT(*)
+		FROM reservation
+		WHERE reservation_date = #{reservationDate}
+		AND table_id = #{tableId}
 	</select>
 
 </mapper>

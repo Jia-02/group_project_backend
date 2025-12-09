@@ -21,7 +21,7 @@ public class CategoryController {
 	
 	//新增分類
 	@PostMapping(value = "category/add")
-	public BasicRes addTable(@RequestBody CategoryDto categoryDto) {
+	public BasicRes addCategory(@RequestBody CategoryDto categoryDto) {
 		return categoryService.addCategory(categoryDto);
 	}
 	
@@ -37,9 +37,9 @@ public class CategoryController {
 		return categoryService.updateCategory(categoryDto);
 	}
 	
-	//查詢分類列表測試
+	//查詢分類列表
 	@GetMapping(value = "category/list")
-	public CategoryListRes getTableList() {
+	public CategoryListRes getCategoryList() {
 		return categoryService.getCategoryList();
 	}
 }

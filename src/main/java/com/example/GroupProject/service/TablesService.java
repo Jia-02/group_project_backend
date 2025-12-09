@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.GroupProject.constants.ResCodeMessage;
+import com.example.GroupProject.dao.ReservationDao;
 import com.example.GroupProject.dao.TableDailyDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.TableDailyDto;
@@ -23,6 +24,9 @@ public class TablesService {
 
 	@Autowired
 	private TableDailyDao tableDailyDao;
+	
+	@Autowired
+	private ReservationDao reservationDao;
 
 	// 新增桌位
 	@Transactional(rollbackFor = Exception.class)
@@ -159,52 +163,92 @@ public class TablesService {
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
 
-
-    // 查某一天全部桌位的狀態
+	// 查某一天全部桌位的狀態
 	@Transactional(readOnly = true)
-    public List<TableDailyDto> getDailyStatus(LocalDate date) {
-        return tableDailyDao.getDailyStatus(date);
-    }
+	public List<TableDailyDto> getDailyStatus(LocalDate date) {
+		return tableDailyDao.getDailyStatus(date);
+	}
 
-    // 更新桌位狀態
+	// 更新桌位狀態
 	@Transactional(rollbackFor = Exception.class)
-    public BasicRes updateTableStatus(TableDailyDto data) {
-        int updateStatusCount = tableDailyDao.updateTableStatus(data);
-        if(updateStatusCount < 0) {
-        	return new BasicRes( //
-        			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-        			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-        }
-        return new BasicRes( //
-        		ResCodeMessage.SUCCESS.getCode(), //
-        		ResCodeMessage.SUCCESS.getMessage());
-    }
+	public BasicRes updateTableStatus(TableDailyDto dto) {
+		// 確認桌位狀態存在
+		Integer tableStaus = tableDailyDao.getTableStatus(dto.getTableDailyDate(), dto.getTableId());
+		if (tableStaus == null || tableStaus < 0) {
+			return new BasicRes( //
+					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getMessage());
+		}
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
+	    
+		int updateStatusCount = tableDailyDao.updateTableStatus(dto);
+		if (updateStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 
-    // 新增桌位狀態
+	// 新增桌位狀態
 	@Transactional(rollbackFor = Exception.class)
-    public BasicRes insertTableStatus(TableDailyDto data) {
-    	int insertStatusCount =tableDailyDao.insertTableStatus(data);
-        if(insertStatusCount < 0) {
-        return new BasicRes( //
-    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-    }
-    return new BasicRes( //
-    		ResCodeMessage.SUCCESS.getCode(), //
-    		ResCodeMessage.SUCCESS.getMessage());
-    }
-    
-    //刪除桌位狀態
-    public BasicRes delTableStatus(TableDailyDto data) {
-    	int delTableStatusCount =tableDailyDao.delTableStatus(data);
-        if(delTableStatusCount < 0) {
-        return new BasicRes( //
-    			ResCodeMessage.ADD_INFO_FAILED.getCode(), //
-    			ResCodeMessage.ADD_INFO_FAILED.getMessage());
-    }
-    return new BasicRes( //
-    		ResCodeMessage.SUCCESS.getCode(), //
-    		ResCodeMessage.SUCCESS.getMessage());
-    }
+	public BasicRes insertTableStatus(TableDailyDto dto) {
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
+		
+		int insertStatusCount = tableDailyDao.insertTableStatus(dto);
+		if (insertStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
+
+	// 刪除桌位狀態
+	public BasicRes delTableStatus(TableDailyDto dto) {
+		// 確認桌位狀態存在
+		Integer tableStaus = tableDailyDao.getTableStatus(dto.getTableDailyDate(), dto.getTableId());
+		if (tableStaus == null || tableStaus < 0) {
+			return new BasicRes( //
+					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getCode(), //
+					ResCodeMessage.TABLE_STATUS_IS_NOT_FOUND.getMessage());
+		}
+		
+		//如果該日有訂位，不可關閉
+	    int count = reservationDao.reservationByDateAndTable(dto.getTableDailyDate(),  dto.getTableId());
+	    if (count > 0) {
+			return new BasicRes( //
+					ResCodeMessage.RESERVATION_EXIST.getCode(), //
+					ResCodeMessage.RESERVATION_EXIST.getMessage());
+	    }
+
+		int delTableStatusCount = tableDailyDao.delTableStatus(dto);
+		if (delTableStatusCount < 0) {
+			return new BasicRes( //
+					ResCodeMessage.ADD_INFO_FAILED.getCode(), //
+					ResCodeMessage.ADD_INFO_FAILED.getMessage());
+		}
+		return new BasicRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage());
+	}
 
 }

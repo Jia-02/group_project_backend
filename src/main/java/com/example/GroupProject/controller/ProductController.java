@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GroupProject.dto.ProductDto;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.ProductAllDetailRes;
 import com.example.GroupProject.response.ProductRes;
 import com.example.GroupProject.service.ProductService;
 
@@ -49,4 +50,11 @@ public class ProductController {
 		return productService.updateProduct(dto);
 	}
 	
+	//查詢商品，使用者點餐(顯示商品+客製化)
+	@GetMapping(value = "product/detail")
+	public ProductAllDetailRes getProductById( //
+			@RequestParam("categoryId") int categoryId, //
+			@RequestParam("productId") int productId ) throws Exception  {
+		return productService.getProductById(categoryId, productId);
+	}
 }
