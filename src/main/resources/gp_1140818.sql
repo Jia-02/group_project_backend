@@ -213,35 +213,6 @@ INSERT INTO `product` VALUES (1,'牛肉漢堡',180,1,'手作牛肉、蛋、生�
 UNLOCK TABLES;
 
 --
-<<<<<<< HEAD
-=======
--- Table structure for table `qr`
---
-
-DROP TABLE IF EXISTS `qr`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `qr` (
-  `qr_id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(200) NOT NULL,
-  `qr_active` tinyint NOT NULL DEFAULT '1',
-  `table_id` varchar(50) NOT NULL,
-  PRIMARY KEY (`qr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `qr`
---
-
-LOCK TABLES `qr` WRITE;
-/*!40000 ALTER TABLE `qr` DISABLE KEYS */;
-INSERT INTO `qr` VALUES (1,'123456',1,'a01'),(2,'4466',0,'a02');
-/*!40000 ALTER TABLE `qr` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
->>>>>>> product
 -- Table structure for table `reservation`
 --
 
@@ -392,8 +363,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-<<<<<<< HEAD
 -- Dump completed on 2025-12-09 10:35:19
-=======
--- Dump completed on 2025-12-05 17:19:45
->>>>>>> product
