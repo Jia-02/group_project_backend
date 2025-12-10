@@ -379,6 +379,7 @@ public class OrdersService {
 		orders.setTableId(req.getTableId());
 
 		// INSERT 新增訂單
+		ordersDao.addOrder(orders);
 		int orderResult = ordersDao.addOrder(orders);
 		if(orderResult < 0) {
     		return new BasicRes(//
@@ -424,7 +425,6 @@ public class OrdersService {
 			detail.setOrderDetails(jsonString);
 			// 將細節傳回
 
-			ordersDao.addOrderDetail(detail);
 
 			// 根據product數量增加製造所需時間 每個product 5分鐘
 			for (OrderProductReq orderProduct : detailReq.getOrderDetails()) {
