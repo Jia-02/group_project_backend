@@ -57,6 +57,12 @@ public class OrdersController {
 		return ordersService.getOrdersAllDetailById(ordersId);
 	}
 	
+	//透過ordersCode查詢單筆訂單資訊與細節
+	@GetMapping(value = "orders/code")
+	public OrdersAllDetailRes getOrdersAllDetailByCode(@RequestParam("orderNo") String orderNo) throws Exception {
+		return ordersService.getOrdersAllDetailByCode(orderNo);
+	}
+	
 	//透過ordersId查詢單筆訂單資訊與細節(有工作台id版本)
 	@GetMapping(value = "orders/meal")
 	public OrdersMealRes getOrdersMealById(@RequestParam("ordersId") int ordersId) throws Exception {

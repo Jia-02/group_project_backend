@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 
+import com.example.GroupProject.dto.DeliveryTask;
 import com.example.GroupProject.dto.OrderDetailDto;
 import com.example.GroupProject.dto.OrdersDto;
 import com.example.GroupProject.vo.OrdersVo;
@@ -26,12 +27,18 @@ public interface OrdersDao {
 	public int updateOrdersCode( //
 			@Param("ordersId") int ordersId, //
 			@Param("ordersCode") String ordersCode);
+	
+	//新增外送資訊
+	public int addDeliveryTask(DeliveryTask deliveryTask);
 
 	// 確認該套餐存在
 	public int checkOrdersExist(@Param("ordersId") int ordersId);
 
 	// ID取得單筆訂單資訊
 	public OrdersDto getOrdersById(@Param("ordersId") int ordersId);
+	
+	// code取得單筆訂單資訊
+	public OrdersDto getOrdersByCode(@Param("ordersCode") String ordersCode);
 	
 	// ID取得列表訂單細節
 	public List<OrderDetailDto> getOrderDetailById(@Param("ordersId") int ordersId);
