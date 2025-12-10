@@ -100,8 +100,10 @@ public enum ResCodeMessage {
 	IS_NOT_PAID(400, "尚未付款不可更新"), //
 	ORDERS_NOT_FOUND(400, "找不到訂單。"), //
 	DELETE_ORDERS_FAILED(400, "刪除訂單失敗。"), //
+	DELIVERY_ADD_FAILED(400, "新增外送訂單失敗。"), //
 	BASIC_INFO_CANT_UPDATE(400, "基礎資訊不可修改。"), //
-	
+	ORDER_ADD_FAILED(400, "新增訂單失敗。"), //
+	ORDER_CODE_ADD_FAILED(400, "新增訂單編號失敗。"), //
 	
 	
 	
@@ -111,6 +113,7 @@ public enum ResCodeMessage {
 	ORDER_DETAIL_PRICE_ERROR(400, "訂單細節金額錯誤"), //
 	ORDER_DETAIL_PRODUCT_EMPTY(400, "找不到訂單細節中客人選擇商品內容"), //
 	TOTAL_PRICE_MISMATCH(400, "總金額與細節總額金額不合"), //
+	ORDER_DETAIL_ADD_FAILED(400, "新增訂單細節失敗。"), //
 	
 	//餐點狀態
 	MEAL_STATUS_EMPTY(400, "餐點狀態為空"), //

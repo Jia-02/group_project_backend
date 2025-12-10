@@ -34,6 +34,16 @@
 		#{settingId} )
 	</insert>
 
+	<!-- 新增外送資訊 -->
+	<insert id="addDeliveryTask">
+		INSERT INTO delivery_task
+		( order_no, delivery_id, date, distance_km, status, is_receive_money,
+		money )
+		VALUES
+		( #{orderNo}, #{deliveryId}, #{date},
+		#{distanceKm}, #{status}, #{isReceiveMoney}, #{money} )
+	</insert>
+
 	<!-- 生成訂單編號 -->
 	<update id="updateOrdersCode">
 		UPDATE orders
@@ -53,6 +63,13 @@
 		resultType="com.example.GroupProject.dto.OrdersDto">
 		SELECT * FROM orders
 		WHERE orders_id = #{ordersId}
+	</select>
+	
+	<!-- Code取得訂單內容 -->
+	<select id="getOrdersByCode"
+		resultType="com.example.GroupProject.dto.OrdersDto">
+		SELECT * FROM orders
+		WHERE orders_code = #{ordersCode}
 	</select>
 
 	<!-- ID取得訂單細節 -->
@@ -90,9 +107,11 @@
 	<!-- 更新單筆訂單明細的餐點狀態 -->
 	<update id="updateOrderIsPaid">
 		UPDATE order_details
-		SET order_details = #{orderDetails}
+		SET order_details =
+		#{orderDetails}
 		WHERE order_details_id = #{orderDetailsId}
-		AND orders_id = #{ordersId}
+		AND orders_id
+		= #{ordersId}
 	</update>
 
 
@@ -101,7 +120,8 @@
 		SELECT *
 		FROM orders
 		WHERE orders_date = #{ordersDate}
-		ORDER BY orders_time ASC
+		ORDER
+		BY orders_time ASC
 	</select>
 
 </mapper>

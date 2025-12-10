@@ -22,7 +22,11 @@ import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.CategoryDto;
+<<<<<<< HEAD
 import com.example.GroupProject.dto.MealStatusDto;
+=======
+import com.example.GroupProject.dto.DeliveryTask;
+>>>>>>> order
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.OrderDetailDto;
@@ -359,6 +363,7 @@ public class OrdersService {
 			return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
 					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
 		}
+		
 
 		// ================= 判斷完畢，開始建立訂單資料（OrdersDto） =================
 		OrdersDto orders = new OrdersDto();
@@ -374,7 +379,12 @@ public class OrdersService {
 		orders.setTableId(req.getTableId());
 
 		// INSERT 新增訂單
-		ordersDao.addOrder(orders);
+		int orderResult = ordersDao.addOrder(orders);
+		if(orderResult < 0) {
+    		return new BasicRes(//
+    				ResCodeMessage.ORDER_ADD_FAILED.getCode(), //
+    				ResCodeMessage.ORDER_ADD_FAILED.getMessage());
+		}
 		// 拿到 AI 生成的 ordersId
 		int ordersId = orders.getOrdersId();
 
@@ -385,11 +395,21 @@ public class OrdersService {
 		);
 		System.out.println("運算完成的結果" + orderCode);
 		// 回寫 ordersCode 到資料庫
+<<<<<<< HEAD
 		ordersDao.updateOrdersCode(ordersId, orderCode);
 
 		LocalTime finishTime = req.getOrdersTime();
 		int estimatedTime = 0;
 
+=======
+		int addCode = ordersDao.updateOrdersCode(ordersId, orderCode);
+		if(addCode < 0) {
+    		return new BasicRes(//
+    				ResCodeMessage.ORDER_CODE_ADD_FAILED.getCode(), //
+    				ResCodeMessage.ORDER_CODE_ADD_FAILED.getMessage());
+		}
+		
+>>>>>>> order
 		// 將orderDetail細節放入
 		for (OrderDetailReq detailReq : req.getOrderDetailsList()) {
 
@@ -403,6 +423,7 @@ public class OrdersService {
 			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
 			detail.setOrderDetails(jsonString);
 			// 將細節傳回
+<<<<<<< HEAD
 			ordersDao.addOrderDetail(detail);
 
 			// 根據product數量增加製造所需時間 每個product 5分鐘
@@ -410,7 +431,30 @@ public class OrdersService {
 				estimatedTime += 5;
 			}
 
+=======
+			int detailResult = ordersDao.addOrderDetail(detail);
+	        if(detailResult < 0) {
+	    		return new BasicRes(//
+	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getCode(), //
+	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getMessage());
+	        }
+			
+>>>>>>> order
 		}
+		
+	    // ================= 如果是外送 D → 建立 DeliveryTask =================
+	    if ("D".equals(req.getOrdersType())) {
+	        DeliveryTask task = new DeliveryTask();
+	        task.setOrderNo(orderCode);   // 存 ordersCode
+	        task.setDate(req.getOrdersDate());           // 存入 OrdersDate
+	        task.setStatus("pending");                   // 常數 pending
+	        int delivery = ordersDao.addDeliveryTask(task);           // INSERT
+	        if(delivery < 0) {
+	    		return new BasicRes(//
+	    				ResCodeMessage.DELIVERY_ADD_FAILED.getCode(), //
+	    				ResCodeMessage.DELIVERY_ADD_FAILED.getMessage());
+	        }
+	    }
 
 		// ---------MealStatus新增部分開始------------
 
@@ -625,6 +669,64 @@ public class OrdersService {
 				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
 				dto.getCustomerAddress(), dto.getTableId(), finalList);
 	}
+	
+	
+	// 透過ordersId查詢單筆訂單資訊與細節
+	@Transactional(readOnly = true)
+	public OrdersAllDetailRes getOrdersAllDetailByCode(String ordersCode) throws Exception {
+
+		// 取得資訊
+		OrdersDto dto = ordersDao.getOrdersByCode(ordersCode);
+		if (dto == null) {
+			return new OrdersAllDetailRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+					ResCodeMessage.ORDERS_NOT_FOUND.getMessage());
+		}
+		int ordersId = dto.getOrdersId();
+
+		// 取得明細列表
+		List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
+
+		// 不可為null
+		if (dbDetailList == null || dbDetailList.isEmpty()) {
+			return new OrdersAllDetailRes(ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
+					ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage());
+		}
+
+		// 晚點存入所有訂單細節
+		List<OrderDetailReq> finalList = new ArrayList<>();
+
+		// 處理每一筆 order_details ---
+		for (OrderDetailDto detail : dbDetailList) {
+
+			// 建立單一細節做存放
+			OrderDetailReq detailReq = new OrderDetailReq();
+			detailReq.setOrderDetailsId(detail.getOrderDetailsId());
+			detailReq.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+			detailReq.setSettingId(detail.getSettingId());
+
+			// order_details (字串 → List<OrderProductReq>)
+			// 存放OrderProductReq列表
+			String jsonString = detail.getOrderDetails();
+			List<OrderProductReq> productList = new ArrayList<>();
+			if (StringUtils.hasText(jsonString)) {
+				productList = mapper.readValue(jsonString, new TypeReference<List<OrderProductReq>>() {
+				});
+			}
+
+			detailReq.setOrderDetails(productList);
+
+			// 加入最終列表
+			finalList.add(detailReq);
+		}
+
+		// 5. 組合 final Res
+		return new OrdersAllDetailRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				dto.getOrdersId(), dto.getOrdersType(), dto.getOrdersDate(), dto.getOrdersTime(), dto.getTotalPrice(),
+				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
+				dto.getCustomerAddress(), dto.getTableId(), finalList);
+	}
+	
+	
 
 	// 透過ordersId查詢單筆訂單資訊與細節，餐點狀態、工作台用
 	@Transactional(readOnly = true)
