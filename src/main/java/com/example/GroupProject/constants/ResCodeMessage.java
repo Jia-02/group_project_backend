@@ -26,6 +26,12 @@ public enum ResCodeMessage {
 	TABLE_HEIGHT_ERROR(400,"桌位長度錯誤"),//
 	TABLE_STATUS_IS_NOT_FOUND(400,"查無桌位狀態"),//
 	
+
+	//活動錯誤
+	CALENDAR_DATE_ERROR(400,"Calendar date error!!"),//
+	CALENDAR_NOT_FOUND(400,"Calendar 標題不得為空!!"),//
+	CALENDAR_IS_EMPTY(400,"Calendar 標題不得為空字串!!"),//
+
 	//分類錯誤CATEGORY
 	CREATE_CATEGORY_FAILED(400, "新增菜單分類失敗。"), //
 	CATEGORY_TYPE_ERROR(400, "菜單分類名稱錯誤。"), //
