@@ -14,6 +14,19 @@ public class MealStatusDto {
 
 	private int ordersId;
 
+	public MealStatusDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public MealStatusDto(String mealStatus, int estimatedTime, LocalTime finishTime, int ordersId) {
+		super();
+		this.mealStatus = mealStatus;
+		this.estimatedTime = estimatedTime;
+		this.finishTime = finishTime;
+		this.ordersId = ordersId;
+	}
+
 	public int getMealStatusId() {
 		return mealStatusId;
 	}

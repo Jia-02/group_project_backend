@@ -72,6 +72,8 @@ public class WorkStationService {
 			}
 		}
 		
+		workStationDao.updateWorkStationNameById(workStation);
+		
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage());
 	}
