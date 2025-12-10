@@ -22,11 +22,11 @@ import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.CategoryDto;
-<<<<<<< HEAD
+
 import com.example.GroupProject.dto.MealStatusDto;
-=======
+
 import com.example.GroupProject.dto.DeliveryTask;
->>>>>>> order
+
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.OrderDetailDto;
@@ -395,13 +395,13 @@ public class OrdersService {
 		);
 		System.out.println("運算完成的結果" + orderCode);
 		// 回寫 ordersCode 到資料庫
-<<<<<<< HEAD
+
 		ordersDao.updateOrdersCode(ordersId, orderCode);
 
 		LocalTime finishTime = req.getOrdersTime();
 		int estimatedTime = 0;
 
-=======
+
 		int addCode = ordersDao.updateOrdersCode(ordersId, orderCode);
 		if(addCode < 0) {
     		return new BasicRes(//
@@ -409,7 +409,7 @@ public class OrdersService {
     				ResCodeMessage.ORDER_CODE_ADD_FAILED.getMessage());
 		}
 		
->>>>>>> order
+
 		// 將orderDetail細節放入
 		for (OrderDetailReq detailReq : req.getOrderDetailsList()) {
 
@@ -423,7 +423,7 @@ public class OrdersService {
 			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
 			detail.setOrderDetails(jsonString);
 			// 將細節傳回
-<<<<<<< HEAD
+
 			ordersDao.addOrderDetail(detail);
 
 			// 根據product數量增加製造所需時間 每個product 5分鐘
@@ -431,7 +431,7 @@ public class OrdersService {
 				estimatedTime += 5;
 			}
 
-=======
+
 			int detailResult = ordersDao.addOrderDetail(detail);
 	        if(detailResult < 0) {
 	    		return new BasicRes(//
@@ -439,7 +439,7 @@ public class OrdersService {
 	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getMessage());
 	        }
 			
->>>>>>> order
+
 		}
 		
 	    // ================= 如果是外送 D → 建立 DeliveryTask =================
