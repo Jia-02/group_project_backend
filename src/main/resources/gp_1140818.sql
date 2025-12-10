@@ -69,6 +69,35 @@ INSERT INTO `category` VALUES (1,'漢堡',1),(2,'飲料',2),(3,'套餐',1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `delivery_task`
+--
+
+DROP TABLE IF EXISTS `delivery_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `delivery_task` (
+  `order_no` varchar(60) NOT NULL,
+  `delivery_id` int DEFAULT '0',
+  `date` date DEFAULT NULL,
+  `distance_km` decimal(5,2) DEFAULT '0.00',
+  `status` enum('pending','pickup','completed') DEFAULT NULL,
+  `is_receive_money` tinyint DEFAULT '0',
+  `money` decimal(10,2) DEFAULT '0.00',
+  PRIMARY KEY (`order_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `delivery_task`
+--
+
+LOCK TABLES `delivery_task` WRITE;
+/*!40000 ALTER TABLE `delivery_task` DISABLE KEYS */;
+INSERT INTO `delivery_task` VALUES ('2512101200D07',0,'2025-12-10',NULL,'pending',0,NULL),('2512101200D10',0,'2025-12-10',NULL,'pending',0,NULL);
+/*!40000 ALTER TABLE `delivery_task` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `meal_status`
 --
 
@@ -144,7 +173,11 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
+<<<<<<< HEAD
 INSERT INTO `order_details` VALUES (1,'[{\"categoryId\":1,\"productId\":1,\"productName\":\"牛肉漢堡\",\"productPrice\":180,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',210,1,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',180,2,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"不加肉\",\"addPrice\":0}]}]',165,3,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,4,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,5,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,6,0),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',230,1,1),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":2,\"productName\":\"可樂\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]}]',230,2,1),(2,'[{\"categoryId\":1,\"productId\":4,\"productName\":\"起司漢堡\",\"productPrice\":120,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',150,3,0),(2,'[{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',50,4,0),(2,'[{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',50,5,0),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',210,6,2);
+=======
+INSERT INTO `order_details` VALUES (1,'[{\"categoryId\":1,\"productId\":1,\"productName\":\"牛肉漢堡\",\"productPrice\":180,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',210,1,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',180,2,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"不加肉\",\"addPrice\":0}]}]',165,3,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,4,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,5,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,6,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,7,0),(1,'[{\"categoryId\":1,\"productId\":3,\"productName\":\"雞肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"蔥蛋\",\"addPrice\":15},{\"option\":\"兩層肉\",\"addPrice\":40}]}]',205,10,0),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',230,1,1),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":2,\"productName\":\"可樂\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"少冰\",\"addPrice\":0}]}]',230,2,1),(2,'[{\"categoryId\":1,\"productId\":4,\"productName\":\"起司漢堡\",\"productPrice\":120,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]}]',150,3,0),(2,'[{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',50,4,0),(2,'[{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',50,5,0),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',210,6,2),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',210,7,2),(2,'[{\"categoryId\":1,\"productId\":2,\"productName\":\"豬肉漢堡\",\"productPrice\":150,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"起司蛋\",\"addPrice\":10},{\"option\":\"一層肉\",\"addPrice\":20}]},{\"categoryId\":2,\"productId\":1,\"productName\":\"氣泡水\",\"productPrice\":50,\"mealStatus\":\"製作中\",\"detailList\":[{\"option\":\"無糖\",\"addPrice\":0},{\"option\":\"去冰\",\"addPrice\":0}]}]',210,10,2);
+>>>>>>> order
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +202,11 @@ CREATE TABLE `orders` (
   `customer_address` varchar(100) DEFAULT NULL,
   `table_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`orders_id`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+=======
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+>>>>>>> order
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,7 +215,11 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+<<<<<<< HEAD
 INSERT INTO `orders` VALUES (1,'A','2025-12-06','12:00:00',440,'現金',0,'2512061200A01',NULL,NULL,NULL,'A01'),(2,'D','2025-12-06','12:00:00',410,'信用卡',1,'2512061200D02','kelly','0912345678','高雄市左營區',NULL),(3,'T','2025-12-06','12:00:00',315,'電子支付',1,'2512061200T03','77','0912345677','高雄市前鎮區',NULL),(4,'A','2025-12-06','14:00:00',255,'信用卡',1,'2512061400A04','','','','A01'),(5,'A','2025-12-07','14:00:00',255,'現金',1,'2512071400A05',NULL,NULL,NULL,'A01'),(6,'T','2025-12-07','16:00:00',415,'現金',1,'2512071600T06','47','0912345647',NULL,'');
+=======
+INSERT INTO `orders` VALUES (1,'A','2025-12-06','12:00:00',440,'現金',0,'2512061200A01',NULL,NULL,NULL,'A01'),(2,'D','2025-12-06','12:00:00',410,'信用卡',1,'2512061200D02','kelly','0912345678','高雄市左營區',NULL),(3,'T','2025-12-06','12:00:00',315,'電子支付',1,'2512061200T03','77','0912345677','高雄市前鎮區',NULL),(4,'A','2025-12-06','14:00:00',255,'信用卡',1,'2512061400A04','','','','A01'),(5,'A','2025-12-07','14:00:00',255,'現金',1,'2512071400A05',NULL,NULL,NULL,'A01'),(6,'T','2025-12-07','16:00:00',415,'現金',1,'2512071600T06','47','0912345647',NULL,''),(7,'D','2025-12-10','12:00:00',415,'信用卡',1,'2512101200D07','47','0912345647','47的家',''),(10,'D','2025-12-10','12:00:00',415,'信用卡',1,'2512101200D10','47','0912345647','47的家','');
+>>>>>>> order
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -363,4 +404,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2025-12-09 13:57:28
+=======
+-- Dump completed on 2025-12-10 11:40:23
+>>>>>>> order

@@ -138,6 +138,14 @@ public class SettingService {
 					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
+				
+				//商品未啟用
+				if (!productDao.getProductActive(categoryId,productId)) {
+					return new BasicRes( //
+							ResCodeMessage.PRODUCT_IS_NO_USED.getCode(), //
+							ResCodeMessage.PRODUCT_IS_NO_USED.getMessage());
+				}
+
 
 				// 商品細節的 categoryId 與外層 detailCategoryId 匹配
 				if (productDto.getCategoryId() != categoryId) {
