@@ -96,6 +96,7 @@ public class SettingService {
 		// 判斷列表內的細節資料
 		for (SettingDetailDto detailCategory : detailList) {
 			int categoryId = detailCategory.getCategoryId();
+			String categoryType = detailCategory.getCategoryType();
 
 			// 分類id不可小0，null
 			if (categoryId <= 0) {
@@ -108,6 +109,13 @@ public class SettingService {
 				return new BasicRes(//
 						ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 						ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
+			}
+			
+			//分類名稱存在與否
+			if (!categoryDao.checkCategoryName(categoryType)) {
+				return new BasicRes(//
+						ResCodeMessage.CATEGORY_TYPE_ERROR.getCode(), //
+						ResCodeMessage.CATEGORY_TYPE_ERROR.getMessage());
 			}
 
 			// 套餐細節商品列表
@@ -123,6 +131,13 @@ public class SettingService {
 			// 遍歷內層 productList
 			for (SettingDetailProductDto product : productList) {
 				int productId = product.getProductId();
+				String productName = product.getProductName();
+				
+				//產品名稱不可為空或null
+				if(!StringUtils.hasText(productName)) {
+					return new BasicRes(ResCodeMessage.PRODUCT_NAME_ERROR.getCode(),
+							ResCodeMessage.PRODUCT_NAME_ERROR.getMessage());
+				}
 
 				// 商品id不可 <= 0
 				if (productId <= 0) {

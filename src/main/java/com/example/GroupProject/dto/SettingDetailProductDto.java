@@ -3,6 +3,7 @@ package com.example.GroupProject.dto;
 public class SettingDetailProductDto {
 	
 	private int productId;
+	private String productName;
 
 	public int getProductId() {
 		return productId;
@@ -10,6 +11,14 @@ public class SettingDetailProductDto {
 
 	public void setProductId(int productId) {
 		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 	
 }
