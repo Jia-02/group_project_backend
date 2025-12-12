@@ -28,6 +28,9 @@ public class TablesDto {
 	@Min(value = 60, message = ConstantsMessage.TABLE_LENGTH_Y_ERROR)
 	private int lengthY;
 
+	@NotBlank(message = ConstantsMessage.TABLE_ID_ERROR)
+	private String qrUrl;
+
 	public String getTableId() {
 		return tableId;
 	}
@@ -82,6 +85,14 @@ public class TablesDto {
 
 	public void setLengthY(int lengthY) {
 		this.lengthY = lengthY;
+	}
+
+	public String getQrUrl() {
+		return qrUrl;
+	}
+
+	public void setQrUrl(String qrUrl) {
+		this.qrUrl = qrUrl;
 	}
 
 }

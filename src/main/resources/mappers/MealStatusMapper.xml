@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.MealStatusDao">
+
+	<resultMap id="MealStatusMap"
+		type="com.example.GroupProject.dto.MealStatusDto">
+
+		<result property="mealStatusId" column="meal_status_id" />
+		<result property="mealStatus" column="meal_status" />
+		<result property="estimatedTime" column="estimated_time" />
+		<result property="finishTime" column="finish_time" />
+		<result property="ordersId" column="orders_id" />
+
+	</resultMap>
+	
+	<insert id="addMealStatus" parameterType="com.example.GroupProject.dto.MealStatusDto">
+		insert into meal_status(meal_status,estimated_time,finish_time,orders_id) 
+		values (#{mealStatus},#{estimatedTime},#{finishTime},#{ordersId})
+	</insert>
+	
+	<update id="updateMealStatus" parameterType="com.example.GroupProject.dto.MealStatusDto">
+		update meal_status set meal_status = #{mealStatus}, estimated_time = #{estimatedTime},
+		finish_time = #{finishTime} where orders_id = #{ordersId}
+	</update>
+	
+	<select id="getMealStatus" resultMap="MealStatusMap">
+		select * from meal_status where orders_id = #{ordersId}
+	</select>
+	
+	
+	
+</mapper>

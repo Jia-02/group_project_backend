@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.OrdersDao">
+
+	<!-- 新增訂單 -->
+	<insert id="addOrder" useGeneratedKeys="true"
+		keyProperty="ordersId">
+		INSERT INTO orders(
+		orders_type, orders_date, orders_time,
+		total_price, payment_type, paid,
+		orders_code, customer_name,
+		customer_phone, customer_address, table_id
+		) VALUES (
+		#{ordersType},
+		#{ordersDate}, #{ordersTime}, #{totalPrice}, #{paymentType},
+		#{paid},
+		#{ordersCode}, #{customerName}, #{customerPhone},
+		#{customerAddress},
+		#{tableId} )
+	</insert>
+
+	<!-- 新增訂單明細 -->
+	<insert id="addOrderDetail">
+		INSERT INTO order_details (
+		order_details_id,
+		order_details, order_details_price,
+		orders_id, setting_id )
+		VALUES (
+		#{orderDetailsId}, #{orderDetails}, #{orderDetailsPrice},
+		#{ordersId},
+		#{settingId} )
+	</insert>
+
+	<!-- 新增外送資訊 -->
+	<insert id="addDeliveryTask">
+		INSERT INTO delivery_task
+		( order_no, delivery_id, date, distance_km, status, is_receive_money,
+		money )
+		VALUES
+		( #{orderNo}, #{deliveryId}, #{date},
+		#{distanceKm}, #{status}, #{isReceiveMoney}, #{money} )
+	</insert>
+
+	<!-- 生成訂單編號 -->
+	<update id="updateOrdersCode">
+		UPDATE orders
+		SET orders_code = #{ordersCode}
+		WHERE
+		orders_id = #{ordersId}
+	</update>
+
+	<!-- 訂單存在數量 -->
+	<select id="checkOrdersExist" resultType="int">
+		SELECT COUNT(1) FROM
+		orders WHERE orders_id = #{ordersId}
+	</select>
+
+	<!-- ID取得訂單內容 -->
+	<select id="getOrdersById"
+		resultType="com.example.GroupProject.dto.OrdersDto">
+		SELECT * FROM orders
+		WHERE orders_id = #{ordersId}
+	</select>
+	
+	<!-- Code取得訂單內容 -->
+	<select id="getOrdersByCode"
+		resultType="com.example.GroupProject.dto.OrdersDto">
+		SELECT * FROM orders
+		WHERE orders_code = #{ordersCode}
+	</select>
+
+	<!-- ID取得訂單細節 -->
+	<select id="getOrderDetailById"
+		resultType="com.example.GroupProject.dto.OrderDetailDto">
+		SELECT * FROM order_details
+		WHERE orders_id = #{ordersId}
+	</select>
+
+	<!-- 取得訂單列表 -->
+	<select id="getOrdersList"
+		resultType="com.example.GroupProject.vo.OrdersVo">
+		SELECT * FROM orders
+	</select>
+
+	<!-- 更新訂單(未付款前最後編輯，可改為已付款) -->
+	<update id="updateOrder">
+		UPDATE orders
+		SET
+		payment_type = #{paymentType},
+		paid =
+		#{paid},
+		total_price = #{totalPrice}
+		WHERE
+		orders_id = #{ordersId}
+	</update>
+
+	<!-- 刪除該訂單底下所有明細 -->
+	<delete id="delOrderDetailById">
+		DELETE FROM order_details
+		WHERE orders_id =
+		#{ordersId}
+	</delete>
+
+	<!-- 更新單筆訂單明細的餐點狀態 -->
+	<update id="updateOrderIsPaid">
+		UPDATE order_details
+		SET order_details =
+		#{orderDetails}
+		WHERE order_details_id = #{orderDetailsId}
+		AND orders_id
+		= #{ordersId}
+	</update>
+
+
+	<select id="getOrdersByDate"
+		resultType="com.example.GroupProject.dto.OrdersDto">
+		SELECT *
+		FROM orders
+		WHERE orders_date = #{ordersDate}
+		ORDER
+		BY orders_time ASC
+	</select>
+
+</mapper>
