@@ -84,11 +84,6 @@ public class TablesService {
 	@Transactional(rollbackFor = Exception.class)
 	public TableListRes getTableList() {
 
-		if (tableDao.getTableList().isEmpty()) {
-			return new TableListRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
-					ResCodeMessage.TABLE_NOT_FOUND.getMessage());
-		}
-
 		return new TableListRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
 				tableDao.getTableList());
 	}

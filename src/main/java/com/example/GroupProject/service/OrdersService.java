@@ -1,6 +1,7 @@
 package com.example.GroupProject.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,13 +15,18 @@ import org.springframework.util.StringUtils;
 
 import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
+import com.example.GroupProject.dao.MealStatusDao;
 import com.example.GroupProject.dao.OptionDao;
 import com.example.GroupProject.dao.OrdersDao;
 import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.CategoryDto;
+
+import com.example.GroupProject.dto.MealStatusDto;
+
 import com.example.GroupProject.dto.DeliveryTask;
+
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.OrderDetailDto;
@@ -66,6 +72,9 @@ public class OrdersService {
 
 	@Autowired
 	private CategoryDao categoryDao;
+
+	@Autowired
+	private MealStatusDao mealStatusDao;
 
 	// 私有方法轉換日期
 	private String generateOrderCode(int orderId, String type, String orderDate, String orderTime) {
@@ -282,9 +291,9 @@ public class OrdersService {
 					boolean matched = false;
 					// category 有多個 option
 					List<OptionDto> optionListFromDb = optionDao.getOptionList(categoryId);
-                    //迴圈檢查客製化
+					// 迴圈檢查客製化
 					for (OptionDto dbOption : optionListFromDb) {
-						//字串成 list
+						// 字串成 list
 						List<OptionDetailDto> optionDetailList = new ArrayList<>();
 						try {
 							ObjectMapper mapper = new ObjectMapper();
@@ -370,6 +379,7 @@ public class OrdersService {
 		orders.setTableId(req.getTableId());
 
 		// INSERT 新增訂單
+		ordersDao.addOrder(orders);
 		int orderResult = ordersDao.addOrder(orders);
 		if(orderResult < 0) {
     		return new BasicRes(//
@@ -378,6 +388,7 @@ public class OrdersService {
 		}
 		// 拿到 AI 生成的 ordersId
 		int ordersId = orders.getOrdersId();
+
 		// 後端運算code
 		String orderCode = generateOrderCode(ordersId, req.getOrdersType(), // A，T，D
 				req.getOrdersDate().toString(), // yyyy-MM-dd
@@ -385,6 +396,13 @@ public class OrdersService {
 		);
 		System.out.println("運算完成的結果" + orderCode);
 		// 回寫 ordersCode 到資料庫
+
+		ordersDao.updateOrdersCode(ordersId, orderCode);
+
+		LocalTime finishTime = req.getOrdersTime();
+		int estimatedTime = 0;
+
+
 		int addCode = ordersDao.updateOrdersCode(ordersId, orderCode);
 		if(addCode < 0) {
     		return new BasicRes(//
@@ -392,6 +410,7 @@ public class OrdersService {
     				ResCodeMessage.ORDER_CODE_ADD_FAILED.getMessage());
 		}
 		
+
 		// 將orderDetail細節放入
 		for (OrderDetailReq detailReq : req.getOrderDetailsList()) {
 
@@ -405,6 +424,14 @@ public class OrdersService {
 			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
 			detail.setOrderDetails(jsonString);
 			// 將細節傳回
+
+
+			// 根據product數量增加製造所需時間 每個product 5分鐘
+			for (OrderProductReq orderProduct : detailReq.getOrderDetails()) {
+				estimatedTime += 5;
+			}
+
+
 			int detailResult = ordersDao.addOrderDetail(detail);
 	        if(detailResult < 0) {
 	    		return new BasicRes(//
@@ -412,6 +439,7 @@ public class OrdersService {
 	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getMessage());
 	        }
 			
+
 		}
 		
 	    // ================= 如果是外送 D → 建立 DeliveryTask =================
@@ -427,6 +455,16 @@ public class OrdersService {
 	    				ResCodeMessage.DELIVERY_ADD_FAILED.getMessage());
 	        }
 	    }
+
+		// ---------MealStatus新增部分開始------------
+
+		finishTime = finishTime.plusMinutes(estimatedTime);
+
+		MealStatusDto mealStatus = new MealStatusDto("製作中", estimatedTime, finishTime, ordersId);
+
+		mealStatusDao.addMealStatus(mealStatus);
+
+		// ---------MealStatus新增部分結束-------------
 
 		return new BasicRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
@@ -534,11 +572,35 @@ public class OrdersService {
 			return new BasicRes(ResCodeMessage.IS_NOT_PAID.getCode(), ResCodeMessage.IS_NOT_PAID.getMessage());
 		}
 
+		int countStatus = 0;
+		List<String> orderStatusList = new ArrayList<>();
+
 		// 只更新餐點細節
 		for (OrderDetailReq detailReq : req.getOrderDetails()) {
 			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
 			ordersDao.updateOrderIsPaid(ordersId, detailReq.getOrderDetailsId(), jsonString);
+			for (OrderProductReq productReq : detailReq.getOrderDetails()) {
+				if (productReq.getMealStatus().equalsIgnoreCase("製作中")) {
+					countStatus++;
+				}
+				orderStatusList.add(productReq.getMealStatus());
+			}
 		}
+
+		MealStatusDto mealStatus = mealStatusDao.getMealStatus(ordersId);
+		String orderStatus = "已送達";
+		if (orderStatusList.contains("製作中")) {
+			orderStatus = "製作中";
+		} else if (orderStatusList.contains("待送餐")) {
+			orderStatus = "待送餐";
+		}
+		
+		LocalTime orderTime = LocalTime.now();
+		mealStatus.setEstimatedTime(5 * countStatus);
+		mealStatus.setMealStatus(orderStatus);
+		mealStatus.setFinishTime(orderTime.plusMinutes(mealStatus.getEstimatedTime()));
+
+		mealStatusDao.updateMealStatus(mealStatus);
 
 		return new BasicRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage());
 	}
@@ -737,97 +799,90 @@ public class OrdersService {
 				dto.getPaymentType(), dto.isPaid(), dto.getOrdersCode(), dto.getCustomerName(), dto.getCustomerPhone(),
 				dto.getCustomerAddress(), dto.getTableId(), finalList);
 	}
-	
-	//日期查詢當日訂單列表+細節
+
+	// 日期查詢當日訂單列表+細節
 	@Transactional(readOnly = true)
 	public OrdersMealListRes getOrdersMealByDate(LocalDate ordersDate) throws Exception {
 
 		// 1. 查詢當日所有訂單
-	    List<OrdersDto> ordersList = ordersDao.getOrdersByDate(ordersDate);
+		List<OrdersDto> ordersList = ordersDao.getOrdersByDate(ordersDate);
 
-	    if (ordersList == null || ordersList.isEmpty()) {
-	        return new OrdersMealListRes(
-	                ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
-	                ResCodeMessage.ORDERS_NOT_FOUND.getMessage(),
-	                null
-	        );
-	    }
-	    List<OrdersMealListVo> finalOrders = new ArrayList<>();
+		if (ordersList == null || ordersList.isEmpty()) {
+			return new OrdersMealListRes(ResCodeMessage.ORDERS_NOT_FOUND.getCode(),
+					ResCodeMessage.ORDERS_NOT_FOUND.getMessage(), null);
+		}
+		List<OrdersMealListVo> finalOrders = new ArrayList<>();
 
-	    // 2. 逐筆處理每張訂單
-	    for (OrdersDto dto : ordersList) {
+		// 2. 逐筆處理每張訂單
+		for (OrdersDto dto : ordersList) {
 
-	        int ordersId = dto.getOrdersId();
-	        // 查詢訂單明細
-	        List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
-	        List<OrdersMealVo> finalDetailList = new ArrayList<>();
+			int ordersId = dto.getOrdersId();
+			// 查詢訂單明細
+			List<OrderDetailDto> dbDetailList = ordersDao.getOrderDetailById(ordersId);
+			List<OrdersMealVo> finalDetailList = new ArrayList<>();
 
-	        // 3. 處理每筆明細
-	        for (OrderDetailDto detail : dbDetailList) {
+			// 3. 處理每筆明細
+			for (OrderDetailDto detail : dbDetailList) {
 
-	            OrdersMealVo mealVo = new OrdersMealVo();
-	            mealVo.setOrderDetailsId(detail.getOrderDetailsId());
-	            mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
-	            mealVo.setSettingId(detail.getSettingId());
+				OrdersMealVo mealVo = new OrdersMealVo();
+				mealVo.setOrderDetailsId(detail.getOrderDetailsId());
+				mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
+				mealVo.setSettingId(detail.getSettingId());
 
-	            // 解析 JSON → 商品列表
-	            String jsonString = detail.getOrderDetails();
-	            List<OrderMealDetailVo> productList = new ArrayList<>();
-	            if (StringUtils.hasText(jsonString)) {
+				// 解析 JSON → 商品列表
+				String jsonString = detail.getOrderDetails();
+				List<OrderMealDetailVo> productList = new ArrayList<>();
+				if (StringUtils.hasText(jsonString)) {
 
-	                // 先轉成 OrderProductReq
-	                List<OrderProductReq> tempList = mapper.readValue(
-	                        jsonString, new TypeReference<List<OrderProductReq>>() {}
-	                );
+					// 先轉成 OrderProductReq
+					List<OrderProductReq> tempList = mapper.readValue(jsonString,
+							new TypeReference<List<OrderProductReq>>() {
+							});
 
-	                // 再轉成 OrderMealDetailVo
-	                for (OrderProductReq p : tempList) {
-	                    OrderMealDetailVo mealDetail = new OrderMealDetailVo();
-	                    mealDetail.setCategoryId(p.getCategoryId());
-	                    mealDetail.setProductId(p.getProductId());
-	                    mealDetail.setProductName(p.getProductName());
-	                    mealDetail.setProductPrice(p.getProductPrice());
-	                    mealDetail.setMealStatus(p.getMealStatus());
-	                    mealDetail.setDetailList(p.getDetailList()); // 客製化
+					// 再轉成 OrderMealDetailVo
+					for (OrderProductReq p : tempList) {
+						OrderMealDetailVo mealDetail = new OrderMealDetailVo();
+						mealDetail.setCategoryId(p.getCategoryId());
+						mealDetail.setProductId(p.getProductId());
+						mealDetail.setProductName(p.getProductName());
+						mealDetail.setProductPrice(p.getProductPrice());
+						mealDetail.setMealStatus(p.getMealStatus());
+						mealDetail.setDetailList(p.getDetailList()); // 客製化
 
-	                    // workstationId
-	                    CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
-	                    if (cat != null) {
-	                        mealDetail.setWorkStationId(cat.getWorkstationId());
-	                    }
-	                    productList.add(mealDetail);
-	                }
-	            }
+						// workstationId
+						CategoryDto cat = categoryDao.getCategoryById(p.getCategoryId());
+						if (cat != null) {
+							mealDetail.setWorkStationId(cat.getWorkstationId());
+						}
+						productList.add(mealDetail);
+					}
+				}
 
-	            mealVo.setOrderDetails(productList);
-	            finalDetailList.add(mealVo);
-	        }
+				mealVo.setOrderDetails(productList);
+				finalDetailList.add(mealVo);
+			}
 
-	        //使用 OrdersMealListVo
-	        OrdersMealListVo listVo = new OrdersMealListVo();
-	        listVo.setOrdersId(dto.getOrdersId());
-	        listVo.setOrdersType(dto.getOrdersType());
-	        listVo.setOrdersDate(dto.getOrdersDate());
-	        listVo.setOrdersTime(dto.getOrdersTime());
-	        listVo.setTotalPrice(dto.getTotalPrice());
-	        listVo.setPaymentType(dto.getPaymentType());
-	        listVo.setPaid(dto.isPaid());
-	        listVo.setOrdersCode(dto.getOrdersCode());
-	        listVo.setCustomerName(dto.getCustomerName());
-	        listVo.setCustomerPhone(dto.getCustomerPhone());
-	        listVo.setCustomerAddress(dto.getCustomerAddress());
-	        listVo.setTableId(dto.getTableId());
-	        listVo.setOrderDetailsList(finalDetailList);
-	        finalOrders.add(listVo);
-	    }
+			// 使用 OrdersMealListVo
+			OrdersMealListVo listVo = new OrdersMealListVo();
+			listVo.setOrdersId(dto.getOrdersId());
+			listVo.setOrdersType(dto.getOrdersType());
+			listVo.setOrdersDate(dto.getOrdersDate());
+			listVo.setOrdersTime(dto.getOrdersTime());
+			listVo.setTotalPrice(dto.getTotalPrice());
+			listVo.setPaymentType(dto.getPaymentType());
+			listVo.setPaid(dto.isPaid());
+			listVo.setOrdersCode(dto.getOrdersCode());
+			listVo.setCustomerName(dto.getCustomerName());
+			listVo.setCustomerPhone(dto.getCustomerPhone());
+			listVo.setCustomerAddress(dto.getCustomerAddress());
+			listVo.setTableId(dto.getTableId());
+			listVo.setOrderDetailsList(finalDetailList);
+			finalOrders.add(listVo);
+		}
 
-	    // 4. 回傳結果
-	    return new OrdersMealListRes(
-	            ResCodeMessage.SUCCESS.getCode(),
-	            ResCodeMessage.SUCCESS.getMessage(),
-	            finalOrders
-	    );
+		// 4. 回傳結果
+		return new OrdersMealListRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				finalOrders);
 	}
-
 
 }
