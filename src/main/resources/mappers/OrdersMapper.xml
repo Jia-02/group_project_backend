@@ -83,6 +83,7 @@
 	<select id="getOrdersList"
 		resultType="com.example.GroupProject.vo.OrdersVo">
 		SELECT * FROM orders
+		ORDER BY orders_date DESC, orders_time DESC
 	</select>
 
 	<!-- 更新訂單(未付款前最後編輯，可改為已付款) -->
