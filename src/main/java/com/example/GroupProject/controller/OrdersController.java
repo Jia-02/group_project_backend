@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.GroupProject.request.AddOrdersReq;
 import com.example.GroupProject.request.OrderUpdateReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.OrderBasicRes;
 import com.example.GroupProject.response.OrdersAllDetailRes;
 import com.example.GroupProject.response.OrdersListRes;
 import com.example.GroupProject.response.OrdersMealListRes;
@@ -29,7 +30,7 @@ public class OrdersController {
 	
 	//新增訂單
 	@PostMapping(value = "orders/add")
-	public BasicRes addOrder(@RequestBody AddOrdersReq req) throws Exception{
+	public OrderBasicRes addOrder(@RequestBody AddOrdersReq req) throws Exception{
 		return ordersService.addOrder(req);
 	}
 	

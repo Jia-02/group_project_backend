@@ -22,11 +22,8 @@ import com.example.GroupProject.dao.ProductDao;
 import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dao.TablesDao;
 import com.example.GroupProject.dto.CategoryDto;
-
-import com.example.GroupProject.dto.MealStatusDto;
-
 import com.example.GroupProject.dto.DeliveryTask;
-
+import com.example.GroupProject.dto.MealStatusDto;
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.OptionDto;
 import com.example.GroupProject.dto.OrderDetailDto;
@@ -38,6 +35,7 @@ import com.example.GroupProject.request.OrderDetailReq;
 import com.example.GroupProject.request.OrderProductReq;
 import com.example.GroupProject.request.OrderUpdateReq;
 import com.example.GroupProject.response.BasicRes;
+import com.example.GroupProject.response.OrderBasicRes;
 import com.example.GroupProject.response.OrdersAllDetailRes;
 import com.example.GroupProject.response.OrdersListRes;
 import com.example.GroupProject.response.OrdersMealListRes;
@@ -90,53 +88,53 @@ public class OrdersService {
 	}
 
 	// 私有方法檢查資訊
-	private BasicRes checkInfo(AddOrdersReq req) {
+	private OrderBasicRes checkInfo(AddOrdersReq req) {
 		// 判斷類型不可為空
 		if (!StringUtils.hasText(req.getOrdersType())) {
-			return new BasicRes(ResCodeMessage.ORDERS_TYPE_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.ORDERS_TYPE_ERROR.getCode(), //
 					ResCodeMessage.ORDERS_TYPE_ERROR.getMessage());
 		}
 
 		// 判斷日期不可為空
 		if (req.getOrdersDate() == null) {
-			return new BasicRes(ResCodeMessage.ORDERS_DATE_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.ORDERS_DATE_ERROR.getCode(), //
 					ResCodeMessage.ORDERS_DATE_ERROR.getMessage());
 		}
 
 		// 判斷時間不可為空
 		if (req.getOrdersTime() == null) {
-			return new BasicRes(ResCodeMessage.ORDERS_TIME_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.ORDERS_TIME_ERROR.getCode(), //
 					ResCodeMessage.ORDERS_TIME_ERROR.getMessage());
 		}
 
 		// 判斷總價格不可 <= 0
 		if (req.getTotalPrice() <= 0) {
-			return new BasicRes(ResCodeMessage.ORDERS_TOTAL_PRICE_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.ORDERS_TOTAL_PRICE_ERROR.getCode(), //
 					ResCodeMessage.ORDERS_TOTAL_PRICE_ERROR.getMessage());
 		}
 
 		// 判斷付款類型不可為空
 		if (!StringUtils.hasText(req.getPaymentType())) {
-			return new BasicRes(ResCodeMessage.PAYMENT_TYPE_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.PAYMENT_TYPE_ERROR.getCode(), //
 					ResCodeMessage.PAYMENT_TYPE_ERROR.getMessage());
 		}
 
 		// 如果付款方式不是現金或取消，已結帳
 		if (!"現金".equals(req.getPaymentType()) && !req.isPaid() && !"取消".equals(req.getPaymentType())) {
-			return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
 					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
 		}
 		// 內用需要桌號
 		if ("A".equals(req.getOrdersType())) {
 			// 桌號不可為空
 			if (!StringUtils.hasText(req.getTableId())) {
-				return new BasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
+				return new OrderBasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
 						ResCodeMessage.TABLE_NOT_FOUND.getMessage());
 			}
 
 			// 檢查桌位是否存在
 			if (!tableDao.existsById(req.getTableId())) {
-				return new BasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
+				return new OrderBasicRes(ResCodeMessage.TABLE_NOT_FOUND.getCode(),
 						ResCodeMessage.TABLE_NOT_FOUND.getMessage());
 			}
 		}
@@ -144,7 +142,7 @@ public class OrdersService {
 		// 外帶必須有顧客資訊
 		if ("T".equals(req.getOrdersType()) && (!StringUtils.hasText(req.getCustomerName()) //
 				|| !StringUtils.hasText(req.getCustomerPhone()))) {
-			return new BasicRes(ResCodeMessage.CUSTOMER_INFO_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.CUSTOMER_INFO_ERROR.getCode(), //
 					ResCodeMessage.CUSTOMER_INFO_ERROR.getMessage());
 		}
 
@@ -152,7 +150,7 @@ public class OrdersService {
 		if ("D".equals(req.getOrdersType()) && (!StringUtils.hasText(req.getCustomerName()) //
 				|| !StringUtils.hasText(req.getCustomerPhone()) || //
 				!StringUtils.hasText(req.getCustomerAddress()))) {
-			return new BasicRes(ResCodeMessage.CUSTOMER_INFO_ERROR.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.CUSTOMER_INFO_ERROR.getCode(), //
 					ResCodeMessage.CUSTOMER_INFO_ERROR.getMessage());
 		}
 
@@ -160,7 +158,7 @@ public class OrdersService {
 		// 取得訂單細節
 		List<OrderDetailReq> detailsList = req.getOrderDetailsList();
 		if (detailsList == null || detailsList.isEmpty()) {
-			return new BasicRes(ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
+			return new OrderBasicRes(ResCodeMessage.ORDER_DETAIL_EMPTY.getCode(),
 					ResCodeMessage.ORDER_DETAIL_EMPTY.getMessage());
 		}
 
@@ -174,26 +172,26 @@ public class OrdersService {
 
 			// orderDetailsId 必須大於0且不重複
 			if (detail.getOrderDetailsId() <= 0 || !detailIds.add(detail.getOrderDetailsId())) {
-				return new BasicRes(ResCodeMessage.ORDER_DETAIL_ID_ERROR.getCode(),
+				return new OrderBasicRes(ResCodeMessage.ORDER_DETAIL_ID_ERROR.getCode(),
 						ResCodeMessage.ORDER_DETAIL_ID_ERROR.getMessage());
 			}
 
 			// 細節金額不可 <= 0
 			if (detail.getOrderDetailsPrice() <= 0) {
-				return new BasicRes(ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getCode(),
+				return new OrderBasicRes(ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getCode(),
 						ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getMessage());
 			}
 
 			// 判斷如果 settingId >0 套餐是否存在
 			if (settingId > 0) {
 				if (settingDao.checkSettingExist(settingId) == 0) {
-					return new BasicRes(ResCodeMessage.SETTING_NOT_FOUND.getCode(),
+					return new OrderBasicRes(ResCodeMessage.SETTING_NOT_FOUND.getCode(),
 							ResCodeMessage.SETTING_NOT_FOUND.getMessage());
 				}
 				SettingDto setting = settingDao.getSettingById(settingId);
 				detailPrice += setting.getSettingPrice();
 			} else if (settingId < -1) {
-				return new BasicRes(ResCodeMessage.SETTING_ID_ERROR.getCode(),
+				return new OrderBasicRes(ResCodeMessage.SETTING_ID_ERROR.getCode(),
 						ResCodeMessage.SETTING_ID_ERROR.getMessage());
 			}
 
@@ -202,7 +200,7 @@ public class OrdersService {
 
 			// 商品細節不可為空
 			if (products == null || products.isEmpty()) {
-				return new BasicRes(ResCodeMessage.DETAIL_PRODUCT_LIST_EMPTY.getCode(),
+				return new OrderBasicRes(ResCodeMessage.DETAIL_PRODUCT_LIST_EMPTY.getCode(),
 						ResCodeMessage.DETAIL_PRODUCT_LIST_EMPTY.getMessage());
 			}
 
@@ -212,20 +210,20 @@ public class OrdersService {
 
 				// 分類id不可小0，null
 				if (categoryId <= 0) {
-					return new BasicRes(ResCodeMessage.CATEGORY_ID_ERROR.getCode(), //
+					return new OrderBasicRes(ResCodeMessage.CATEGORY_ID_ERROR.getCode(), //
 							ResCodeMessage.CATEGORY_ID_ERROR.getMessage());
 				}
 
 				// 分類存在與否
 				if (categoryDao.checkCategoryExistById(categoryId) == 0) {
-					return new BasicRes(//
+					return new OrderBasicRes(//
 							ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 							ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 				}
 
 				// 餐點狀態不可為空
 				if (!StringUtils.hasText(product.getMealStatus())) {
-					return new BasicRes(ResCodeMessage.MEAL_STATUS_EMPTY.getCode(), //
+					return new OrderBasicRes(ResCodeMessage.MEAL_STATUS_EMPTY.getCode(), //
 							ResCodeMessage.MEAL_STATUS_EMPTY.getMessage());
 				}
 
@@ -237,32 +235,32 @@ public class OrdersService {
 				// 商品名稱不可為空或是否對應
 				if (!StringUtils.hasText(product.getProductName()) //
 						|| !productDto.getProductName().equals(product.getProductName())) {
-					return new BasicRes(ResCodeMessage.PRODUCT_NAME_ERROR.getCode(), //
+					return new OrderBasicRes(ResCodeMessage.PRODUCT_NAME_ERROR.getCode(), //
 							ResCodeMessage.PRODUCT_NAME_ERROR.getMessage());
 				}
 
 				// 商品價格不可<0，商品價格是否對應
 				if (product.getProductPrice() <= 0 || //
 						productDto.getProductPrice() != (product.getProductPrice())) {
-					return new BasicRes(ResCodeMessage.PRODUCT_PRICE_ERROR.getCode(),
+					return new OrderBasicRes(ResCodeMessage.PRODUCT_PRICE_ERROR.getCode(),
 							ResCodeMessage.PRODUCT_PRICE_ERROR.getMessage());
 				}
 
 				// 商品id不可 <= 0
 				if (productId <= 0) {
-					return new BasicRes(ResCodeMessage.PRODUCT_ID_ERROR.getCode(),
+					return new OrderBasicRes(ResCodeMessage.PRODUCT_ID_ERROR.getCode(),
 							ResCodeMessage.PRODUCT_ID_ERROR.getMessage());
 				}
 
 				// 檢查商品是否存在
 				if (productDao.checkProductExist(categoryId, productId) == 0) {
-					return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
+					return new OrderBasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 							ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 				}
 
 				// 商品細節的 categoryId 與 detailCategoryId 匹配
 				if (productDto.getCategoryId() != categoryId) {
-					return new BasicRes(//
+					return new OrderBasicRes(//
 							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(), //
 							ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getMessage());
 				}
@@ -275,7 +273,7 @@ public class OrdersService {
 				List<OptionDetailDto> options = product.getDetailList();
 				// 客製化細節不可為空
 				if (options == null) {
-					return new BasicRes(ResCodeMessage.OPTION_EMPTY.getCode(),
+					return new OrderBasicRes(ResCodeMessage.OPTION_EMPTY.getCode(),
 							ResCodeMessage.OPTION_EMPTY.getMessage());
 				}
 				// 檢查客製化
@@ -284,7 +282,7 @@ public class OrdersService {
 					int userAddPrice = option.getAddPrice();
 					// OptionName不可為空
 					if (!StringUtils.hasText(userOptionName)) {
-						return new BasicRes(ResCodeMessage.OPTION_DETAIL_NAME_EMPTY.getCode(),
+						return new OrderBasicRes(ResCodeMessage.OPTION_DETAIL_NAME_EMPTY.getCode(),
 								ResCodeMessage.OPTION_DETAIL_NAME_EMPTY.getMessage());
 					}
 					// 稍晚判斷客製化是否存在
@@ -301,7 +299,7 @@ public class OrdersService {
 									new TypeReference<List<OptionDetailDto>>() {
 									});
 						} catch (Exception e) {
-							return new BasicRes(ResCodeMessage.OPTION_DETAIL_EMPTY.getCode(),
+							return new OrderBasicRes(ResCodeMessage.OPTION_DETAIL_EMPTY.getCode(),
 									ResCodeMessage.OPTION_DETAIL_EMPTY.getMessage());
 						}
 
@@ -312,7 +310,7 @@ public class OrdersService {
 								matched = true;
 								// 價格匹配
 								if (dbDetail.getAddPrice() != userAddPrice) {
-									return new BasicRes(ResCodeMessage.OPTION_DETAIL_PRICE_ERROR.getCode(),
+									return new OrderBasicRes(ResCodeMessage.OPTION_DETAIL_PRICE_ERROR.getCode(),
 											ResCodeMessage.OPTION_DETAIL_PRICE_ERROR.getMessage());
 								}
 								break;
@@ -324,7 +322,7 @@ public class OrdersService {
 
 					// 全部 option 都沒找到 → 非法的客製化選項
 					if (!matched) {
-						return new BasicRes(ResCodeMessage.OPTION_NOT_FOUND.getCode(),
+						return new OrderBasicRes(ResCodeMessage.OPTION_NOT_FOUND.getCode(),
 								ResCodeMessage.OPTION_NOT_FOUND.getMessage());
 					}
 					detailPrice += option.getAddPrice();
@@ -332,7 +330,7 @@ public class OrdersService {
 			}
 			// 算出來的價格不等於前端輸入
 			if (detailPrice != detail.getOrderDetailsPrice()) {
-				return new BasicRes(ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getCode(),
+				return new OrderBasicRes(ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getCode(),
 						ResCodeMessage.ORDER_DETAIL_PRICE_ERROR.getMessage());
 			}
 			detail.setOrderDetailsPrice(detailPrice); // 更新明細價格
@@ -341,7 +339,7 @@ public class OrdersService {
 
 		// 驗證前端 totalPrice 是否正確
 		if (calcTotalPrice != req.getTotalPrice()) {
-			return new BasicRes(ResCodeMessage.TOTAL_PRICE_MISMATCH.getCode(),
+			return new OrderBasicRes(ResCodeMessage.TOTAL_PRICE_MISMATCH.getCode(),
 					ResCodeMessage.TOTAL_PRICE_MISMATCH.getMessage());
 		}
 
@@ -350,17 +348,17 @@ public class OrdersService {
 
 	// 新增訂單
 	@Transactional(rollbackFor = Exception.class)
-	public BasicRes addOrder(AddOrdersReq req) throws Exception {
+	public OrderBasicRes addOrder(AddOrdersReq req) throws Exception {
 
 		// 共同方法判斷
-		BasicRes checkInfoRes = checkInfo(req);
+		OrderBasicRes checkInfoRes = checkInfo(req);
 		if (checkInfoRes != null) {
 			return checkInfoRes;
 		}
 
 		// 如果付款方式是取消，不可新增
 		if ("取消".equals(req.getPaymentType())) {
-			return new BasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
+			return new OrderBasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
 					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
 		}
 		
@@ -382,7 +380,7 @@ public class OrdersService {
 		ordersDao.addOrder(orders);
 		int orderResult = ordersDao.addOrder(orders);
 		if(orderResult < 0) {
-    		return new BasicRes(//
+    		return new OrderBasicRes(//
     				ResCodeMessage.ORDER_ADD_FAILED.getCode(), //
     				ResCodeMessage.ORDER_ADD_FAILED.getMessage());
 		}
@@ -405,7 +403,7 @@ public class OrdersService {
 
 		int addCode = ordersDao.updateOrdersCode(ordersId, orderCode);
 		if(addCode < 0) {
-    		return new BasicRes(//
+    		return new OrderBasicRes(//
     				ResCodeMessage.ORDER_CODE_ADD_FAILED.getCode(), //
     				ResCodeMessage.ORDER_CODE_ADD_FAILED.getMessage());
 		}
@@ -434,7 +432,7 @@ public class OrdersService {
 
 			int detailResult = ordersDao.addOrderDetail(detail);
 	        if(detailResult < 0) {
-	    		return new BasicRes(//
+	    		return new OrderBasicRes(//
 	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getCode(), //
 	    				ResCodeMessage.ORDER_DETAIL_ADD_FAILED.getMessage());
 	        }
@@ -450,7 +448,7 @@ public class OrdersService {
 	        task.setStatus("pending");                   // 常數 pending
 	        int delivery = ordersDao.addDeliveryTask(task);           // INSERT
 	        if(delivery < 0) {
-	    		return new BasicRes(//
+	    		return new OrderBasicRes(//
 	    				ResCodeMessage.DELIVERY_ADD_FAILED.getCode(), //
 	    				ResCodeMessage.DELIVERY_ADD_FAILED.getMessage());
 	        }
@@ -466,9 +464,10 @@ public class OrdersService {
 
 		// ---------MealStatus新增部分結束-------------
 
-		return new BasicRes(//
+		return new OrderBasicRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
-				ResCodeMessage.SUCCESS.getMessage());
+				ResCodeMessage.SUCCESS.getMessage(),
+				ordersId);
 	}
 
 	// 更新訂單 (尚未付款時，可改訂單明細，或是取消訂單)
