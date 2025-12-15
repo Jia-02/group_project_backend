@@ -377,7 +377,7 @@ public class OrdersService {
 		orders.setTableId(req.getTableId());
 
 		// INSERT 新增訂單
-		ordersDao.addOrder(orders);
+		
 		int orderResult = ordersDao.addOrder(orders);
 		if(orderResult < 0) {
     		return new OrderBasicRes(//

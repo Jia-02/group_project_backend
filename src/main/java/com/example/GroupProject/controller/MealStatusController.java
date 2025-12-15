@@ -17,7 +17,7 @@ public class MealStatusController {
 	private MealStatusService mealStatusService;
 	
 	@GetMapping(value = "meal/status")
-	public MealStatusRes getMealStatus(@RequestParam("orderId") int orderId) {
+	public MealStatusRes getMealStatus(@RequestParam("orderId") int orderId) throws Exception {
 		return mealStatusService.getMealStatus(orderId);
 	}
 	
