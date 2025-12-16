@@ -41,21 +41,28 @@
 		SELECT * FROM setting
 		WHERE category_id = #{categoryId}
 	</select>
-	
-		<!-- 查詢套餐(透過分類ID) (使用者) -->
+
+	<!-- 查詢套餐(透過分類ID) (使用者) -->
 	<select id="getUserSettingListById"
 		resultType="com.example.GroupProject.dto.SettingDto">
 		SELECT * FROM setting
 		WHERE category_id = #{categoryId}
-		AND setting_active = 1
+		AND
+		setting_active = 1
 	</select>
-	
-		<!-- 查詢套餐(透過套餐ID) -->
+
+	<!-- 查詢套餐(透過套餐ID) -->
 	<select id="getSettingById"
 		resultType="com.example.GroupProject.dto.SettingDto">
 		SELECT * FROM setting
 		WHERE setting_id = #{settingId}
 	</select>
 
+    <!-- 查詢商品是否使用中 -->
+	<select id="checkProductUsedInSetting" resultType="int">
+		SELECT COUNT(*)
+		FROM setting
+		WHERE setting_detail LIKE CONCAT('%"productId":', #{productId}, '%')
+	</select>
 
 </mapper>

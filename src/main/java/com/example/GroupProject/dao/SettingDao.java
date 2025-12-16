@@ -30,6 +30,9 @@ public interface SettingDao {
 	
 	//透過套餐id取得單筆套餐資料(管理者)
 	public SettingDto getSettingById(@Param("settingId") int settingId);
+	
+	//查詢商品是否使用中
+	public int checkProductUsedInSetting(@Param("productId") int productId);
 
 	
 }

@@ -3,6 +3,8 @@ package com.example.GroupProject.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import com.example.GroupProject.constants.ResCodeMessage;
 import com.example.GroupProject.dao.CategoryDao;
 import com.example.GroupProject.dao.OptionDao;
 import com.example.GroupProject.dao.ProductDao;
+import com.example.GroupProject.dao.SettingDao;
 import com.example.GroupProject.dto.CategoryDto;
 import com.example.GroupProject.dto.OptionDetailDto;
 import com.example.GroupProject.dto.ProductDto;
@@ -28,15 +31,40 @@ public class ProductService {
 
 	// json跟java物件的轉換
 	private ObjectMapper mapper = new ObjectMapper();
-	
+
 	@Autowired
 	private ProductDao productDao;
 
 	@Autowired
 	private CategoryDao categoryDao;
-	
+
 	@Autowired
 	private OptionDao optionDao;
+	
+	@Autowired
+	private SettingDao settingDao;
+	
+	//ai過敏原
+	private final ChatClient chatClient;
+
+    public ProductService(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
+    }
+    
+    public String allergenCreateByObject(ProductDto productAiVo) {
+
+        String prompt = productAiVo.getProductDescription();
+        String str = "根據這個json中所有的的productName與option，列出可能的過敏源，"
+        		+ "過敏源只需寫出過敏原名稱，多個過敏源間用、隔開，不用分析詳情只留最後結果。"
+        				+ "輸出範例格式: 可能的過敏源:過敏原1、過敏原2......";
+        System.out.println("prompt : " + prompt);
+        String newPrompt = prompt + str;
+        // 直接使用提示詞
+        ChatResponse response = chatClient.prompt(newPrompt).call().chatResponse();
+        System.out.println(response.getResult().getOutput().getText());
+        return response.getResult().getOutput().getText();
+    }
+
 
 	// 新增商品
 	@Transactional(rollbackFor = Exception.class)
@@ -78,6 +106,9 @@ public class ProductService {
 					ResCodeMessage.PRODUCT_NAME_IS_USED.getCode(), //
 					ResCodeMessage.PRODUCT_NAME_IS_USED.getMessage());
 		}
+		//ai過敏原
+		String aiText = allergenCreateByObject(dto);
+		dto.setProductDescription(dto.getProductDescription()+"。"+ aiText);
 
 		int result = productDao.addProduct(dto);
 		if (result > 0) {
@@ -102,12 +133,11 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
 		List<ProductVo> productList = productDao.getProductList(categoryId);
-		
+
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				categoryId,
-				productList);
+				categoryId, productList);
 	}
 
 	// 查看商品列表(點餐時)-不顯示active=0
@@ -120,14 +150,13 @@ public class ProductService {
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(), //
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-		
+
 		List<ProductVo> productList = productDao.getUserProductList(categoryId);
 
 		return new ProductRes( //
 				ResCodeMessage.SUCCESS.getCode(), //
 				ResCodeMessage.SUCCESS.getMessage(), //
-				categoryId,
-				productList);
+				categoryId, productList);
 	}
 
 	// 刪除商品
@@ -142,16 +171,24 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(), dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
 
 		// 如果商品上架中，不可刪除
-		if (productDao.getProductActive(dto.getCategoryId(),dto.getProductId())) {
+		if (productDao.getProductActive(dto.getCategoryId(), dto.getProductId())) {
 			return new BasicRes( //
 					ResCodeMessage.PRODUCT_IS_USED.getCode(), //
 					ResCodeMessage.PRODUCT_IS_USED.getMessage());
+		}
+		
+		//如果套餐內有該商品，不可刪除
+		if (settingDao.checkProductUsedInSetting(dto.getProductId()) > 0) {
+		    return new BasicRes(
+		        ResCodeMessage.SETTING_IS_USED.getCode(),
+		        ResCodeMessage.SETTING_IS_USED.getMessage()
+		    );
 		}
 
 		int result = productDao.delProductById(dto);
@@ -179,7 +216,7 @@ public class ProductService {
 		}
 
 		// 確認商品存在
-		if (productDao.checkProductExist(dto.getCategoryId(),dto.getProductId()) == 0) {
+		if (productDao.checkProductExist(dto.getCategoryId(), dto.getProductId()) == 0) {
 			return new BasicRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
@@ -206,6 +243,19 @@ public class ProductService {
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getCode(), //
 					ResCodeMessage.PRODUCT_PRICE_ERROR.getMessage());
 		}
+		
+		//如果套餐有該商品，修改部分不可為下架商品
+		boolean oldActive = productDao.getProductActive(dto.getCategoryId(), dto.getProductId());
+		boolean newActive = dto.isProductActive(); // 前端傳進來的狀態
+
+		if (oldActive && !newActive) {
+		    // 原本是上架，現在要下架
+		    if (settingDao.checkProductUsedInSetting(dto.getProductId()) > 0) {
+		        return new BasicRes(
+						ResCodeMessage.SETTING_IS_USED.getCode(), //
+						ResCodeMessage.SETTING_IS_USED.getMessage());
+		    }
+		}
 
 		int result = productDao.updateProduct(dto);
 		if (result > 0) {
@@ -218,21 +268,20 @@ public class ProductService {
 					ResCodeMessage.UPDATE_PRODUCT_FAILED.getMessage());
 		}
 	}
-	
-	//查詢單樣商品，使用者點餐(顯示商品+客製化)
+
+	// 查詢單樣商品，使用者點餐(顯示商品+客製化)
 	@Transactional(readOnly = true)
-	public ProductAllDetailRes getProductById(int categoryId, int productId) throws Exception  {
+	public ProductAllDetailRes getProductById(int categoryId, int productId) throws Exception {
 
 		ProductDto dto = productDao.getDetailByProductId(categoryId, productId);
-		
+
 		// 商品不存在
 		if (dto == null) {
-			return new ProductAllDetailRes(
-					ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
+			return new ProductAllDetailRes(ResCodeMessage.PRODUCT_NOT_FOUND.getCode(),
 					ResCodeMessage.PRODUCT_NOT_FOUND.getMessage());
 		}
-		
-		//判斷本身與傳輸之分類id是否相等
+
+		// 判斷本身與傳輸之分類id是否相等
 		if (dto.getCategoryId() != categoryId) {
 			return new ProductAllDetailRes(//
 					ResCodeMessage.PRODUCT_AND_CATEGORY_NOT_MATCH.getCode(), //
@@ -241,11 +290,10 @@ public class ProductService {
 
 		// 分類不存在
 		if (categoryDao.checkCategoryExistById(categoryId) == 0) {
-			return new ProductAllDetailRes(
-					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(),
+			return new ProductAllDetailRes(ResCodeMessage.CATEGORY_IS_NOT_FOUND.getCode(),
 					ResCodeMessage.CATEGORY_IS_NOT_FOUND.getMessage());
 		}
-		
+
 		// 3. 查分類基本資料
 		CategoryDto category = categoryDao.getCategoryById(categoryId);
 
@@ -264,30 +312,19 @@ public class ProductService {
 			String jsonDetail = optionDto.getOptionDetailJson();
 			if (StringUtils.hasText(jsonDetail)) {
 
-				List<OptionDetailDto> detailList = mapper.readValue(
-						jsonDetail, new TypeReference<List<OptionDetailDto>>() {});
+				List<OptionDetailDto> detailList = mapper.readValue(jsonDetail,
+						new TypeReference<List<OptionDetailDto>>() {
+						});
 				vo.setOptionDetail(detailList);
 			}
 			optionList.add(vo);
 		}
 
 		// 5. 回傳結果
-		return new ProductAllDetailRes(
-				ResCodeMessage.SUCCESS.getCode(),
-				ResCodeMessage.SUCCESS.getMessage(),
-				categoryId,
-				dto.getProductId(),
-				dto.getProductName(),
-				dto.getProductPrice(),
-				dto.isProductActive(),
-				dto.getProductDescription(),
-				dto.getImageUrl(),
-				dto.getProductNote(),
-				category.getCategoryType(),
-				category.getWorkstationId(),
-				optionList
-		);
+		return new ProductAllDetailRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
+				categoryId, dto.getProductId(), dto.getProductName(), dto.getProductPrice(), dto.isProductActive(),
+				dto.getProductDescription(), dto.getImageUrl(), dto.getProductNote(), category.getCategoryType(),
+				category.getWorkstationId(), optionList);
 	}
-	
-	
+
 }
