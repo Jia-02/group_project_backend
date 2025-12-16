@@ -257,6 +257,8 @@ public class ProductService {
 		    }
 		}
 
+		String aiText = allergenCreateByObject(dto);
+		dto.setProductDescription(dto.getProductDescription()+"。"+ aiText);
 		int result = productDao.updateProduct(dto);
 		if (result > 0) {
 			return new BasicRes(//
