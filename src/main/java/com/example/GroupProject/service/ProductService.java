@@ -53,11 +53,26 @@ public class ProductService {
     
     public String allergenCreateByObject(ProductDto productAiVo) {
 
-        String prompt = productAiVo.getProductDescription();
-        String str = "根據這個json中所有的的productName與option，列出可能的過敏源，"
-        		+ "過敏源只需寫出過敏原名稱，多個過敏源間用、隔開，不用分析詳情只留最後結果。"
-        				+ "輸出範例格式: 可能的過敏源:過敏原1、過敏原2......";
-        System.out.println("prompt : " + prompt);
+        if(!StringUtils.hasText(productAiVo.getProductName())) {
+            productAiVo.setProductName("");
+        }
+
+        if (!StringUtils.hasText(productAiVo.getProductDescription())) {
+            productAiVo.setProductDescription("");
+        }
+
+        if (!StringUtils.hasText(productAiVo.getProductNote())) {
+            productAiVo.setProductNote("");
+        }
+
+
+        String prompt = "{  \"productName\": \"" + productAiVo.getProductName()
+		+ "\", \"productDescription\":\"" + productAiVo.getProductDescription()
+		+ "\", \"productNote\": \" " + productAiVo.getProductNote() + "\" }";
+		System.out.println("prompt : " + prompt);
+
+        String str = "只根據這個json中的productName與productDescription與productNote，不要參考其他欄位或之前的紀錄，列出可能的過敏源，過敏源只需寫出過敏原名稱，多個過敏源間用、隔開，不用分析詳情只留最後結果。輸出範例格式: 可能的過敏源:過敏原1、過敏原2......。如果沒有明顯的過敏源，或是json格式不齊全，或是參考欄位不足，就輸出:可能的過敏源:無。";
+
         String newPrompt = prompt + str;
         // 直接使用提示詞
         ChatResponse response = chatClient.prompt(newPrompt).call().chatResponse();
@@ -108,7 +123,7 @@ public class ProductService {
 		}
 		//ai過敏原
 		String aiText = allergenCreateByObject(dto);
-		dto.setProductDescription(dto.getProductDescription()+"。"+ aiText);
+		dto.setProductDescription(dto.getProductDescription() + aiText);
 
 		int result = productDao.addProduct(dto);
 		if (result > 0) {
@@ -258,7 +273,7 @@ public class ProductService {
 		}
 
 		String aiText = allergenCreateByObject(dto);
-		dto.setProductDescription(dto.getProductDescription()+"。"+ aiText);
+		dto.setProductDescription(dto.getProductDescription() + aiText);
 		int result = productDao.updateProduct(dto);
 		if (result > 0) {
 			return new BasicRes(//
