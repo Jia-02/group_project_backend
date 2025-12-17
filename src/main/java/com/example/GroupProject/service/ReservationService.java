@@ -109,14 +109,7 @@ public class ReservationService {
 			return new BasicRes( //
 					ResCodeMessage.TABLE_IS_RESERVATION.getCode(), ResCodeMessage.TABLE_IS_RESERVATION.getMessage());
 		}
-		
-		//訂位不可以順便報到==
-		if(reservationDto.isReservationStatus()) {
-			return new BasicRes( //
-					ResCodeMessage.RESERVATION_CANT_CHECK.getCode(), // 
-					ResCodeMessage.RESERVATION_CANT_CHECK.getMessage());
-		}
-
+	
 		// 新增訂位
 		int result = reservationDao.createReservation(reservationDto);
 		if (result > 0) {
