@@ -8,6 +8,7 @@ public class OrdersMealVo {
     private int orderDetailsId;       // 前端生成
     private int orderDetailsPrice;    // 單點＋客製化總價
     private int settingId;            // 套餐 ID，可為 0 或 -1
+    private String settingName;       //套餐名稱
 
     private List<OrderMealDetailVo> orderDetails; // 一筆明細內可能有多個商品
 
@@ -15,12 +16,13 @@ public class OrdersMealVo {
 		super();
 	}
 
-	public OrdersMealVo(int orderDetailsId, int orderDetailsPrice, int settingId,
+	public OrdersMealVo(int orderDetailsId, int orderDetailsPrice, int settingId, String settingName,
 			List<OrderMealDetailVo> orderDetails) {
 		super();
 		this.orderDetailsId = orderDetailsId;
 		this.orderDetailsPrice = orderDetailsPrice;
 		this.settingId = settingId;
+		this.settingName = settingName;
 		this.orderDetails = orderDetails;
 	}
 
@@ -48,6 +50,14 @@ public class OrdersMealVo {
 		this.settingId = settingId;
 	}
 
+	public String getSettingName() {
+		return settingName;
+	}
+
+	public void setSettingName(String settingName) {
+		this.settingName = settingName;
+	}
+
 	public List<OrderMealDetailVo> getOrderDetails() {
 		return orderDetails;
 	}
@@ -55,5 +65,5 @@ public class OrdersMealVo {
 	public void setOrderDetails(List<OrderMealDetailVo> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-
+ 
 }

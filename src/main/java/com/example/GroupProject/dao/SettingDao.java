@@ -22,6 +22,9 @@ public interface SettingDao {
 	//確認該套餐存在
 	public int checkSettingExist(@Param("settingId") int settingId);
 	
+	//透過id取得名稱
+	public String getSettingName(@Param("settingId") int settingId);
+	
 	//透過分類id取得套餐(管理者)
 	public List<SettingDto> getSettingListById(@Param("categoryId") int categoryId);
 	

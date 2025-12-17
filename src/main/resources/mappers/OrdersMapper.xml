@@ -37,11 +37,14 @@
 	<!-- 新增外送資訊 -->
 	<insert id="addDeliveryTask">
 		INSERT INTO delivery_task
-		( order_no, delivery_id, date, distance_km, status, is_receive_money,
+		( order_no, delivery_id,
+		date, distance_km, status, is_receive_money,
 		money )
 		VALUES
-		( #{orderNo}, #{deliveryId}, #{date},
-		#{distanceKm}, #{status}, #{isReceiveMoney}, #{money} )
+		( #{orderNo},
+		#{deliveryId}, #{date},
+		#{distanceKm}, #{status}, #{isReceiveMoney},
+		#{money} )
 	</insert>
 
 	<!-- 生成訂單編號 -->
@@ -64,7 +67,7 @@
 		SELECT * FROM orders
 		WHERE orders_id = #{ordersId}
 	</select>
-	
+
 	<!-- Code取得訂單內容 -->
 	<select id="getOrdersByCode"
 		resultType="com.example.GroupProject.dto.OrdersDto">
@@ -79,11 +82,13 @@
 		WHERE orders_id = #{ordersId}
 	</select>
 
+
 	<!-- 取得訂單列表 -->
 	<select id="getOrdersList"
 		resultType="com.example.GroupProject.vo.OrdersVo">
 		SELECT * FROM orders
-		ORDER BY orders_date DESC, orders_time DESC
+		ORDER BY orders_date DESC, orders_time
+		DESC
 	</select>
 
 	<!-- 更新訂單(未付款前最後編輯，可改為已付款) -->
@@ -115,14 +120,14 @@
 		= #{ordersId}
 	</update>
 
-
+    <!-- 查詢當日訂單列表與細節，不包含取消的 -->
 	<select id="getOrdersByDate"
 		resultType="com.example.GroupProject.dto.OrdersDto">
 		SELECT *
 		FROM orders
 		WHERE orders_date = #{ordersDate}
-		ORDER
-		BY orders_time ASC
+		AND payment_type != '取消'
+		ORDER BY orders_time ASC
 	</select>
 
 </mapper>

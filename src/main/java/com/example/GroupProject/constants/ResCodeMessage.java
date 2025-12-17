@@ -110,6 +110,7 @@ public enum ResCodeMessage {
 	BASIC_INFO_CANT_UPDATE(400, "基礎資訊不可修改。"), //
 	ORDER_ADD_FAILED(400, "新增訂單失敗。"), //
 	ORDER_CODE_ADD_FAILED(400, "新增訂單編號失敗。"), //
+	DELIVERY_CASH_NOT_ALLOWED(400, "外送不可以用現金付款"), //
 	
 	
 	

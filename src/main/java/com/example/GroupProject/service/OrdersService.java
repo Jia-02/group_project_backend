@@ -124,6 +124,16 @@ public class OrdersService {
 			return new OrderBasicRes(ResCodeMessage.NOT_CASH_CANT_NO_PAID.getCode(), //
 					ResCodeMessage.NOT_CASH_CANT_NO_PAID.getMessage());
 		}
+		
+		//外送不可以選現金付款
+		if ("D".equals(req.getOrdersType()) && "現金".equals(req.getPaymentType())) {
+		    return new OrderBasicRes(
+		        ResCodeMessage.DELIVERY_CASH_NOT_ALLOWED.getCode(),
+		        ResCodeMessage.DELIVERY_CASH_NOT_ALLOWED.getMessage()
+		    );
+		}
+		
+		
 		// 內用需要桌號
 		if ("A".equals(req.getOrdersType())) {
 			// 桌號不可為空
@@ -827,6 +837,7 @@ public class OrdersService {
 				mealVo.setOrderDetailsId(detail.getOrderDetailsId());
 				mealVo.setOrderDetailsPrice(detail.getOrderDetailsPrice());
 				mealVo.setSettingId(detail.getSettingId());
+				mealVo.setSettingName(settingDao.getSettingName(detail.getSettingId()));
 
 				// 解析 JSON → 商品列表
 				String jsonString = detail.getOrderDetails();

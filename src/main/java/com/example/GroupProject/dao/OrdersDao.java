@@ -42,7 +42,7 @@ public interface OrdersDao {
 	
 	// ID取得列表訂單細節
 	public List<OrderDetailDto> getOrderDetailById(@Param("ordersId") int ordersId);
-	
+
 	//查詢訂單列表
 	public List<OrdersVo> getOrdersList();
 	

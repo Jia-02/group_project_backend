@@ -58,11 +58,20 @@
 		WHERE setting_id = #{settingId}
 	</select>
 
-    <!-- 查詢商品是否使用中 -->
+	<!-- 查詢商品是否使用中 -->
 	<select id="checkProductUsedInSetting" resultType="int">
-		SELECT COUNT(*)
+		SELECT
+		COUNT(*)
 		FROM setting
-		WHERE setting_detail LIKE CONCAT('%"productId":', #{productId}, '%')
+		WHERE setting_detail LIKE CONCAT('%"productId":',
+		#{productId}, '%')
+	</select>
+
+	<!-- 透過id查詢名稱 -->
+	<select id="getSettingName" resultType="string">
+		SELECT setting_name FROM
+		setting
+		WHERE setting_id = #{settingId}
 	</select>
 
 </mapper>
