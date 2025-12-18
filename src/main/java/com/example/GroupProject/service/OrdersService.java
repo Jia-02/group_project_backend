@@ -560,6 +560,12 @@ public class OrdersService {
 			detail.setOrderDetails(jsonString);
 			ordersDao.addOrderDetail(detail);
 		}
+		
+		if(req.getPaymentType() == "取消") {
+			MealStatusDto mealStatus = mealStatusDao.getMealStatus(ordersId);
+			mealStatus.setMealStatus("取消");
+		}
+		
 
 		return new BasicRes(//
 				ResCodeMessage.SUCCESS.getCode(), //
