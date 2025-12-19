@@ -205,24 +205,36 @@ public class ReservationService {
 		LocalDate reservationDate = now.toLocalDate();
 
 		// 呼叫方法判斷當前時段
-		LocalTime queryTime = findCurrentOrPastSlot(now.toLocalTime(), SchedulTime);
+		LocalTime queryTime = findCurrentOrPastSlot(now.toLocalTime().plusMinutes(30), SchedulTime);
 		System.out.println(queryTime);
 		if (queryTime == null) {
 			return new ReservationAndTableByTimeRes(//
 					ResCodeMessage.NOT_FOUND.getCode(), ResCodeMessage.NOT_FOUND.getMessage());
 		}
-		
-		if (!reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime).isEmpty()) {
-			// 根據當時段訂位資訊更新桌位使用狀態
-			for (ReservationAndTableByTime reservation : reservationDao.findTableStatusByTimeSlot(reservationDate,
-					queryTime)) {
-				tableDao.updateStatusByTableId(reservation.getTableId(), reservation.getTableStatus());
+
+		// 執行資料庫查詢
+		List<ReservationAndTableByTime> reservations = reservationDao.findTableStatusByTimeSlot(reservationDate,
+				queryTime);
+
+		// ⭐ 場次開始時間 + 30 分鐘
+		LocalDateTime noShowTime = LocalDateTime.of(reservationDate, queryTime).plusMinutes(30);
+
+		for (ReservationAndTableByTime reservation : reservations) {
+			// 若已超過 30 分鐘且仍是「已預約」
+			if (now.isAfter(noShowTime) && "已預約".equals(reservation.getTableStatus())) {
+				// 更新為未報到
+				reservation.setTableStatus("未報到");
+				// 根據最新狀態更新桌位
+				tableDao.updateStatusByTableId( //
+						reservation.getTableId(), //
+						reservation.getTableStatus());
 			}
 		}
 
-		// 執行資料庫查詢	
-		return new ReservationAndTableByTimeRes(ResCodeMessage.SUCCESS.getCode(), ResCodeMessage.SUCCESS.getMessage(),
-				reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime));
+		return new ReservationAndTableByTimeRes( //
+				ResCodeMessage.SUCCESS.getCode(), //
+				ResCodeMessage.SUCCESS.getMessage(), //
+				reservations);
 	}
 
 	// 私有方法查詢與現在時間最接近的時段
