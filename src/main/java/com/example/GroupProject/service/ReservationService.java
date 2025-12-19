@@ -211,6 +211,14 @@ public class ReservationService {
 			return new ReservationAndTableByTimeRes(//
 					ResCodeMessage.NOT_FOUND.getCode(), ResCodeMessage.NOT_FOUND.getMessage());
 		}
+		
+		if (!reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime).isEmpty()) { 
+			// 根據當時段訂位資訊更新桌位使用狀態 
+			for (ReservationAndTableByTime reservation : reservationDao.findTableStatusByTimeSlot(reservationDate, queryTime)) {
+				tableDao.updateStatusByTableId(reservation.getTableId(), reservation.getTableStatus()); 
+				} 
+			}
+		
 
 		// 執行資料庫查詢
 		List<ReservationAndTableByTime> reservations = reservationDao.findTableStatusByTimeSlot(reservationDate,
