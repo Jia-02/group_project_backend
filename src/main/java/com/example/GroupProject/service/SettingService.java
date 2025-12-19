@@ -265,7 +265,6 @@ public class SettingService {
 		// 刪除舊的套餐
 		SettingDto delDto = new SettingDto();
 		delDto.setSettingId(settingId);
-		;
 		int delResult = settingDao.delSettingById(delDto);
 		if (delResult <= 0) {
 			return new BasicRes(//
