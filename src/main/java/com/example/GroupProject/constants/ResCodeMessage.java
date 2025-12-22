@@ -125,6 +125,14 @@ public enum ResCodeMessage {
 	//餐點狀態
 	MEAL_STATUS_EMPTY(400, "餐點狀態為空"), //
 	
+	//寵物顯示
+	PARAM_NAME_ERROR(400,"Param name error!!"),//
+    PARAM_AGE_ERROR(400,"Param age error!!"),//
+    PARAM_IMG_ERROR(400,"Param catimg error!!"),//
+    PARAM_INFO_ERROR(400,"Param catInfo error!!"),//
+    PARAM_ID_ERROR(400,"Param catId error!!"),//
+    PET_NOT_FOUND(400,"Pet not found!!"),
+	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
 	NOT_FOUND(404, "Not found!!"), //

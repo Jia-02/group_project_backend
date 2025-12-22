@@ -15,7 +15,7 @@ import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.CalendarRes;
 import com.example.GroupProject.service.CalendarService;
 
-@CrossOrigin // 允許前端來源
+@CrossOrigin (origins = "http://192.168.01.174:4200")
 @RestController
 
 public class CalendarController {

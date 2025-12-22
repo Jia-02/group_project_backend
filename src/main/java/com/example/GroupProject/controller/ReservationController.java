@@ -20,7 +20,7 @@ import com.example.GroupProject.response.ReservationAndTableByTimeRes;
 import com.example.GroupProject.response.ReservationListRes;
 import com.example.GroupProject.service.ReservationService;
 
-@CrossOrigin // 允許前端來源
+@CrossOrigin (origins = "http://192.168.01.174:4200")
 @RestController
 public class ReservationController {
 	

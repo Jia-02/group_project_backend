@@ -42,6 +42,8 @@ public class ConstantsMessage {
 	
 	public static final String TABLE_QR_URL_ERROR = "QR的URL錯誤";
 	
+	public static final String PET_ID_LIST_IS_EMPTY = "PET ID LIST IS EMPTY";
+	
 	
 	
 }
