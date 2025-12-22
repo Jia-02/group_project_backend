@@ -16,7 +16,7 @@ import com.example.GroupProject.response.SettingListRes;
 import com.example.GroupProject.service.SettingService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin (origins = "http://192.168.0.174:4200")
 public class SettingController {
 	
 	@Autowired

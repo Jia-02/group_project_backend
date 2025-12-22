@@ -12,7 +12,7 @@ import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.CategoryListRes;
 import com.example.GroupProject.service.CategoryService;
 
-@CrossOrigin // 允許前端來源
+@CrossOrigin (origins = "http://192.168.0.174:4200")
 @RestController
 public class CategoryController {
 	

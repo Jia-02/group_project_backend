@@ -13,7 +13,7 @@ import com.example.GroupProject.response.BasicRes;
 import com.example.GroupProject.response.workStationListRes;
 import com.example.GroupProject.service.WorkStationService;
 
-@CrossOrigin // 允許前端來源
+@CrossOrigin (origins = "http://192.168.0.174:4200")
 @RestController
 public class WorkStationController {
 

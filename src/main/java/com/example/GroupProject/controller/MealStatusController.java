@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.GroupProject.response.MealStatusRes;
 import com.example.GroupProject.service.MealStatusService;
 
-@CrossOrigin // 允許前端來源
+@CrossOrigin (origins = "http://192.168.0.174:4200")
 @RestController
 public class MealStatusController {
 	
