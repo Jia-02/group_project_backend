@@ -15,7 +15,6 @@ import com.example.GroupProject.response.PetListRes;
 import com.example.GroupProject.service.PetListService;
 
 @CrossOrigin 
-//(origins = "http://192.168.0.174:4200")
 @RestController
 public class PetListController {
 

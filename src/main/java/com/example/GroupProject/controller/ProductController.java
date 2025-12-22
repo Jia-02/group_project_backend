@@ -15,7 +15,6 @@ import com.example.GroupProject.service.ProductService;
 
 @RestController
 @CrossOrigin 
-//(origins = "http://192.168.0.174:4200")
 public class ProductController {
 	
 	@Autowired
