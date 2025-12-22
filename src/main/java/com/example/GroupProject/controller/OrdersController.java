@@ -21,7 +21,8 @@ import com.example.GroupProject.response.OrdersMealRes;
 import com.example.GroupProject.service.OrdersService;
 
 @RestController
-@CrossOrigin (origins = "http://192.168.0.174:4200")
+@CrossOrigin
+//(origins = "http://192.168.0.174:4200")
 public class OrdersController {
 	
 	@Autowired
