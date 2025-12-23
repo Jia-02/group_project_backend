@@ -608,8 +608,10 @@ public class OrdersService {
 			orderStatus = "製作中";
 		} else if (orderStatusList.contains("待送餐")) {
 			orderStatus = "待送餐";
-		}else if (orderStatusList.contains("已取餐")) {
-			orderStatus = "已取餐";
+		}else if (orderStatusList.contains("餐點已完成")) {
+			orderStatus = "餐點製作完成";
+		}else if (orderStatusList.contains("餐點已送出")) {
+			orderStatus = "外送員已取餐";
 		}
 		
 		LocalTime orderTime = LocalTime.now();

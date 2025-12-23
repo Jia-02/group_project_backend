@@ -324,18 +324,17 @@ public class DeliveryTaskService {
 		        String mealStatus = mealstatusdao.getMealStatusByOrdersId(ordersId);
 
 		        //  內場還沒完成
-		        if (!"待取餐".equals(mealStatus)) {
+		        if (!"外送員已取餐".equals(mealStatus)) {
 		            return new BasicRes(
 		            		ResCodeMessage.MEAL_NOT_COMPLETED.getCode(), //
 							ResCodeMessage.MEAL_NOT_COMPLETED.getMessage()
 		            );
 		        }
 		    }
-			
-			
+
 			
 			if ("pickup".equalsIgnoreCase(status)) {
-				mealStatusDto.setMealStatus("已取餐");
+				mealStatusDto.setMealStatus("外送員已取餐");
 				mealStatusDto.setEstimatedTime(estimatedTime); // 預計送達時間
 				mealStatusDto.setFinishTime(LocalTime.now());
 			}
