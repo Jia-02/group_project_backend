@@ -32,7 +32,7 @@ public class TablesService {
 	@Transactional(rollbackFor = Exception.class)
 	public BasicRes addTable(TablesDto table) {
 
-		if (table.getTablePositionX() + table.getLengthX() > 500) {
+		if (table.getTablePositionX() + table.getLengthX() > 700) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
@@ -120,7 +120,7 @@ public class TablesService {
 			return new BasicRes(ResCodeMessage.TABLE_CAPACITY_ERROR.getCode(),
 					ResCodeMessage.TABLE_CAPACITY_ERROR.getMessage());
 		}
-		if (table.getTablePositionX() + table.getLengthX() > 500) {
+		if (table.getTablePositionX() + table.getLengthX() > 700) {
 			return new BasicRes(ResCodeMessage.TABLE_POSITION_ERROR.getCode(),
 					ResCodeMessage.TABLE_POSITION_ERROR.getMessage());
 		}
