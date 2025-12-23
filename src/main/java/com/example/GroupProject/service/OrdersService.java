@@ -556,14 +556,23 @@ public class OrdersService {
 			detail.setOrderDetailsPrice(detailReq.getOrderDetailsPrice());
 			detail.setSettingId(detailReq.getSettingId());
 			detail.setOrdersId(ordersId);
+			for(OrderProductReq productReq:detailReq.getOrderDetails()) {
+				if(req.getPaymentType().equalsIgnoreCase("取消")) {
+					productReq.setMealStatus("取消");
+				}
+			}
 			String jsonString = mapper.writeValueAsString(detailReq.getOrderDetails());
 			detail.setOrderDetails(jsonString);
 			ordersDao.addOrderDetail(detail);
 		}
 		
-		if(req.getPaymentType() == "取消") {
+		if(req.getPaymentType().equalsIgnoreCase("取消")) {
+			LocalTime orderTime = LocalTime.now();
 			MealStatusDto mealStatus = mealStatusDao.getMealStatus(ordersId);
+			mealStatus.setEstimatedTime(0);
+			mealStatus.setFinishTime(orderTime);
 			mealStatus.setMealStatus("取消");
+			mealStatusDao.updateMealStatus(mealStatus);
 		}
 		
 
