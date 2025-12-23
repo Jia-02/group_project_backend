@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+       PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+       "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.GroupProject.dao.DeliveryTaskDao">
+
+	<resultMap id="DeliveryTask"
+		type="com.example.GroupProject.dto.DeliveryTask">
+		<!-- id 標籤: 用來標示主鍵，用於主鍵欄位和變數名稱的映射 -->
+		<!-- property: PersonInfo2 中的屬性變數名稱 -->
+		<!-- column: 資料表的欄位名稱 -->
+		<id property="orderNo" column="order_no" />
+		<!-- result 標籤: 用在一般欄位與 DTO 變數名稱的映射 -->
+		<result property="deliveryId" column="delivery_id" />
+		<result property="date" column="date" />
+		<result property="distanceKm" column="distance_km" />
+		<result property="status" column="status" />
+		<result property="isReceiveMoney" column="is_receive_money" />
+		<result property="money" column="money" />
+	</resultMap>
+
+	<select id="getAll" resultMap="DeliveryTask">
+		select * from delivery_task
+	</select>
+
+	<select id="getAllNotEnd" resultMap="DeliveryTask">
+		select * from delivery_task
+		where delivery_id is not null and status in('pending', 'pickup')
+	</select>
+
+	<select id="getAllNoDeliveryId" resultMap="DeliveryTask">
+		select * from
+		delivery_task where delivery_id = 0
+	</select>
+
+	<select id="getDeliveryUserCountById">
+		select count(*) from delivery_user where id = #{id}
+	</select>
+
+	<update id="updateDeliveryIdToDTask">
+		update delivery_task set delivery_id = #{deliveryId}
+		where order_no = #{orderNo}
+	</update>
+
+	<select id="getTaskListTaking" resultMap="DeliveryTask">
+		select * from
+		delivery_task where delivery_id = #{deliveryId} and status
+		in('pending', 'pickup')
+	</select>
+
+	<select id="getTaskListByDate" resultMap="DeliveryTask">
+		select * from
+		delivery_task where
+		delivery_id = #{deliveryId} AND
+		status = 'completed' AND
+		date = #{date}
+
+	</select>
+
+	<select id="getTaskListByMonth" resultMap="DeliveryTask">
+		select * from
+		delivery_task where
+		delivery_id = #{deliveryId} AND
+		status = 'completed' AND
+		MONTH(date) = #{month}
+
+	</select>
+
+	<select id="getTaskListByYear" resultMap="DeliveryTask">
+		select * from
+		delivery_task where
+		delivery_id = #{deliveryId} AND
+		status = 'completed' AND
+		YEAR(date) = #{year}
+
+	</select>
+
+	<update id="updateStatus">
+		update delivery_task set status = #{status} where
+		order_no = #{orderNo}
+	</update>
+
+	<select id="getCountByOrderNo">
+		select count(*) from delivery_task where order_no =
+		#{orderNo}
+	</select>
+
+	<select id="getAllByDeliveryid">
+		select * from delivery_task where delivery_id =
+		#{deliveryId} and status in("completed")
+	</select>
+
+	<select id="findOrdersIdByOrderNo" resultType="int">
+		SELECT orders_id
+		FROM orders
+		WHERE orders_code = #{orderNo}
+	</select>
+
+	<update id="updateDistanceAndMoney">
+		update delivery_task set distance_km = #{distanceKm}
+		, money = #{money} where order_no = #{orderNo}
+	</update>
+
+	<select id="getTaskByOrderNo" resultMap="DeliveryTask">
+		select * from delivery_task where order_no = #{orderNo}
+	</select>
+
+</mapper>

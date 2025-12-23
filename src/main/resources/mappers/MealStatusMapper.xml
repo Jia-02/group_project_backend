@@ -15,21 +15,33 @@
 		<result property="ordersId" column="orders_id" />
 
 	</resultMap>
-	
-	<insert id="addMealStatus" parameterType="com.example.GroupProject.dto.MealStatusDto">
-		insert into meal_status(meal_status,estimated_time,finish_time,orders_id) 
+
+	<insert id="addMealStatus"
+		parameterType="com.example.GroupProject.dto.MealStatusDto">
+		insert into
+		meal_status(meal_status,estimated_time,finish_time,orders_id)
 		values (#{mealStatus},#{estimatedTime},#{finishTime},#{ordersId})
 	</insert>
-	
-	<update id="updateMealStatus" parameterType="com.example.GroupProject.dto.MealStatusDto">
-		update meal_status set meal_status = #{mealStatus}, estimated_time = #{estimatedTime},
-		finish_time = #{finishTime} where orders_id = #{ordersId}
+
+	<update id="updateMealStatus"
+		parameterType="com.example.GroupProject.dto.MealStatusDto">
+		update meal_status set meal_status = #{mealStatus},
+		estimated_time = #{estimatedTime},
+		finish_time = #{finishTime} where
+		orders_id = #{ordersId}
 	</update>
-	
+
 	<select id="getMealStatus" resultMap="MealStatusMap">
-		select * from meal_status where orders_id = #{ordersId}
+		select * from meal_status
+		where orders_id = #{ordersId}
 	</select>
-	
-	
-	
+
+
+	<select id="getMealStatusByOrdersId" resultType="string">
+		SELECT meal_status
+		FROM meal_status
+		WHERE orders_id = #{ordersId}
+	</select>
+
+
 </mapper>

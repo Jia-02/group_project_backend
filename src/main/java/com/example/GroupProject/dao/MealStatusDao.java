@@ -14,4 +14,6 @@ public interface MealStatusDao {
 	
 	public MealStatusDto getMealStatus(@Param("ordersId") int orderId);
 	
+	public String getMealStatusByOrdersId(Integer ordersId);
+	
 }

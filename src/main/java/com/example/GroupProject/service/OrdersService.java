@@ -608,6 +608,8 @@ public class OrdersService {
 			orderStatus = "製作中";
 		} else if (orderStatusList.contains("待送餐")) {
 			orderStatus = "待送餐";
+		}else if (orderStatusList.contains("已取餐")) {
+			orderStatus = "已取餐";
 		}
 		
 		LocalTime orderTime = LocalTime.now();

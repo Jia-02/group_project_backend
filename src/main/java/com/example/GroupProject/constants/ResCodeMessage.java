@@ -135,12 +135,37 @@ public enum ResCodeMessage {
 	
 	ADD_INFO_FAILED(400, "Add info failed!!"), //
 	UPDATE_INOF_FAILED(400, "Update info failed!!"), //
-	NOT_FOUND(404, "Not found!!"), //
-	PARAM_ACCOUNT_ERROR(400, "Param account error!!"), //
-	PARAM_PASSWORD_ERROR(400, "Param password error!!"), //
-	PASSWORD_MISMATCH(400, "Password mismatch!!"), //
 	PARAM_ACCOUNT_EXIST(400, "Account already exist!!"),//
-	LOGIN_FAILED(400, "Login failed!!");//
+	LOGIN_FAILED(400, "Login failed!!"),//
+	
+	//外送
+	ADD_INFO_FALIED(400,"新增資訊失敗"),//
+	NOT_FOUND(404,"找不到資料!!"),//
+	PARAM_ACCOUNT_ERROR(400,"帳號參數錯誤!!"),//
+	PARAM_PASSWORD_ERROR(400,"密碼參數錯誤!!"),//
+	PASSWORD_MISMATCH(400,"密碼錯誤!!"),//
+	ACCOUNT_EXIST(400,"帳戶已存在"),
+	QUESTION_TYPE_OPTIONS_MISMATCH(400,"問題類型和選項不匹配"),//
+	ACCOUNT_NOT_EXIST(400,"帳戶不存在"),//
+	QUIZ_DATE_ERROR(400,"問卷日期錯誤!!"),//
+	QUIZ_ID_ERROR(400,"問卷 ID 錯誤"),//
+	RADIO_ANSWER_IS_REQUIRED(400,"必須選擇一個單選答案!!"),//
+	TEXT_ANSWER_IS_REQUIRED(400,"文字答案為必填!!"),//
+	CHECKBOX_ANSWER_IS_REQUIRED(400,"多選答案為必填!!"),//
+	QUESTION_OPTION_MISMATCH(400,"題目選項不匹配!!"),//
+	DTASK_NOT_FOUND(400, "Delivery task not found!!"),	//
+	PARAM_ORDERNO_ERROR(400, "Param orderNo error!!"),	//
+	DELIVERY_USER_NOT_FOUND(400, "This delivery user is not found!!"),	//
+	PARAM_DELIVERYID_ERROR(400, "Param deliveryId error!!"),	//
+	PARAM_DATE_ERROR(400, "Param date error!!"),	//
+	PARAM_MY_ERROR(400, "Param month or year error!!"),	//
+	PARAM_MONTH_ERROR(400, "Param month error!!"),	//
+	PARAM_YEAR_ERROR(400, "Param year error!!"),	//
+	PARAM_TIME_ERROR(400, "Param time error!!"),	//
+	PARAM_STATUS_ERROR(400, "Param status error!!"),//
+	KM_MONEY_ERROR(400,"km money error"),//
+	MONEY_ALREADY_EXISTS(400,"money already exists."),//
+	MEAL_NOT_COMPLETED(400,"餐點還沒準備好");
 
 
 	private int code;
