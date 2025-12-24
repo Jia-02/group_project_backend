@@ -53,32 +53,57 @@ public class ProductService {
     
     public String allergenCreateByObject(ProductDto productAiVo) {
 
-        if(!StringUtils.hasText(productAiVo.getProductName())) {
-            productAiVo.setProductName("");
-        }
+		if (!StringUtils.hasText(productAiVo.getProductName())) {
+			productAiVo.setProductName("");
+		}
 
-        if (!StringUtils.hasText(productAiVo.getProductDescription())) {
-            productAiVo.setProductDescription("");
-        }
+		if (!StringUtils.hasText(productAiVo.getProductDescription())) {
+			productAiVo.setProductDescription("");
+		}
 
-        if (!StringUtils.hasText(productAiVo.getProductNote())) {
-            productAiVo.setProductNote("");
-        }
+		if (!StringUtils.hasText(productAiVo.getProductNote())) {
+			productAiVo.setProductNote("");
+		}
 
+		// 1. 先生成一串30~50字的餐點描述 以利於後續的過敏原判斷
 
-        String prompt = "{  \"productName\": \"" + productAiVo.getProductName()
-		+ "\", \"productDescription\":\"" + productAiVo.getProductDescription()
-		+ "\", \"productNote\": \" " + productAiVo.getProductNote() + "\" }";
-		System.out.println("prompt : " + prompt);
+		String prompt01 = "{  \"productName\": \"" + productAiVo.getProductName() + "\", \"productDescription\":\""
+				+ productAiVo.getProductDescription() + "\", \"productNote\": \" " + productAiVo.getProductNote()
+				+ "\" }";
+		System.out.println("prompt : " + prompt01);
 
-        String str = "只根據這個json中的productName與productDescription與productNote，不要參考其他欄位或之前的紀錄，列出可能的過敏源，過敏源只需寫出過敏原名稱，多個過敏源間用、隔開，不用分析詳情只留最後結果。輸出範例格式: 可能的過敏源:過敏原1、過敏原2......。如果沒有明顯的過敏源，或是json格式不齊全，或是參考欄位不足，就輸出:可能的過敏源:無。";
+		String str1st = "只根據這個json中的productName與productDescription與productNote，盡量依照這幾個欄位的字面意思，並參考維基百科對該項目的描述，生成30~50字左右的餐點描述，著重與餐點源料或成分相關的描述。";
 
-        String newPrompt = prompt + str;
-        // 直接使用提示詞
-        ChatResponse response = chatClient.prompt(newPrompt).call().chatResponse();
-        System.out.println(response.getResult().getOutput().getText());
-        return response.getResult().getOutput().getText();
-    }
+		String newPrompt = prompt01 + str1st;
+		// 直接使用提示詞
+
+		ChatResponse response = chatClient.prompt(newPrompt).call().chatResponse();
+		System.out.println("第一次生成 : " + response.getResult().getOutput().getText());
+
+		// 2. 根據餐點名稱與新生成的字串去做AI過敏原分析
+
+		StringBuilder resSb = new StringBuilder("");
+		// 分析到有為止 迴圈
+		while (true) {
+			String prompt02 = "餐點名稱:" + productAiVo.getProductName() + "，餐點描述:"
+					+ response.getResult().getOutput().getText();
+			String str2nd = "根據這個餐點名稱與餐點描述，列出所有可能的過敏源，過敏源只需寫出過敏原名稱，多個過敏源間用、隔開，不用分析詳情只留最後結果。輸出範例格式: 可能的過敏源:過敏原1、過敏原2......。如果真的沒有過敏源，就輸出:可能的過敏源:";
+
+			String newPrompt02 = prompt02 + str2nd;
+			response = chatClient.prompt(newPrompt02).call().chatResponse();
+			String finalRes = response.getResult().getOutput().getText();
+			System.out.println("第二次生成 : " + finalRes);
+
+			if (finalRes.contentEquals("無") && finalRes.length() < 8) {
+				System.out.println("因為" + finalRes + "，重新生成中......");
+				continue;
+			}
+
+			resSb.append(finalRes);
+			break;
+		}
+		return resSb.toString();
+	}
 
 
 	// 新增商品

@@ -334,7 +334,7 @@ public class DeliveryTaskService {
 
 			
 			if ("pickup".equalsIgnoreCase(status)) {
-				mealStatusDto.setMealStatus("外送員已取餐");
+				mealStatusDto.setMealStatus("外送員已在路上");
 				mealStatusDto.setEstimatedTime(estimatedTime); // 預計送達時間
 				mealStatusDto.setFinishTime(LocalTime.now());
 			}
