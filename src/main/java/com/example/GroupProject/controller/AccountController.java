@@ -18,8 +18,8 @@ import com.example.GroupProject.service.AccountService;
 import jakarta.validation.Valid;
 
 
-@CrossOrigin
-//@CrossOrigin(origins = "http://192.168.1.156:4200")
+//@CrossOrigin
+@CrossOrigin(origins = "http://192.168.0.174:4200")
 @RestController
 public class AccountController {
 	

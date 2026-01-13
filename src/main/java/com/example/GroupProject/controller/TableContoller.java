@@ -15,7 +15,8 @@ import com.example.GroupProject.service.TablesService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin 
+//@CrossOrigin 
+@CrossOrigin(origins = "http://192.168.0.174:4200")
 @RestController
 public class TableContoller {
 	

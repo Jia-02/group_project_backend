@@ -20,8 +20,8 @@ import com.example.GroupProject.service.DeliveryTaskService;
 
 
 // 外送任務Controller
-@CrossOrigin
-//@CrossOrigin(origins = "http://192.168.1.156:4200")
+//@CrossOrigin
+@CrossOrigin(origins = "http://192.168.0.174:4200")
 @RequestMapping(value = "api/v1/deliverytask/")
 @RestController
 public class DeliveryTaskController {

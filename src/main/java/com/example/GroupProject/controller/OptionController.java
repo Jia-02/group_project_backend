@@ -15,7 +15,8 @@ import com.example.GroupProject.response.OptionListRes;
 import com.example.GroupProject.service.OptionService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://192.168.0.174:4200")
+//@CrossOrigin
 public class OptionController {
 
 	@Autowired
